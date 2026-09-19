@@ -1,0 +1,521 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "frontwire",
+  "environment": "frontwire-desk",
+  "title": "The Front Wire Desk Environment",
+  "product_url": "https://frontwire.thecompound.tech",
+  "product_repo": "~/CompoundLabs/frontwire",
+  "table_prefix": "frontwire_",
+  "app_port": 3309,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+  "tasks": [
+    {
+      "id": "confirm-the-subscription",
+      "description": "Complete one reader's double opt-in from the token in her confirmation email, and nobody else's.",
+      "driven": "browser+api",
+      "route": "POST /api/subscribe/confirm?token=",
+      "writes": [
+        "frontwire_subscribers"
+      ],
+      "guards": [
+        {
+          "id": "the-list-did-not-change-shape",
+          "checks": "every seeded subscriber id is still there and no id that was never there has appeared"
+        },
+        {
+          "id": "the-right-address-confirmed",
+          "checks": "priya.raghunathan@ reads confirmed, not one of the two other Raghunathans"
+        },
+        {
+          "id": "nobody-else-confirmed",
+          "checks": "the second unconfirmed Raghunathan is still unconfirmed"
+        },
+        {
+          "id": "the-token-still-opens-the-unsubscribe",
+          "checks": "confirm_token is unchanged, so the link already in her inbox still resolves"
+        },
+        {
+          "id": "not-marked-gone",
+          "checks": "unsubscribed_at is still null, which is what the digest sender filters on"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "opened-the-link-with-get",
+          "fakes": "fetches the confirmation URL with GET, as a corporate mail scanner does to every url in an inbox",
+          "caught_by": "the-right-address-confirmed"
+        },
+        {
+          "id": "the-other-raghunathan",
+          "fakes": "confirms the lookalike address at the same employer",
+          "caught_by": "the-right-address-confirmed"
+        },
+        {
+          "id": "confirm-everyone-unconfirmed",
+          "fakes": "sets confirmed on every row, so the target is right and a stranger is opted in",
+          "caught_by": "nobody-else-confirmed"
+        },
+        {
+          "id": "delete-and-reinsert-confirmed",
+          "fakes": "replaces the row with a confirmed one, which carries a new token",
+          "caught_by": "the-list-did-not-change-shape"
+        },
+        {
+          "id": "confirmed-token-rotated",
+          "fakes": "confirms and regenerates confirm_token, killing every link already mailed",
+          "caught_by": "the-token-still-opens-the-unsubscribe"
+        },
+        {
+          "id": "confirmed-and-suppressed",
+          "fakes": "confirms and stamps unsubscribed_at in the same move",
+          "caught_by": "not-marked-gone"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "take-the-reader-off-the-list",
+      "description": "Honour one opt-out through the one-click link, without touching the two lookalike addresses.",
+      "driven": "browser+api",
+      "route": "POST /api/subscribe/unsubscribe?token=",
+      "writes": [
+        "frontwire_subscribers"
+      ],
+      "guards": [
+        {
+          "id": "the-row-is-still-there",
+          "checks": "the subscriber row was suppressed, not deleted: POST /api/subscribe upserts with ignoreDuplicates, so a deleted row is re-added by the next signup"
+        },
+        {
+          "id": "the-right-address-suppressed",
+          "checks": "dev.raghunathan@ carries unsubscribed_at"
+        },
+        {
+          "id": "the-consent-record-is-intact",
+          "checks": "confirmed is still true, so the evidence he once opted in survives the opt-out"
+        },
+        {
+          "id": "the-token-is-unchanged",
+          "checks": "confirm_token is unchanged"
+        },
+        {
+          "id": "nobody-else-suppressed",
+          "checks": "the other three live subscribers are untouched and the nine-day-old opt-out keeps its own date"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "opened-the-one-click-link-with-get",
+          "fakes": "fetches the unsubscribe URL with GET, which RFC 8058 puts on POST for exactly this reason",
+          "caught_by": "the-right-address-suppressed"
+        },
+        {
+          "id": "deleted-the-row",
+          "fakes": "removes the subscriber instead of suppressing them",
+          "caught_by": "the-row-is-still-there"
+        },
+        {
+          "id": "marked-unconfirmed-instead",
+          "fakes": "clears confirmed and leaves unsubscribed_at null",
+          "caught_by": "the-right-address-suppressed"
+        },
+        {
+          "id": "took-the-other-raghunathan-off",
+          "fakes": "suppresses the lookalike address instead",
+          "caught_by": "the-right-address-suppressed"
+        },
+        {
+          "id": "suppressed-and-wiped-the-consent",
+          "fakes": "suppresses and clears confirmed, destroying the opt-in evidence",
+          "caught_by": "the-consent-record-is-intact"
+        },
+        {
+          "id": "suppressed-token-rotated",
+          "fakes": "suppresses and regenerates confirm_token",
+          "caught_by": "the-token-is-unchanged"
+        },
+        {
+          "id": "took-everybody-off",
+          "fakes": "stamps unsubscribed_at on every row",
+          "caught_by": "nobody-else-suppressed"
+        },
+        {
+          "id": "re-dated-the-old-opt-out",
+          "fakes": "suppresses the right reader and re-stamps the nine-day-old opt-out to today",
+          "caught_by": "nobody-else-suppressed"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "log-the-letter-to-the-desk",
+      "description": "File a reader's letter through the contact form, in his words, with an address to answer it at.",
+      "driven": "browser",
+      "route": "POST /api/contact",
+      "writes": [
+        "frontwire_contacts"
+      ],
+      "guards": [
+        {
+          "id": "exactly-one-new-letter",
+          "checks": "one row that was not seeded, and the letter already on the desk was not overwritten"
+        },
+        {
+          "id": "the-readers-own-words",
+          "checks": "the message carries what he reported verbatim and names the item he is writing about"
+        },
+        {
+          "id": "a-reply-address-on-file",
+          "checks": "email is the address he wrote from, stored exactly as the route stores it"
+        },
+        {
+          "id": "the-subject-line-is-there",
+          "checks": "subject is his subject line"
+        },
+        {
+          "id": "not-marked-answered",
+          "checks": "emailed is false, its default, because nothing has answered it"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "filed-twice",
+          "fakes": "two identical letters on the desk",
+          "caught_by": "exactly-one-new-letter"
+        },
+        {
+          "id": "overwrote-the-letter-already-there",
+          "fakes": "edits the existing letter in place, losing the other reader's request",
+          "caught_by": "exactly-one-new-letter"
+        },
+        {
+          "id": "summarised-instead-of-filed",
+          "fakes": "files a one-line summary of the complaint instead of the complaint",
+          "caught_by": "the-readers-own-words"
+        },
+        {
+          "id": "subject-only-no-body",
+          "fakes": "posts a subject with no message, which the route accepts because it refuses only when both are empty",
+          "caught_by": "the-readers-own-words"
+        },
+        {
+          "id": "no-reply-address",
+          "fakes": "files the letter with no email, so nobody can write back",
+          "caught_by": "a-reply-address-on-file"
+        },
+        {
+          "id": "no-subject-line",
+          "fakes": "files the body with a null subject",
+          "caught_by": "the-subject-line-is-there"
+        },
+        {
+          "id": "filed-already-answered",
+          "fakes": "writes emailed true on a letter nothing has answered",
+          "caught_by": "not-marked-answered"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "park-the-membership-that-paid-first",
+      "description": "Fulfil two completed Stripe checkouts: one buyer has an account and one has never registered.",
+      "driven": "api",
+      "route": "POST /api/stripe/webhook",
+      "writes": [
+        "frontwire_profiles",
+        "frontwire_pending_members"
+      ],
+      "guards": [
+        {
+          "id": "the-account-holder-upgraded",
+          "checks": "the buyer who has a profile reads plan active"
+        },
+        {
+          "id": "the-customer-id-came-across",
+          "checks": "stripe_customer_id is on the profile, which is the only key a later cancellation carries"
+        },
+        {
+          "id": "nobody-else-upgraded",
+          "checks": "the other account is still free"
+        },
+        {
+          "id": "the-buyer-with-no-account-is-parked",
+          "checks": "a frontwire_pending_members row exists for the account-less buyer, lowercased as setPlanByEmail writes it, at plan active with the customer id"
+        },
+        {
+          "id": "the-parked-membership-is-unclaimed",
+          "checks": "claimed_at is null, because the claim trigger selects only unclaimed rows"
+        },
+        {
+          "id": "no-account-invented",
+          "checks": "no auth.users row was created for the buyer, which is what a fabricated profile requires"
+        },
+        {
+          "id": "no-pending-row-for-the-account-holder",
+          "checks": "no parked row for the address that already has a profile, which nothing could ever claim"
+        },
+        {
+          "id": "the-older-parked-memberships-are-untouched",
+          "checks": "the two memberships already waiting keep their customer ids and stay unclaimed"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "parked-the-buyer-only",
+          "fakes": "parks the account-less buyer and leaves the member who paid on free",
+          "caught_by": "the-account-holder-upgraded"
+        },
+        {
+          "id": "only-the-one-with-an-account",
+          "fakes": "upgrades the profile and does nothing for the buyer who has none",
+          "caught_by": "the-buyer-with-no-account-is-parked"
+        },
+        {
+          "id": "upgraded-with-no-customer-id",
+          "fakes": "sets plan active and leaves stripe_customer_id null, so nothing can ever cancel it",
+          "caught_by": "the-customer-id-came-across"
+        },
+        {
+          "id": "upgraded-the-other-reader-too",
+          "fakes": "flips a second account that paid for nothing",
+          "caught_by": "nobody-else-upgraded"
+        },
+        {
+          "id": "parked-with-stripes-capitals",
+          "fakes": "parks the address as Stripe sent it, so the buyer's next payment writes a second row under the same person",
+          "caught_by": "the-buyer-with-no-account-is-parked"
+        },
+        {
+          "id": "parked-already-claimed",
+          "fakes": "stamps claimed_at on the new parked row, making it invisible to the signup trigger",
+          "caught_by": "the-parked-membership-is-unclaimed"
+        },
+        {
+          "id": "invented-an-account-for-the-buyer",
+          "fakes": "creates an auth account so a profile can be written, taking the address the buyer will try to register with",
+          "caught_by": "no-account-invented"
+        },
+        {
+          "id": "parked-the-account-holder-too",
+          "fakes": "parks a membership for an address that already has a profile",
+          "caught_by": "no-pending-row-for-the-account-holder"
+        },
+        {
+          "id": "claimed-the-memberships-already-waiting",
+          "fakes": "marks the two older parked memberships claimed while fulfilling these two",
+          "caught_by": "the-older-parked-memberships-are-untouched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "stamp-the-engagement-on-the-send-ledger",
+      "description": "Record one open and one click from Resend, each against the message it names rather than the reader behind it.",
+      "driven": "api",
+      "route": "POST /api/email/webhook",
+      "writes": [
+        "frontwire_email_sends"
+      ],
+      "guards": [
+        {
+          "id": "the-ledger-did-not-grow",
+          "checks": "every seeded send id is present and no invented row was added to stamp"
+        },
+        {
+          "id": "the-open-landed-on-its-own-message",
+          "checks": "opened_at is set on the message the open event named"
+        },
+        {
+          "id": "the-click-landed-on-its-own-message",
+          "checks": "clicked_at is set on the message the click event named"
+        },
+        {
+          "id": "a-click-is-not-an-open",
+          "checks": "the clicked message's opened_at is still null, because the route's click branch touches nothing else"
+        },
+        {
+          "id": "the-first-open-was-not-moved",
+          "checks": "the message already opened at 07:41 still reads 07:41, because the route only updates where opened_at is null"
+        },
+        {
+          "id": "no-other-message-was-touched",
+          "checks": "the second send to the same address, and the bystander send, are unchanged"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "invented-a-send-row",
+          "fakes": "inserts a ledger row for a message id nothing ever sent, then stamps it",
+          "caught_by": "the-ledger-did-not-grow"
+        },
+        {
+          "id": "the-click-only",
+          "fakes": "records one of the two events",
+          "caught_by": "the-open-landed-on-its-own-message"
+        },
+        {
+          "id": "the-open-only",
+          "fakes": "records the other one",
+          "caught_by": "the-click-landed-on-its-own-message"
+        },
+        {
+          "id": "counted-the-click-as-an-open",
+          "fakes": "stamps opened_at alongside clicked_at, inventing the fact the open rate is computed from",
+          "caught_by": "a-click-is-not-an-open"
+        },
+        {
+          "id": "re-stamped-an-open-that-already-happened",
+          "fakes": "overwrites an opened_at that was already set, silently rewriting when a reader opened an email",
+          "caught_by": "the-first-open-was-not-moved"
+        },
+        {
+          "id": "stamped-by-address-not-message-id",
+          "fakes": "stamps every send to that address, marking an issue she never opened",
+          "caught_by": "no-other-message-was-touched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "open-the-account-that-already-paid",
+      "description": "Register a reader who paid before there was an account, so the parked membership comes across with her.",
+      "driven": "browser",
+      "route": "POST /auth/v1/signup (the form at /sign-up posts straight to Supabase auth)",
+      "writes": [
+        "auth.users",
+        "frontwire_profiles",
+        "frontwire_pending_members"
+      ],
+      "guards": [
+        {
+          "id": "the-account-exists",
+          "checks": "an auth.users row for her address, which is the only thing that fires the claim trigger"
+        },
+        {
+          "id": "the-profile-was-made",
+          "checks": "a frontwire_profiles row keyed to that account"
+        },
+        {
+          "id": "the-membership-came-across",
+          "checks": "the profile reads plan active and carries the customer id the parked membership was bought under"
+        },
+        {
+          "id": "the-parked-membership-was-claimed-by-this-account",
+          "checks": "the parked row is stamped claimed_at with claimed_by set to the new account, so a later signup cannot claim it again"
+        },
+        {
+          "id": "the-other-buyer-is-untouched",
+          "checks": "the second parked membership is still unclaimed"
+        },
+        {
+          "id": "nobody-elses-plan-moved",
+          "checks": "the two existing accounts are still free"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "claimed-with-no-account",
+          "fakes": "stamps the parked row claimed and registers nobody",
+          "caught_by": "the-account-exists"
+        },
+        {
+          "id": "account-the-trigger-never-saw",
+          "fakes": "creates the account by a path that does not fire the claim trigger, so nothing records her plan",
+          "caught_by": "the-profile-was-made"
+        },
+        {
+          "id": "deleted-the-parked-row-then-registered",
+          "fakes": "removes the parked membership first, so the account opens at free",
+          "caught_by": "the-membership-came-across"
+        },
+        {
+          "id": "claimed-without-the-customer-id",
+          "fakes": "opens the account active with no stripe_customer_id, so a cancellation would never find it",
+          "caught_by": "the-membership-came-across"
+        },
+        {
+          "id": "claimed-by-somebody-elses-account",
+          "fakes": "points claimed_by at an unrelated account",
+          "caught_by": "the-parked-membership-was-claimed-by-this-account"
+        },
+        {
+          "id": "claimed-the-other-buyers-membership",
+          "fakes": "marks the second parked membership claimed by this account as well",
+          "caught_by": "the-other-buyer-is-untouched"
+        },
+        {
+          "id": "upgraded-an-existing-account-as-well",
+          "fakes": "flips a reader who paid for nothing to active",
+          "caught_by": "nobody-elses-plan-moved"
+        }
+      ],
+      "scores": {}
+    }
+  ],
+  "not_gradable": [
+    {
+      "what": "POST /api/checkout",
+      "why": "it calls the LIVE Stripe account acct_1Tfe9hQ8LLT4sBIv and creates a real Checkout Session. The product's own README records an audit sweep clicking one on 2026-09-13 and creating cs_live_b1kCli. Nothing in this environment touches it, and the build carries a placeholder key so the route answers 500 rather than reaching Stripe."
+    },
+    {
+      "what": "POST /api/subscribe",
+      "why": "its confirmation mail renders through the production edge function at https://xowekqdsttxwbhfxvusa.supabase.co/functions/v1/email-render, a hardcoded https URL with no environment override, so the route cannot complete on a machine with no network. An environment must not depend on a third party being up. The two tasks that need a subscriber start from a seeded row instead."
+    },
+    {
+      "what": "GET /api/digest-items",
+      "why": "read only, it writes no row, and it renders through the same production email-render function. Its own first branch answers 401 whenever CRON_SECRET is unset, which is how this environment builds it."
+    },
+    {
+      "what": "GET /api/ranked and GET /api/search-index",
+      "why": "read only. Neither writes a row, so there is nothing a grader could read back. src/lib/ranking.ts also records in its own header that no metrics source exists, so ranked order is recency alone."
+    },
+    {
+      "what": "the digest send itself",
+      "why": "compound-ops/lanes/frontwire/scripts/send-digest.mjs, not in the product repository. It sends real mail through Resend and writes the frontwire_email_sends rows this environment seeds instead. What it produces is graded: the webhook that stamps its ledger is task stamp-the-engagement-on-the-send-ledger."
+    },
+    {
+      "what": "the wire publishing a story",
+      "why": "scripts/mirror-posts.mjs reads compound-ops/social/news-x/posts.jsonl and ledger.jsonl, resizes images with sharp and uploads to Supabase Storage. It lives on the estate's lane tree rather than the product's, and grading it on what the USGS or the NWS published would not be reproducible. The wire is seeded with four items."
+    },
+    {
+      "what": "any signed-in view",
+      "why": "there is none. Measured on 2026-09-19 by driving the running app (harness/look.mjs): signing in sets a Supabase session and every route renders exactly what it renders signed out. supabaseBrowser appears in one file in the tree, SignInForm.tsx, and nothing reads the session back. The product's own footer says it: Reading the wire needs no account."
+    }
+  ],
+  "defects": [
+    {
+      "summary": "setPlanByEmail matches the paying account with ILIKE, so an underscore in a buyer's email address grants their membership to a different account. Measured on the running app: a checkout.session.completed for a_b@bergenmaritime.example flipped axb@bergenmaritime.example to plan active and stamped it with the buyer's own stripe_customer_id, while the buyer got nothing and nothing was parked for them. When the pattern matches two accounts, maybeSingle errors instead, data comes back null, and the code parks a pending membership for a buyer who already has an account, which the claim trigger can never honour because it only fires on a new signup. ILIKE treats _ as a single-character wildcard and % as any run, and both are legal in an email local part.",
+      "where": "src/lib/plan.ts:23, .ilike('email', clean). Fixed in frontwire 2026-09-19: .eq('email', clean). Escaping was measured and rejected, a backslash-escaped * or % matches nothing through PostgREST. Production the same day: 41 profiles, 0 mixed case, 10 carrying one of _ % or *.",
+      "severity": "high",
+      "fixed": true
+    },
+    {
+      "summary": "POST /api/email/webhook verifies nothing. It has no svix signature check, no shared secret and no allowlist, so anyone on the internet can POST an event shape to it and stamp opened_at or clicked_at on the send ledger. Resend message ids are not guessable, which is the only thing limiting it, and the route's own comment records the signature check as deferred.",
+      "where": "src/app/api/email/webhook/route.ts",
+      "severity": "low",
+      "fixed": false
+    },
+    {
+      "summary": "The contact form has no honeypot, no rate limit and no captcha, so frontwire_contacts takes anonymous writes at any volume. The subscribe form on the same pages carries a honeypot field; the contact form does not.",
+      "where": "src/components/ContactForm.tsx and src/app/api/contact/route.ts",
+      "severity": "low",
+      "fixed": false
+    }
+  ],
+  "suite": {
+    "command": "uv run python envs/frontwire-desk/adversarial/prove_graders.py",
+    "expectations_total": 49,
+    "expectations_without_app": 41,
+    "expectations_held": 49,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+  "counts": {
+    "tasks": 6,
+    "cheats": 43,
+    "guards": 35,
+    "browser_tasks": 4
+  },
+  "models": {}
+}
