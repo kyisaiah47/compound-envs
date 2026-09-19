@@ -60,15 +60,15 @@ insert into cd_documents (id, tenant_id, kind, storage_path, original_name, mime
    'fixture/nj-monetary-3310.pdf', 'NJ-monetary-3310.pdf', 'application/pdf', 61002,
    'c3f5e2b9a6d7c4781234ee5db1f6a99342cd8b6ea022445566778899bbccddee', 1, false, 'low', null);
 
--- Notices. 2001 is the one whose printed due date is wrong: mailed 2026-09-08, NY allows 30 days
--- from the mail date, so the computed due is 2026-10-08 and the printed 2026-09-23 is short.
+-- Notices.
+--
+-- ⛔ THE DETERMINATION ON DANA WHITFIELD'S CLAIM IS DELIBERATELY ABSENT. Recording it is the
+-- first task, and the app's own `recordNotice` is what writes it: the operator supplies the
+-- dates off the document and the deadline engine computes the rest. Seeding the row here would
+-- have made the task a no-op and the grader a tautology.
 insert into cd_notices (id, tenant_id, claim_id, document_id, type, state, notice_date, mail_date,
                         printed_due, computed_due, due_source, due_window_kind, due_citation,
                         due_disagreement, needs_human, channel) values
-  ('00000000-0000-4000-8000-000000002001', '00000000-0000-4000-8000-000000000001',
-   '00000000-0000-4000-8000-000000001001', '00000000-0000-4000-8000-000000003001',
-   'determination', 'NY', '2026-09-06', '2026-09-08', '2026-09-23', '2026-10-08', 'computed',
-   'calendar_days_from_mail', '{"rule":"NY UI 597.4","window_days":30}'::jsonb, false, false, 'mail'),
   ('00000000-0000-4000-8000-000000002002', '00000000-0000-4000-8000-000000000001',
    '00000000-0000-4000-8000-000000001001', null, 'charge_statement', 'NY', '2026-08-30',
    '2026-08-31', '2026-09-30', '2026-09-30', 'printed', 'calendar_days_from_mail',
@@ -90,16 +90,24 @@ insert into cd_statements (id, tenant_id, document_id, state, form_id, period_st
    '2026-08-30', '2026-09-30', 'printed', 9, true, 0.97, 41, 'audited');
 
 -- Sofia Lindqvist's claim is waiting on the manager. Sent, unanswered, one chase already.
-insert into cd_fact_requests (id, tenant_id, claim_id, manager_name, manager_email, questions,
+--
+-- ⛔ THE QUESTION SET IS THE REAL ONE AND THE STATE DECIDES IT. `questionsFor(category, state)`
+-- returns QUESTION_SETS[category] plus an upstream question when the state has one. PA has one
+-- and NY does not, so a PA discharge_misconduct questionnaire carries ELEVEN ids and the same
+-- questionnaire in NY carries ten. The eleventh is ff.relief.upstream_response. An earlier cut
+-- of this fixture invented three ids of its own; the app would have refused every one of them,
+-- because `assertBatched` throws on a request missing any required question for its category.
+insert into cd_fact_requests (id, tenant_id, claim_id, manager_name, manager_email,
                               status, sent_at, expires_at, state, category, question_ids, due_at,
                               chase_count) values
   ('00000000-0000-4000-8000-000000005001', '00000000-0000-4000-8000-000000000001',
    '00000000-0000-4000-8000-000000001005', 'Greg Paulsen', 'g.paulsen@brightlinefacilities.example',
-   '[{"id":"sep_reason","text":"What was the stated reason for separation?"},
-     {"id":"final_warning","text":"Was a final written warning issued, and on what date?"},
-     {"id":"policy_ack","text":"Did the employee acknowledge the attendance policy in writing?"}]'::jsonb,
-   'sent', '2026-09-11T15:20:00Z', '2026-09-25T15:20:00Z', 'PA', 'separation',
-   '{sep_reason,final_warning,policy_ack}', '2026-09-18T15:20:00Z', 1);
+   'sent', '2026-09-11T15:20:00Z', '2026-09-25T15:20:00Z', 'PA', 'discharge_misconduct',
+   '{ff.dates.hire_date,ff.dates.last_day_worked,ff.dates.separation_date,ff.dates.moving_party,
+     ff.misconduct.rule,ff.misconduct.policy_given,ff.misconduct.warnings,
+     ff.misconduct.final_incident,ff.misconduct.decision_dates,ff.misconduct.documents,
+     ff.relief.upstream_response}',
+   '2026-09-25T15:20:00Z', 1);
 
 -- Priya Raman's claim already has a filed draft. Present so that "create a draft" on a claim that
 -- has one, and "update the existing draft", are different observable outcomes.

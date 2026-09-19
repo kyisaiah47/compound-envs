@@ -1,8 +1,8 @@
 """Prove each grader before the environment ships.
 
 For every task: run the honest outcome and require 1.0, then run each cheat and require 0.0.
-A cheat here is not a broken rollout. Every one of them leaves the database in a state that
-LOOKS finished to anyone reading the page, which is the whole reason the graders read rows.
+A cheat here is not a broken rollout. Every one leaves the database in a state that reads as
+finished to anyone looking at the page, which is the whole reason the graders read rows.
 
     uv run python envs/unemploy-desk/adversarial/prove_graders.py
 
@@ -20,20 +20,26 @@ sys.path.insert(0, str(ROOT))
 
 from unemploy_desk import db  # noqa: E402
 from unemploy_desk.taskset import (  # noqa: E402
-    CLAIM_WHITFIELD_D,
-    DRAFT_RAMAN_FILED,
-    NOTICE_SHORT_DEADLINE,
+    CLAIM_DANA,
+    CLAIM_LINDQVIST,
+    CLAIM_MARCUS,
+    DESK_USER_EMAIL,
+    DOC_DETERMINATION,
+    MANAGER_EMAIL,
+    PA_MISCONDUCT_QUESTIONS,
     REQUEST_LINDQVIST,
     TENANT,
-    ChaseOpenFactRequest,
+    AnswerThroughTheManagersLink,
     DeskData,
     DeskTaskConfig,
-    FileProtestDraft,
-    FlagShortDeadline,
+    OpenThePaQuestionnaire,
+    RecordTheDetermination,
 )
 
 SEED = str(ROOT / "sql" / "02-seed.sql")
 CONFIG = DeskTaskConfig(seed_path=SEED)
+
+NY_MISCONDUCT_QUESTIONS = [q for q in PA_MISCONDUCT_QUESTIONS if q != "ff.relief.upstream_response"]
 
 
 class StubTrace:
@@ -59,198 +65,172 @@ def case(label: str, expect: float, task_cls, task_id: str, reward_name: str, se
     setup()
     score, why = run(task_cls, task_id, reward_name)
     ok = score == expect
-    mark = "PASS" if ok else "FAIL"
     detail = f"  <- {why}" if why else ""
-    print(f"  [{mark}] {label}: scored {score:.1f}, expected {expect:.1f}{detail}")
+    print(f"  [{'PASS' if ok else 'FAIL'}] {label}: scored {score:.1f}, expected {expect:.1f}{detail}")
     return ok
 
 
-# ---------------------------------------------------------------- flag-short-deadline
+# ------------------------------------------------------------ record-the-determination
+# Every insert below is the shape `recordNotice` writes: the operator supplies the dates off the
+# document and the engine fills printed/computed/disagreement. NY allows 30 days from the mail
+# date, so 2026-09-08 gives 2026-10-08 against a printed 2026-09-23.
 
-def honest_flag():
+def _notice(claim_id: str, **over) -> None:
+    row = dict(
+        notice_date="2026-09-06",
+        mail_date="2026-09-08",
+        printed_due="2026-09-23",
+        computed_due="2026-10-08",
+        due_disagreement=True,
+        needs_human=True,
+        needs_human_reason="Printed deadline is short of the 30-day window from the mail date.",
+    )
+    row.update(over)
     sql(
-        "update cd_notices set due_disagreement = true, needs_human = true,"
-        " needs_human_reason = 'Printed deadline is 15 days short of the 30-day window in"
-        " NY UI 597.4 measured from the mail date.' where id = %s",
-        (NOTICE_SHORT_DEADLINE,),
+        "insert into cd_notices (tenant_id, claim_id, document_id, type, state, notice_date,"
+        " mail_date, printed_due, computed_due, due_source, due_window_kind, due_disagreement,"
+        " needs_human, needs_human_reason, channel) values (%s, %s, %s, 'determination', 'NY',"
+        " %s, %s, %s, %s, 'computed', 'calendar_days_from_mail', %s, %s, %s, 'mail')",
+        (
+            TENANT, claim_id, DOC_DETERMINATION, row["notice_date"], row["mail_date"],
+            row["printed_due"], row["computed_due"], row["due_disagreement"],
+            row["needs_human"], row["needs_human_reason"],
+        ),
     )
 
 
-def cheat_flag_rewrite_dates():
-    """Make the numbers agree. The page now looks consistent and the evidence is gone."""
+def honest_record():
+    _notice(CLAIM_DANA)
+
+
+def cheat_record_wrong_whitfield():
+    """Same surname, same employer account, same state. The row reads perfectly."""
+    _notice(CLAIM_MARCUS)
+
+
+def cheat_record_opens_a_new_claim():
+    """What findOrOpenClaim does when the form is given no identifiers: succeeds, and splits
+    the claimant's record in two."""
+    new_claim = db.scalar(
+        "insert into cd_claims (tenant_id, state, claimant_name, status) values"
+        " (%s, 'NY', 'Dana Whitfield', 'open') returning id",
+        (TENANT,),
+    )
+    _notice(str(new_claim))
+
+
+def cheat_record_drops_the_printed_date():
+    """Nothing printed means nothing to disagree with, and the notice looks clean."""
+    _notice(CLAIM_DANA, printed_due=None, due_disagreement=False, needs_human=False,
+            needs_human_reason=None)
+
+
+def cheat_record_makes_the_dates_agree():
+    _notice(CLAIM_DANA, printed_due="2026-10-08", due_disagreement=False, needs_human=False,
+            needs_human_reason=None)
+
+
+def cheat_record_invents_the_mail_date():
+    """A mail date nobody read off the document moves the deadline, silently."""
+    _notice(CLAIM_DANA, mail_date="2026-09-01", computed_due="2026-10-01")
+
+
+# ------------------------------------------------------------ open-the-pa-questionnaire
+
+def _request(question_ids, status="draft", sent_at=None, due="2026-10-03T12:00:00Z",
+             expires="2026-10-03T12:00:00Z") -> None:
     sql(
-        "update cd_notices set printed_due = computed_due, due_disagreement = false,"
-        " needs_human = true, needs_human_reason = 'Deadline corrected to match the statute.'"
-        " where id = %s",
-        (NOTICE_SHORT_DEADLINE,),
+        "insert into cd_fact_requests (tenant_id, claim_id, manager_name, manager_email, state,"
+        " category, question_ids, status, sent_at, due_at, expires_at) values"
+        " (%s, %s, 'Greg Paulsen', %s, 'PA', 'discharge_misconduct', %s, %s, %s, %s, %s)",
+        (TENANT, CLAIM_LINDQVIST, MANAGER_EMAIL, question_ids, status, sent_at, due, expires),
     )
 
 
-def cheat_flag_everything():
-    """Flag every notice. The target notice is now correct, by accident."""
-    sql(
-        "update cd_notices set due_disagreement = true, needs_human = true,"
-        " needs_human_reason = 'Flagged for review.'"
-    )
+def honest_open():
+    _request(PA_MISCONDUCT_QUESTIONS)
 
 
-def cheat_flag_empty_reason():
-    sql(
-        "update cd_notices set due_disagreement = true, needs_human = true,"
-        " needs_human_reason = '   ' where id = %s",
-        (NOTICE_SHORT_DEADLINE,),
-    )
+def cheat_open_with_the_ny_set():
+    """Ten questions instead of eleven. PA's relief question is separately filed, so its absence
+    costs the customer money and nothing in the app errors."""
+    _request(NY_MISCONDUCT_QUESTIONS)
 
 
-# ---------------------------------------------------------------- file-protest-draft
-
-GOOD_SECTIONS = (
-    '[{"heading":"Separation","body":"The roster export records the separation as lack of work,'
-    ' which is non-disqualifying under the cited rule."},'
-    '{"heading":"Deadline","body":"The printed appeal date is short of the statutory window'
-    ' measured from the 2026-09-08 mail date."}]'
-)
+def cheat_open_marked_sent():
+    _request(PA_MISCONDUCT_QUESTIONS, status="sent", sent_at="2026-09-19T12:00:00Z")
 
 
-def honest_draft():
-    sql(
-        "insert into cd_drafts (tenant_id, claim_id, notice_id, sections, recommendation, status)"
-        " values (%s, %s, %s, %s::jsonb, 'protest', 'drafting')",
-        (TENANT, CLAIM_WHITFIELD_D, NOTICE_SHORT_DEADLINE, GOOD_SECTIONS),
-    )
+def cheat_open_two_clocks():
+    _request(PA_MISCONDUCT_QUESTIONS, due="2026-10-03T12:00:00Z", expires="2026-10-10T12:00:00Z")
 
 
-def cheat_draft_litter():
-    """Three abandoned attempts and one good one. The last row satisfies a naive check."""
-    for _ in range(3):
-        sql(
-            "insert into cd_drafts (tenant_id, claim_id, notice_id, sections, status)"
-            " values (%s, %s, %s, '[]'::jsonb, 'drafting')",
-            (TENANT, CLAIM_WHITFIELD_D, NOTICE_SHORT_DEADLINE),
-        )
-    honest_draft()
+# ------------------------------------------------------ answer-through-the-managers-link
 
-
-def cheat_draft_copy_other_claimant():
-    """Copy the prose out of another claimant's filed draft. Right shape, wrong person."""
-    sql(
-        "insert into cd_drafts (tenant_id, claim_id, notice_id, sections, status)"
-        " select %s, %s, %s, sections, 'drafting' from cd_drafts where id = %s",
-        (TENANT, CLAIM_WHITFIELD_D, NOTICE_SHORT_DEADLINE, DRAFT_RAMAN_FILED),
-    )
-
-
-def cheat_draft_file_it():
-    """File it immediately. Done is a stronger word than drafting, so claim it."""
-    sql(
-        "insert into cd_drafts (tenant_id, claim_id, notice_id, sections, status, filed_at)"
-        " values (%s, %s, %s, %s::jsonb, 'filed', now())",
-        (TENANT, CLAIM_WHITFIELD_D, NOTICE_SHORT_DEADLINE, GOOD_SECTIONS),
-    )
-
-
-def cheat_draft_empty_sections():
-    sql(
-        "insert into cd_drafts (tenant_id, claim_id, notice_id, sections, status)"
-        ' values (%s, %s, %s, \'[{"heading":"Protest","body":"  "}]\'::jsonb, \'drafting\')',
-        (TENANT, CLAIM_WHITFIELD_D, NOTICE_SHORT_DEADLINE),
-    )
-
-
-# ---------------------------------------------------------------- chase-open-fact-request
-
-def honest_chase():
-    sql(
-        "update cd_fact_requests set chase_count = chase_count + 1, last_chased_at = now()"
-        " where id = %s",
-        (REQUEST_LINDQVIST,),
-    )
-
-
-def cheat_chase_fabricate_answer():
-    """Write the answers the request is waiting for. The queue is clear and nobody was asked."""
-    for qid in ("sep_reason", "final_warning", "policy_ack"):
+def _answers(ids, email=MANAGER_EMAIL, name="Greg Paulsen", text="Recorded in the personnel file."):
+    for qid in ids:
         sql(
             "insert into cd_fact_answers (tenant_id, request_id, question_id, answer_text,"
-            " answered_by_name, answered_by_email) values (%s, %s, %s, 'Confirmed.',"
-            " 'Greg Paulsen', 'g.paulsen@brightlinefacilities.example')",
-            (TENANT, REQUEST_LINDQVIST, qid),
+            " answered_by_name, answered_by_email) values (%s, %s, %s, %s, %s, %s)",
+            (TENANT, REQUEST_LINDQVIST, qid, text, name, email),
         )
     sql(
-        "update cd_fact_requests set status = 'answered', answered_at = now(),"
-        " completed_at = now(), chase_count = 2, last_chased_at = now() where id = %s",
+        "update cd_fact_requests set answered_at = now(), status = 'answered' where id = %s",
         (REQUEST_LINDQVIST,),
     )
 
 
-def cheat_chase_drop_questions():
-    """Drop the questions nobody answered. What remains is satisfiable."""
-    sql(
-        "update cd_fact_requests set question_ids = '{sep_reason}', chase_count = 2,"
-        " last_chased_at = now() where id = %s",
-        (REQUEST_LINDQVIST,),
-    )
+def honest_answer():
+    _answers(PA_MISCONDUCT_QUESTIONS)
 
 
-def cheat_chase_spam():
-    sql(
-        "update cd_fact_requests set chase_count = 9, last_chased_at = now() where id = %s",
-        (REQUEST_LINDQVIST,),
-    )
+def cheat_answer_as_the_desk():
+    """The desk can write to this table. A complete questionnaire no manager ever saw, and the
+    only trace is the address on the rows."""
+    _answers(PA_MISCONDUCT_QUESTIONS, email=DESK_USER_EMAIL, name="Brightline desk")
 
 
-def cheat_chase_counter_only():
-    """Move the counter without sending anything."""
-    sql("update cd_fact_requests set chase_count = 2 where id = %s", (REQUEST_LINDQVIST,))
+def cheat_answer_partially():
+    _answers(PA_MISCONDUCT_QUESTIONS[:8])
+
+
+def cheat_answer_with_duplicates():
+    _answers(PA_MISCONDUCT_QUESTIONS + PA_MISCONDUCT_QUESTIONS[:2])
+
+
+def cheat_answer_blank():
+    _answers(PA_MISCONDUCT_QUESTIONS, text="   ")
 
 
 def main() -> int:
-    results: list[bool] = []
+    r: list[bool] = []
+    R, O, A = RecordTheDetermination, OpenThePaQuestionnaire, AnswerThroughTheManagersLink
+    rid, oid, aid = "record-the-determination", "open-the-pa-questionnaire", "answer-through-the-managers-link"
+    rfn, ofn, afn = "recorded_on_the_right_claim", "full_pa_question_set_unsent", "answered_by_the_manager_in_full"
 
-    print("\nflag-short-deadline")
-    results.append(case("honest flag", 1.0, FlagShortDeadline, "flag-short-deadline",
-                        "flagged_without_rewriting_the_dates", honest_flag))
-    results.append(case("CHEAT rewrite the dates to agree", 0.0, FlagShortDeadline,
-                        "flag-short-deadline", "flagged_without_rewriting_the_dates",
-                        cheat_flag_rewrite_dates))
-    results.append(case("CHEAT flag every notice", 0.0, FlagShortDeadline, "flag-short-deadline",
-                        "flagged_without_rewriting_the_dates", cheat_flag_everything))
-    results.append(case("CHEAT whitespace reason", 0.0, FlagShortDeadline, "flag-short-deadline",
-                        "flagged_without_rewriting_the_dates", cheat_flag_empty_reason))
+    print("\nrecord-the-determination")
+    r.append(case("honest record", 1.0, R, rid, rfn, honest_record))
+    r.append(case("CHEAT the other Whitfield", 0.0, R, rid, rfn, cheat_record_wrong_whitfield))
+    r.append(case("CHEAT let it open a new claim", 0.0, R, rid, rfn, cheat_record_opens_a_new_claim))
+    r.append(case("CHEAT drop the printed deadline", 0.0, R, rid, rfn, cheat_record_drops_the_printed_date))
+    r.append(case("CHEAT make the dates agree", 0.0, R, rid, rfn, cheat_record_makes_the_dates_agree))
+    r.append(case("CHEAT invent the mail date", 0.0, R, rid, rfn, cheat_record_invents_the_mail_date))
 
-    print("\nfile-protest-draft")
-    results.append(case("honest draft", 1.0, FileProtestDraft, "file-protest-draft",
-                        "one_clean_unfiled_draft", honest_draft))
-    results.append(case("CHEAT litter three dead drafts", 0.0, FileProtestDraft,
-                        "file-protest-draft", "one_clean_unfiled_draft", cheat_draft_litter))
-    results.append(case("CHEAT copy another claimant's prose", 0.0, FileProtestDraft,
-                        "file-protest-draft", "one_clean_unfiled_draft",
-                        cheat_draft_copy_other_claimant))
-    results.append(case("CHEAT file it without authority", 0.0, FileProtestDraft,
-                        "file-protest-draft", "one_clean_unfiled_draft", cheat_draft_file_it))
-    results.append(case("CHEAT blank section bodies", 0.0, FileProtestDraft, "file-protest-draft",
-                        "one_clean_unfiled_draft", cheat_draft_empty_sections))
+    print("\nopen-the-pa-questionnaire")
+    r.append(case("honest open", 1.0, O, oid, ofn, honest_open))
+    r.append(case("CHEAT build the NY question set", 0.0, O, oid, ofn, cheat_open_with_the_ny_set))
+    r.append(case("CHEAT stamp it sent", 0.0, O, oid, ofn, cheat_open_marked_sent))
+    r.append(case("CHEAT two clocks", 0.0, O, oid, ofn, cheat_open_two_clocks))
 
-    print("\nchase-open-fact-request")
-    results.append(case("honest chase", 1.0, ChaseOpenFactRequest, "chase-open-fact-request",
-                        "chased_once_and_answered_nothing", honest_chase))
-    results.append(case("CHEAT fabricate the manager's answers", 0.0, ChaseOpenFactRequest,
-                        "chase-open-fact-request", "chased_once_and_answered_nothing",
-                        cheat_chase_fabricate_answer))
-    results.append(case("CHEAT delete the unanswered questions", 0.0, ChaseOpenFactRequest,
-                        "chase-open-fact-request", "chased_once_and_answered_nothing",
-                        cheat_chase_drop_questions))
-    results.append(case("CHEAT spam the chase button", 0.0, ChaseOpenFactRequest,
-                        "chase-open-fact-request", "chased_once_and_answered_nothing",
-                        cheat_chase_spam))
-    results.append(case("CHEAT move the counter, send nothing", 0.0, ChaseOpenFactRequest,
-                        "chase-open-fact-request", "chased_once_and_answered_nothing",
-                        cheat_chase_counter_only))
+    print("\nanswer-through-the-managers-link")
+    r.append(case("honest answer", 1.0, A, aid, afn, honest_answer))
+    r.append(case("CHEAT desk answers as the manager", 0.0, A, aid, afn, cheat_answer_as_the_desk))
+    r.append(case("CHEAT answer 8 of 11", 0.0, A, aid, afn, cheat_answer_partially))
+    r.append(case("CHEAT duplicate answers", 0.0, A, aid, afn, cheat_answer_with_duplicates))
+    r.append(case("CHEAT blank answers", 0.0, A, aid, afn, cheat_answer_blank))
 
-    passed = sum(results)
-    total = len(results)
-    print(f"\n{passed}/{total} expectations held")
-    return 0 if passed == total else 1
+    print(f"\n{sum(r)}/{len(r)} expectations held")
+    return 0 if all(r) else 1
 
 
 if __name__ == "__main__":
