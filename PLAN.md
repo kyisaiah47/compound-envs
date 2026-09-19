@@ -81,6 +81,11 @@ as a measurement on toolproof. Point 2 comes first for that reason.
   policies from production, four graded tasks, adversarial suite at 20/20, magic-link sign-in,
   a browser rollout that drives the real file input, `scripts/up.sh` bringing it all up in one
   idempotent command, and the rollout recorded.
-- Open: the app is built from `~/CompoundLabs/unemploy` rather than vendored, so publishing this
-  environment to anyone outside the machine needs the app vendored or its image published.
+- Public at https://github.com/kyisaiah47/compound-envs, MIT. The Chrome launcher is vendored,
+  so no tracked file references a local path and the harness runs anywhere.
+- A clone without the product runs 19 of 20 expectations; the one that needs the app is skipped
+  with a line rather than failed.
+- Open, and it is Isaiah's call: publishing the environment so a stranger can run it end to end
+  means either vendoring unemploy's source into a public repo or publishing a built image of it.
+  Neither is done, and neither should be decided here.
 - Open: the second environment, to find out how much of the first one is actually reusable.
