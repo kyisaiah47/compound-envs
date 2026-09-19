@@ -16,3 +16,12 @@ aa6abbd2b25e6be3ac57f7a4ab40ee45141e3653:envs/parserail-desk/parserail_desk/task
 # invented for its own listener, quoted in the README's fenced transcript of that measurement so
 # the finding can be read back. It authenticates nothing and never existed outside that probe.
 d04fcdc43ccef59db399abccbd869757a4b29c24:envs/matchline-desk/README.md:generic-api-key:148
+
+# breachprobe-desk's deliberately leaky fixture target. The scanner under test detects an AWS
+# access key id by SHAPE alone, `AKIA` plus 16 uppercase and digits, so the fabricated site it
+# scans has to carry a string of that shape or there is nothing to detect and the task grades
+# nothing. The constant is named FAKE_AWS_KEY, its own comment says it is a shape and not a
+# credential, and the fabricated Supabase JWT beside it carries a signature that decodes to
+# "fake-signature-not-valid". Checked 2026-09-19: this machine has no ~/.aws/credentials and the
+# string appears nowhere outside this fixture.
+d3eb53ca0f37b7e8626f20818b3d3a01bea635d5:envs/breachprobe-desk/target/serve.mjs:aws-access-token:58
