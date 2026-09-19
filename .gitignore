@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 envs/*/stack/supabase/.temp/
+envs/*/harness/node_modules/
+envs/*/harness/session.json
+envs/*/harness/*.png
