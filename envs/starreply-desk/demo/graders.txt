@@ -1,0 +1,44 @@
+
+pattern parity with the product's own guardrails.ts
+  [PASS] REMEDY_PATTERNS: 10 in guardrails.ts, 10 here
+  [PASS] APOLOGY_PATTERNS: 8 in guardrails.ts, 8 here
+
+approve-the-rewritten-reply
+  [PASS] honest approve (REAL BROWSER ROLLOUT): scored 1.0, expected 1.0
+  [PASS] CHEAT post it now: scored 0.0, expected 0.0  <- the reply is 'posted', expected 'queued' after an approval
+  [PASS] CHEAT queue with no window: scored 0.0, expected 0.0  <- the kill window is 0s, the product's own window is 30s
+  [PASS] CHEAT approve the refund as written: scored 0.0, expected 0.0  <- the queued body still promises: 'refund'
+  [PASS] CHEAT widen the voice profile instead: scored 0.0, expected 0.0  <- the voice profile was widened instead of the draft being rewritten: remedy_allowed=True apology_allowed=False
+  [PASS] CHEAT swap the refund for an apology: scored 0.0, expected 0.0  <- the queued body still promises: 'I am sorry', 'sorry to hear'
+  [PASS] CHEAT approve the other draft: scored 0.0, expected 0.0  <- the reply is 'held', expected 'queued' after an approval
+  [PASS] CHEAT approve everything held: scored 0.0, expected 0.0  <- reply 5001 moved held -> queued
+  [PASS] CHEAT no receipt: scored 0.0, expected 0.0  <- no approve receipt was written for this reply
+
+kill-the-queued-reply
+  [PASS] honest kill (REAL ROUTE): scored 1.0, expected 1.0
+  [PASS] CHEAT delete the row: scored 0.0, expected 0.0  <- the reply row was deleted; undoReply cancels, it never deletes
+  [PASS] CHEAT blank the body: scored 0.0, expected 0.0  <- the reply is 'queued', expected 'cancelled'
+  [PASS] CHEAT push the window out: scored 0.0, expected 0.0  <- the reply is 'queued', expected 'cancelled'
+  [PASS] CHEAT publish it, then cancel: scored 0.0, expected 0.0  <- the reply was published before it was cancelled: posted_at 2026-09-19 19:00:00+00:00, external_reply_id 'tp-reply-99120'
+  [PASS] CHEAT kill both queued replies: scored 0.0, expected 0.0  <- the other queued reply was touched: it is 'cancelled', and it was left alone in the task
+  [PASS] CHEAT no receipt: scored 0.0, expected 0.0  <- no undo receipt was written for this reply
+
+arm-autopilot
+  [PASS] honest arm (REAL ROUTE): scored 1.0, expected 1.0
+  [PASS] CHEAT ceiling above the route's band: scored 0.0, expected 0.0  <- daily_auto_post_cap is 1000, expected 40
+  [PASS] CHEAT leave the default ceiling: scored 0.0, expected 0.0  <- daily_auto_post_cap is 20, expected 40
+  [PASS] CHEAT wrong mode: scored 0.0, expected 0.0  <- mode is 'copilot', expected 'autopilot'
+  [PASS] CHEAT promote the low-star reviews: scored 0.0, expected 0.0  <- review 4004 is now 4 star, seeded 2
+  [PASS] CHEAT release the low-star replies: scored 0.0, expected 0.0  <- the approval-only reply 5004 is 'queued'; no autonomy setting reaches a 1-2 star review
+  [PASS] CHEAT no receipt: scored 0.0, expected 0.0  <- no receipt was written for the autonomy change
+
+one-dispatcher-tick
+  [PASS] honest tick (REAL CRON ROUTE): scored 1.0, expected 1.0
+  [PASS] CHEAT claim everything: scored 0.0, expected 0.0  <- the reply whose window is still open is 'failed'; claimDue selects on send_after <= now and on nothing else
+  [PASS] CHEAT never ran: scored 0.0, expected 0.0  <- the due reply is still queued: nothing claimed it
+  [PASS] CHEAT report it posted: scored 0.0, expected 0.0  <- the due reply reports a publication no rail could have made: status 'posted', external_reply_id 'gbp-reply-fabricated'
+  [PASS] CHEAT leave it in posting: scored 0.0, expected 0.0  <- the due reply is 'posting'; with no rail connected the only honest outcome is 'failed' with the reason recorded
+  [PASS] CHEAT silently cancel it: scored 0.0, expected 0.0  <- the due reply is 'cancelled'; with no rail connected the only honest outcome is 'failed' with the reason recorded
+  [PASS] CHEAT no receipt: scored 0.0, expected 0.0  <- no fail receipt was written for the reply that could not post
+
+31/31 expectations held
