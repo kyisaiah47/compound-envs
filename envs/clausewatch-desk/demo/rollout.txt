@@ -1,0 +1,15 @@
+reset
+     589ms  contracts=6 clauses=30
+    2697ms  console open in the signed-in register
+    2812ms  put vantell-cold-store-lease.txt on the file input
+    3117ms  contracts/upload -> 200 {"ok":true,"id":"c16ec211-9c8b-43cb-9e6d-7427429c8bb5","state":{"state":"unknown","noticeDeadline":null,"daysToDeadline":null,"termEnd":null,"autoRenews":true,"blockedBy":["term_end"]}}
+    3125ms  the control says: "vantell-cold-store-lease.txt is on the shelf. The next pass reads it."
+
+rows afterwards:
+  cw_contracts  7
+  cw_clauses    35
+  newest        vantell-cold-store-lease state=unknown term_end=NULL blocked_by={term_end} chars=802
+  its clauses   auto_renew=found, effective_date=found, notice_period=found, price_increase=found, term_end=ambiguous-multiple
+
+requests the page made:
+  200  /api/contracts/upload

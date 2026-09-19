@@ -1,0 +1,6 @@
+{
+  "name": "standup-desk-harness",
+  "private": true,
+  "type": "module",
+  "dependencies": { "puppeteer-core": "^25.10.0" }
+}

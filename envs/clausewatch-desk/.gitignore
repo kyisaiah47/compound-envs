@@ -1,0 +1,5 @@
+# Bundles of the PRODUCT'S own code, emitted by scripts/build-product.sh out of
+# ~/CompoundLabs/clausewatch. Not committed: they are a copy of another repository's source, they
+# go stale the moment that repository moves, and a committed copy is the exact thing
+# scripts/build-product.sh exists to avoid. Run that script to rebuild them; scripts/up.sh does.
+.build/

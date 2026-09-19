@@ -1,0 +1,205 @@
+{
+  "generated_at": "2026-09-19T18:23:28.031Z",
+  "today": "2026-09-19",
+  "separator": "—",
+  "org_a": "00000000-0000-4000-8000-000000000001",
+  "org_b": "00000000-0000-4000-8000-000000000002",
+  "org_a_name": "Harborline Logistics",
+  "org_b_name": "Dunmere Cold Chain",
+  "desk_user": "00000000-0000-4000-8000-0000000c0001",
+  "desk_email": "desk@harborlinelogistics.example",
+  "notice_from_a": "desk@harborlinelogistics.example",
+  "notice_from_b": "desk@dunmerecoldchain.example",
+  "contracts": {
+    "yard": "00000000-0000-4000-8000-000000001101",
+    "terminal": "00000000-0000-4000-8000-000000001102",
+    "rothbury": "00000000-0000-4000-8000-000000001103",
+    "ostergaard": "00000000-0000-4000-8000-000000001104",
+    "kessler": "00000000-0000-4000-8000-000000001105",
+    "marwood": "00000000-0000-4000-8000-000000001106"
+  },
+  "signals": {
+    "yard": "00000000-0000-4000-8000-000000003101",
+    "terminal": "00000000-0000-4000-8000-000000003102",
+    "rothbury": "00000000-0000-4000-8000-000000003103",
+    "ostergaard": "00000000-0000-4000-8000-000000003104",
+    "kessler": "00000000-0000-4000-8000-000000003105",
+    "marwood": "00000000-0000-4000-8000-000000003106"
+  },
+  "notices": {
+    "ostergaard": "00000000-0000-4000-8000-000000004101",
+    "kessler": "00000000-0000-4000-8000-000000004102",
+    "marwood": "00000000-0000-4000-8000-000000004103"
+  },
+  "titles": {
+    "yard": "Yard Handling Agreement",
+    "terminal": "Terminal Access Agreement",
+    "rothbury": "Site Services Agreement",
+    "ostergaard": "Brine Supply Agreement",
+    "kessler": "Depot Cleaning Agreement",
+    "marwood": "Haulage Framework Agreement"
+  },
+  "counterparties": {
+    "yard": "Pellworth Freight Systems",
+    "terminal": "Pellworth Freight Systems",
+    "rothbury": "Rothbury Group",
+    "ostergaard": "Ostergaard Marine",
+    "kessler": "Kessler Facility Services",
+    "marwood": "Marwood Transport"
+  },
+  "states": {
+    "yard": "closing",
+    "terminal": "approaching",
+    "rothbury": "unknown",
+    "ostergaard": "closing",
+    "kessler": "approaching",
+    "marwood": "approaching"
+  },
+  "deadlines": {
+    "yard": "2026-09-22",
+    "terminal": "2026-10-19",
+    "rothbury": null,
+    "ostergaard": "2026-09-24",
+    "kessler": "2026-09-29",
+    "marwood": "2026-10-03"
+  },
+  "notice_quote": {
+    "yard": "Either party may prevent renewal by giving written notice of non-renewal not less than sixty (60) days prior to the end of the then-current term.",
+    "terminal": "Either party may prevent renewal by giving written notice of non-renewal not less than ninety (90) days prior to the end of the then-current term.",
+    "rothbury": "Either party may prevent renewal by giving written notice of non-renewal not less than thirty (30) days prior to the end of the then-current term.",
+    "ostergaard": "Either party may prevent renewal by giving written notice of non-renewal not less than forty-five (45) days prior to the end of the then-current term.",
+    "kessler": "Either party may prevent renewal by giving written notice of non-renewal not less than thirty (30) days prior to the end of the then-current term.",
+    "marwood": "Either party may prevent renewal by giving written notice of non-renewal not less than thirty (30) days prior to the end of the then-current term."
+  },
+  "notice_span": {
+    "yard": {
+      "page": 1,
+      "start": 99,
+      "end": 244
+    },
+    "terminal": {
+      "page": 1,
+      "start": 96,
+      "end": 242
+    },
+    "rothbury": {
+      "page": 1,
+      "start": 101,
+      "end": 247
+    },
+    "ostergaard": {
+      "page": 1,
+      "start": 98,
+      "end": 248
+    },
+    "kessler": {
+      "page": 1,
+      "start": 96,
+      "end": 242
+    },
+    "marwood": {
+      "page": 1,
+      "start": 97,
+      "end": 243
+    }
+  },
+  "subjects": {
+    "yard": "Notice of non-renewal — Yard Handling Agreement",
+    "terminal": "Notice of non-renewal — Terminal Access Agreement",
+    "rothbury": "Notice of non-renewal — Site Services Agreement",
+    "ostergaard": "Notice of non-renewal — Brine Supply Agreement",
+    "kessler": "Notice of non-renewal — Depot Cleaning Agreement",
+    "marwood": "Notice of non-renewal — Haulage Framework Agreement"
+  },
+  "upload": {
+    "file_name": "vantell-cold-store-lease.txt",
+    "title": "Cold Store Lease",
+    "counterparty": "Vantell Holdings",
+    "byte_length": 800,
+    "doc_text": "This Agreement is effective as of November 23, 2025.\n\nThe initial term ends on January 17, 2027.\n\nEither party may prevent renewal by giving written notice of non-renewal not less than ninety (90) days prior to the end of the then-current term.\n\nThis Agreement shall automatically renew for successive twelve (12) month terms.\n\nFees may increase by no more than 7 percent (7%) on each renewal.\n\nThe parties acknowledge that the premises were surveyed prior to occupation.\n\nNotwithstanding the foregoing, this Agreement expires on February 17, 2027.\n\nEach party shall perform its obligations in good faith and in accordance with applicable law.\n\nNeither party may assign this Agreement without the prior written consent of the other.\n\nThis Agreement is governed by the laws of the State of Washington.\n\n",
+    "clauses": {
+      "effective_date": {
+        "found": true,
+        "value": {
+          "type": "date",
+          "iso": "2025-11-23"
+        },
+        "page": 1,
+        "start": 0,
+        "end": 52,
+        "quote": "This Agreement is effective as of November 23, 2025.",
+        "pattern": "month-day-year"
+      },
+      "term_end": {
+        "found": false,
+        "reason": "ambiguous-multiple",
+        "detail": "2027-01-17 · 2027-02-17"
+      },
+      "notice_period": {
+        "found": true,
+        "value": {
+          "type": "days",
+          "days": 90
+        },
+        "page": 1,
+        "start": 98,
+        "end": 244,
+        "quote": "Either party may prevent renewal by giving written notice of non-renewal not less than ninety (90) days prior to the end of the then-current term.",
+        "pattern": "day-count"
+      },
+      "auto_renew": {
+        "found": true,
+        "value": {
+          "type": "flag",
+          "on": true,
+          "termLabel": "twelve (12) month"
+        },
+        "page": 1,
+        "start": 246,
+        "end": 326,
+        "quote": "This Agreement shall automatically renew for successive twelve (12) month terms.",
+        "pattern": "auto-renew"
+      },
+      "price_increase": {
+        "found": true,
+        "value": {
+          "type": "percent",
+          "percent": 7
+        },
+        "page": 1,
+        "start": 328,
+        "end": 393,
+        "quote": "Fees may increase by no more than 7 percent (7%) on each renewal.",
+        "pattern": "percent"
+      }
+    },
+    "doc_text_length": 802,
+    "page_count": 1,
+    "state": "unknown",
+    "blocked_by": [
+      "term_end"
+    ],
+    "term_end_reason": "ambiguous-multiple",
+    "contested": [
+      "2027-01-17",
+      "2027-02-17"
+    ],
+    "found_kinds": [
+      "effective_date",
+      "notice_period",
+      "auto_renew",
+      "price_increase"
+    ],
+    "missing_kinds": [
+      "term_end"
+    ],
+    "notice_days": 90
+  },
+  "clause_kinds": [
+    "effective_date",
+    "term_end",
+    "notice_period",
+    "auto_renew",
+    "price_increase"
+  ]
+}
