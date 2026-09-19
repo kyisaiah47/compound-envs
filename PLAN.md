@@ -85,7 +85,8 @@ as a measurement on toolproof. Point 2 comes first for that reason.
   so no tracked file references a local path and the harness runs anywhere.
 - A clone without the product runs 19 of 20 expectations; the one that needs the app is skipped
   with a line rather than failed.
-- Open, and it is Isaiah's call: publishing the environment so a stranger can run it end to end
-  means either vendoring unemploy's source into a public repo or publishing a built image of it.
-  Neither is done, and neither should be decided here.
+- Nothing about the product gets open sourced, and nothing needs to. The repo is the proof: the
+  graders, the fixture, the adversarial output and the recording all read on their own. Nobody
+  clones a portfolio repo to run it, and the published eval results in the estate plan are numbers
+  and a methodology, the way compound-datasets already publishes, not runnable machinery.
 - Open: the second environment, to find out how much of the first one is actually reusable.
