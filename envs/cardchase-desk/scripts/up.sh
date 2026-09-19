@@ -138,6 +138,10 @@ for f in 03-rls.sql 02-seed.sql; do
 done
 
 say "app build"
+# Rule 9's other half: a build older than its source is the wrong bytes, and the
+# server started from it keeps serving them. See tools/stale-build.sh.
+. "$HERE/../../tools/stale-build.sh"
+desk_invalidate_stale_build "$APP_DIR" "$API_URL" "$PORT"
 cd "$APP_DIR"
 # ⛔ REBUILT AGAINST THE LOCAL STACK, ALWAYS. NEXT_PUBLIC_* are inlined into the client bundle at
 # build time, so a .next left over from a production build ships the PRODUCTION Supabase url and
@@ -159,6 +163,8 @@ else
   touch "$STAMP"
   echo "built"
 fi
+
+desk_stamp_build "$APP_DIR" "$API_URL"
 
 say "app"
 if curl -s -o /dev/null -m 2 "http://127.0.0.1:$PORT/"; then

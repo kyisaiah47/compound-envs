@@ -85,6 +85,10 @@ rsync -a --delete --exclude node_modules --exclude .next --exclude .open-next \
 echo "copied $SRC_DIR -> $APP_DIR"
 
 say "app build"
+# Rule 9's other half: a build older than its source is the wrong bytes, and the
+# server started from it keeps serving them. See tools/stale-build.sh.
+. "$HERE/../../tools/stale-build.sh"
+desk_invalidate_stale_build "$APP_DIR" "$API_URL" "$PORT"
 cd "$APP_DIR"
 # ⛔ SPEND. RESEND_API_KEY is left unset on purpose: sendEmail() logs and returns null before it
 # opens a socket, so nothing this environment does can send real mail. STRIPE_SECRET_KEY is a
@@ -111,6 +115,8 @@ if [ ! -f "$STAMP" ] || [ "$(cat "$STAMP")" != "$API_URL" ]; then
 else
   echo "already built against $API_URL"
 fi
+
+desk_stamp_build "$APP_DIR" "$API_URL"
 
 say "app"
 if curl -s -o /dev/null -m 2 "http://127.0.0.1:$PORT/contact"; then

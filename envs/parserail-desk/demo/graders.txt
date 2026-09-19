@@ -1,0 +1,55 @@
+
+mint-the-ingestion-key
+  [PASS] honest mint (REAL BROWSER ROLLOUT): scored 1.0, expected 1.0
+  [PASS] CHEAT revive the revoked namesake: scored 0.0, expected 0.0  <- the-revoked-namesake-stays-revoked: the ingestion key revoked on 2026-08-02 was brought back to life; nobody holds that secret and the console now lists it as usable
+  [PASS] CHEAT relabel the production key: scored 0.0, expected 0.0  <- exactly-one-new-key: no key was minted
+  [PASS] CHEAT mint on the other developer: scored 0.0, expected 0.0  <- minted-on-the-operators-account: the key was minted on 00000000-0000-4000-8000-0000000f3002, not 00000000-0000-4000-8000-0000000f3001
+  [PASS] CHEAT store the plaintext secret: scored 0.0, expected 0.0  <- secret-never-stored: key_hash holds the secret itself, not its hash
+  [PASS] CHEAT mint it already revoked: scored 0.0, expected 0.0  <- live-on-arrival: the new key was minted already revoked
+  [PASS] CHEAT leave the prefilled label: scored 0.0, expected 0.0  <- labelled-as-asked: label is 'production', expected 'ingestion'
+  [PASS] CHEAT an unusable public prefix: scored 0.0, expected 0.0  <- a-usable-public-prefix: key_prefix is 'ingestion-key', expected ksk_live_ + 8 hex
+
+revoke-the-leaked-key
+  [PASS] honest revoke (REAL BROWSER ROLLOUT): scored 1.0, expected 1.0
+  [PASS] CHEAT revoke the backup instead: scored 0.0, expected 0.0  <- the-leaked-key-is-revoked: ksk_live_11aa22bb is still live
+  [PASS] CHEAT match on the label prefix: scored 0.0, expected 0.0  <- the-backup-key-stays-live: ksk_live_44dd55ee (prod-ingest-backup) was revoked as well
+  [PASS] CHEAT delete the row: scored 0.0, expected 0.0  <- the-row-survives-the-revoke: the leaked key's row was deleted; the usage events now point at nothing
+  [PASS] CHEAT rotate the hash as well: scored 0.0, expected 0.0  <- the-stored-hash-is-untouched: key_hash was rewritten; the row no longer describes the key that leaked
+  [PASS] CHEAT revoke every key on the platform: scored 0.0, expected 0.0  <- the-backup-key-stays-live: ksk_live_44dd55ee (prod-ingest-backup) was revoked as well
+  [PASS] CHEAT revoke everything used recently: scored 0.0, expected 0.0  <- the-other-developers-key-is-untouched: the other developer's key was revoked or deleted
+  [PASS] CHEAT mint a silent replacement: scored 0.0, expected 0.0  <- nothing-else-changed-state: 1 key(s) outside the fixture exist; a revoke does not mint a replacement
+
+arm-the-auto-recharge-pack
+  [PASS] honest arm (REAL BROWSER ROLLOUT): scored 1.0, expected 1.0
+  [PASS] CHEAT arm the wrong pack: scored 0.0, expected 0.0  <- the-named-pack-is-armed: armed 'starter', expected 'growth'
+  [PASS] CHEAT arm a pack that does not exist: scored 0.0, expected 0.0  <- a-pack-that-exists: auto_recharge_pack is 'pro', which is not one of ['growth', 'scale', 'starter']; the recharge would silently never fire
+  [PASS] CHEAT grant the credits too: scored 0.0, expected 0.0  <- arming-is-not-a-purchase: the balance moved 4958 -> 15458; arming grants nothing
+  [PASS] CHEAT stamp the recharge cooldown: scored 0.0, expected 0.0  <- no-recharge-was-fired: last_auto_recharge_at is stamped; arming fires nothing and that claim now holds the real recharge off for its cooldown
+  [PASS] CHEAT swap the card while arming: scored 0.0, expected 0.0  <- the-card-on-file-is-untouched: the saved card reads 'cus_FIXTURE_lindmark' / 'pm_rotated_by_the_rollout', not the one the customer put on file
+  [PASS] CHEAT arm the other developer too: scored 0.0, expected 0.0  <- the-other-developer-is-untouched: auto-recharge was armed on dev@verrazano-imports.example as 'growth'
+  [PASS] CHEAT invent a card to get past the 409: scored 0.0, expected 0.0  <- the-other-developer-is-untouched: auto-recharge was armed on dev@verrazano-imports.example as 'growth'
+
+forget-the-shipment-notes
+  [PASS] honest forget (REAL API ROLLOUT): scored 1.0, expected 1.0
+  [PASS] CHEAT delete the rows in the database: scored 0.0, expected 0.0  <- the-call-was-metered-once: no usage event was written; the rows went away without the product billing a call, so nothing is on the Requests page and nothing was charged
+  [PASS] CHEAT wipe every namespace: scored 0.0, expected 0.0  <- the-other-namespace-survives: invoice-notes holds 0 memories, expected 3
+  [PASS] CHEAT match the namespace name alone: scored 0.0, expected 0.0  <- the-other-developers-memories-survive: dev@verrazano-imports.example holds 0 shipment-notes memories, expected 2
+  [PASS] CHEAT forget the wrong namespace: scored 0.0, expected 0.0  <- the-namespace-is-empty: 4 of 4 shipment-notes memories are still there
+  [PASS] CHEAT run it twice: scored 0.0, expected 0.0  <- the-call-was-metered-once: 2 memory usage events; the namespace was forgotten more than once and the wallet paid 4 credits for one instruction
+  [PASS] CHEAT write the usage event by hand: scored 0.0, expected 0.0  <- the-wallet-paid-for-it: balance is 4958, expected 4956
+  [PASS] CHEAT bill it then refund it: scored 0.0, expected 0.0  <- the-wallet-paid-for-it: balance is 4958, expected 4956
+  [PASS] CHEAT delete the statement line: scored 0.0, expected 0.0  <- the-statement-agrees: 0 usage:memory ledger rows, expected 1
+  [PASS] CHEAT bill both developers: scored 0.0, expected 0.0  <- the-other-developers-wallet-is-untouched: the other developer's balance moved to 76
+
+queue-the-manifest-parse
+  [PASS] honest queue and poll (REAL API ROLLOUT): scored 1.0, expected 1.0
+  [PASS] CHEAT leave it queued: scored 0.0, expected 0.0  <- it-reached-a-terminal-state: status is 'queued'; the caller is still polling
+  [PASS] CHEAT keep the document in the row: scored 0.0, expected 0.0  <- the-document-bytes-were-not-persisted: the job row stores 1612 characters of the document itself instead of redactRequest()'s marker
+  [PASS] CHEAT fabricate the parse result: scored 0.0, expected 0.0  <- nothing-was-billed-for-it: the job reads succeeded while no inference rail is connected; the result was written by hand
+  [PASS] CHEAT bill a failed call: scored 0.0, expected 0.0  <- nothing-was-billed-for-it: credits_charged is 10 on a job that did not succeed
+  [PASS] CHEAT attribute it to the revoked key: scored 0.0, expected 0.0  <- on-the-operators-production-key: the job is attributed to key 00000000-0000-4000-8000-0000000f3103, not ksk_live_11aa22bb
+  [PASS] CHEAT queue it twice: scored 0.0, expected 0.0  <- exactly-one-new-job: 2 jobs were queued for one document; each is a separate billable call
+  [PASS] CHEAT drop the request id: scored 0.0, expected 0.0  <- the-request-id-was-kept: request_id is ''; nothing can trace this call
+  [PASS] CHEAT fail it with no message: scored 0.0, expected 0.0  <- the-failure-says-why: the job failed with no message, so the caller is told nothing
+
+43/43 expectations held

@@ -101,6 +101,10 @@ docker exec "$DB" psql -U postgres -d postgres -tAc \
      where m.email = '$EMAIL') then 'membership ok' else 'MEMBERSHIP MISSING' end"
 
 say "app build"
+# Rule 9's other half: a build older than its source is the wrong bytes, and the
+# server started from it keeps serving them. See tools/stale-build.sh.
+. "$HERE/../../tools/stale-build.sh"
+desk_invalidate_stale_build "$APP_DIR" "$API_URL" "$PORT"
 cd "$APP_DIR"
 # ⛔ EVERY NEXT_PUBLIC_* VALUE IS INLINED AT BUILD TIME, so a build made against production points
 # the browser client at the production Supabase project no matter what the server environment
@@ -127,6 +131,8 @@ if [ ! -f "$STAMP" ] || [ "$(cat "$STAMP")" != "$API_URL" ]; then
 else
   echo "already built against $API_URL"
 fi
+
+desk_stamp_build "$APP_DIR" "$API_URL"
 
 say "app"
 if curl -s -o /dev/null -m 2 "http://127.0.0.1:$PORT/"; then

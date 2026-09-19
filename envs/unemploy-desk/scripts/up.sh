@@ -63,12 +63,18 @@ case "$code" in
 esac
 
 say "app build"
+# Rule 9's other half: a build older than its source is the wrong bytes, and the
+# server started from it keeps serving them. See tools/stale-build.sh.
+. "$HERE/../../tools/stale-build.sh"
+desk_invalidate_stale_build "$APP_DIR" "$API_URL" "$PORT"
 cd "$APP_DIR"
 export NEXT_PUBLIC_SUPABASE_URL="$API_URL" NEXT_PUBLIC_SUPABASE_ANON_KEY="$ANON" \
        SUPABASE_SERVICE_ROLE_KEY="$SERVICE" \
        NEXT_PUBLIC_APP_URL="http://127.0.0.1:$PORT" NEXT_PUBLIC_WEB_URL="http://127.0.0.1:$PORT"
 [ -d .next ] || npm run build
 echo "built"
+
+desk_stamp_build "$APP_DIR" "$API_URL"
 
 say "app"
 if curl -s -o /dev/null -m 2 "http://127.0.0.1:$PORT/sign-in"; then

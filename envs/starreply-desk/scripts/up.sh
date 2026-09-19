@@ -106,6 +106,10 @@ rsync -a --delete \
 echo "copied to $HERE/app"
 
 say "app build"
+# Rule 9's other half: a build older than its source is the wrong bytes, and the
+# server started from it keeps serving them. See tools/stale-build.sh.
+. "$HERE/../../tools/stale-build.sh"
+desk_invalidate_stale_build "$HERE/app" "$API_URL" "$PORT"
 cd "$HERE/app"
 export NEXT_PUBLIC_SUPABASE_URL="$API_URL" NEXT_PUBLIC_SUPABASE_ANON_KEY="$ANON" \
        SUPABASE_SERVICE_ROLE_KEY="$SERVICE" CRON_SECRET="$DESK_CRON" \
@@ -115,6 +119,8 @@ export NEXT_PUBLIC_SUPABASE_URL="$API_URL" NEXT_PUBLIC_SUPABASE_ANON_KEY="$ANON"
 # handlers unbound, so every control on the console does nothing and nothing errors.
 [ -d .next ] || npm run build
 echo "built"
+
+desk_stamp_build "$HERE/app" "$API_URL"
 
 say "app"
 if curl -s -o /dev/null -m 2 "http://127.0.0.1:$PORT/"; then

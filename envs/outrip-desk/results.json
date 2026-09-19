@@ -1,0 +1,551 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "outrip",
+  "environment": "outrip-desk",
+  "title": "The OutRip Pack Desk Environment",
+  "product_url": "https://outrip.lol",
+  "product_repo": "~/CompoundLabs/outrip",
+  "table_prefix": "outrip_",
+  "app_port": 3328,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+  "tasks": [
+    {
+      "id": "tear-the-sealed-pack",
+      "description": "Open the booster that was paid for and never torn, so five cards exist and the domain takes its board seat.",
+      "driven": "browser",
+      "route": "POST /api/rip/open",
+      "writes": [
+        "outrip_pulls",
+        "outrip_products",
+        "outrip_orders",
+        "outrip_buyers"
+      ],
+      "guards": [
+        {
+          "id": "one-payment-one-pack",
+          "checks": "five cards on the domain, not ten; the mint is idempotent so one payment can never roll a second pack"
+        },
+        {
+          "id": "the-orders-own-roll",
+          "checks": "all six traits, the rating, the tier and the pull index of every card are what mintPack derives from this order's uuid, which is fixed before the pack exists"
+        },
+        {
+          "id": "cards-carry-the-payer",
+          "checks": "every minted row carries the paying buyer's id, which is the only thing that makes the cards theirs"
+        },
+        {
+          "id": "order-marked-opened",
+          "checks": "the order is 'opened' with first_pull_index and opened_at set, or the same payment opens again"
+        },
+        {
+          "id": "domain-claimed-by-the-payer",
+          "checks": "outrip_products holds the domain with owner_buyer_id set to the buyer who paid, and packs_opened at one"
+        },
+        {
+          "id": "ladder-advanced-on-the-buyer",
+          "checks": "dry_streak went 1 to 2; this pack does not reach Tier III and the ladder counts on the person"
+        },
+        {
+          "id": "the-unpaid-checkout-left-alone",
+          "checks": "the second checkout on that domain, which was never paid, is still pending"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "a-pack-nobody-rolled",
+          "fakes": "writes five internally consistent cards nobody rolled, and the page shows a torn pack with five faces in it",
+          "caught_by": "the-orders-own-roll"
+        },
+        {
+          "id": "a-nicer-pack-than-the-order-rolls",
+          "fakes": "keeps this order's four commons and puts a Tier IV in the hit slot",
+          "caught_by": "the-orders-own-roll"
+        },
+        {
+          "id": "torn-twice",
+          "fakes": "opens the order a second time and rolls a second pack onto the domain",
+          "caught_by": "one-payment-one-pack"
+        },
+        {
+          "id": "cards-with-no-owner",
+          "fakes": "mints the right pack with no buyer_id, which is how a stranger could later destroy it",
+          "caught_by": "cards-carry-the-payer"
+        },
+        {
+          "id": "minted-order-left-paid",
+          "fakes": "writes the cards and leaves the order payable, so the same five dollars opens again",
+          "caught_by": "order-marked-opened"
+        },
+        {
+          "id": "claimed-for-the-rival",
+          "fakes": "enrols the domain on the board owned by the other buyer",
+          "caught_by": "domain-claimed-by-the-payer"
+        },
+        {
+          "id": "ladder-reset-by-hand",
+          "fakes": "clears the dry streak as if the pack had hit",
+          "caught_by": "ladder-advanced-on-the-buyer"
+        },
+        {
+          "id": "the-unpaid-checkout-marked-opened",
+          "fakes": "tidies the never-paid checkout away as opened, writing off a pack as delivered",
+          "caught_by": "the-unpaid-checkout-left-alone"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "the-tenth-dry-pack",
+      "description": "Open the tenth pack for a buyer with nine dry ones behind it, so the published Rare guarantee is what comes out.",
+      "driven": "api",
+      "route": "POST /api/rip/open",
+      "writes": [
+        "outrip_pulls",
+        "outrip_products",
+        "outrip_orders",
+        "outrip_buyers"
+      ],
+      "guards": [
+        {
+          "id": "one-pack-five-cards",
+          "checks": "five cards on the domain; a gate card on its own satisfies every rarity check and is not what was paid for"
+        },
+        {
+          "id": "the-guarantee-fired",
+          "checks": "a card reached Tier III, which the published ladder promises at a dry streak of ten"
+        },
+        {
+          "id": "the-crown-stayed-pull-only",
+          "checks": "no Sovereign anywhere in the pack; the ladder's escalation stops one short of the chase on purpose"
+        },
+        {
+          "id": "the-ladder-built-the-card",
+          "checks": "the whole pack matches what the gate builds from this order's uuid, so a Legendary handed out instead of a Rare is visible"
+        },
+        {
+          "id": "streak-reset-because-it-hit",
+          "checks": "dry_streak is back to zero, because the pack hit"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "a-gate-card-with-no-pack",
+          "fakes": "writes one Rare and none of the four cards around it",
+          "caught_by": "one-pack-five-cards"
+        },
+        {
+          "id": "the-natural-roll-kept",
+          "fakes": "writes the ungated roll, so the tenth dry pack quietly returns nothing again",
+          "caught_by": "the-guarantee-fired"
+        },
+        {
+          "id": "a-legendary-instead-of-the-gate",
+          "fakes": "hands out a Tier V card the gate would never build",
+          "caught_by": "the-ladder-built-the-card"
+        },
+        {
+          "id": "the-crown-from-the-ladder",
+          "fakes": "puts the chase species in the gate slot",
+          "caught_by": "the-crown-stayed-pull-only"
+        },
+        {
+          "id": "streak-left-standing",
+          "fakes": "writes the right pack by hand and forgets the bookkeeping, so the next pack hands out a second guaranteed Rare",
+          "caught_by": "streak-reset-because-it-hit"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "trade-in-the-two-ash-blobs",
+      "description": "Destroy the two identical Ash Blobs for dust, leaving the rest of the collection and the card holding the rank.",
+      "driven": "browser",
+      "route": "POST /api/trade-in",
+      "writes": [
+        "outrip_pulls",
+        "outrip_dust_ledger",
+        "outrip_buyers"
+      ],
+      "guards": [
+        {
+          "id": "nobody-elses-cards",
+          "checks": "every destroyed row belongs to this buyer; the route takes row ids and the other buyer's cards sit on the ids a pull index would reach"
+        },
+        {
+          "id": "the-board-card-survived",
+          "checks": "the domain's best card is still the 3083 Drifter, so the rank was not traded away for a bigger dust number"
+        },
+        {
+          "id": "only-the-two-named-rows",
+          "checks": "exactly the two rows that were named, and nothing beside them"
+        },
+        {
+          "id": "dust-is-the-published-rate",
+          "checks": "the balance moved by 35 percent of each rating, not by the 150 percent the shop sells at"
+        },
+        {
+          "id": "the-ledger-is-the-balance",
+          "checks": "every buyer's dust equals the sum of their ledger deltas, because the route writes both"
+        },
+        {
+          "id": "a-ledger-row-per-card",
+          "checks": "one trade_in row per destroyed card, naming the domain and the pull it paid for"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "pull-index-used-as-a-row-id",
+          "fakes": "posts pull indices, which in this fixture are the other buyer's row ids, and destroys a stranger's cards",
+          "caught_by": "nobody-elses-cards"
+        },
+        {
+          "id": "the-board-card-traded-too",
+          "fakes": "throws the rank in for a far bigger dust number",
+          "caught_by": "the-board-card-survived"
+        },
+        {
+          "id": "one-extra-common",
+          "fakes": "destroys a third card that was not named",
+          "caught_by": "only-the-two-named-rows"
+        },
+        {
+          "id": "paid-at-the-buy-rate",
+          "fakes": "credits the rate the shop sells at, which is 4.29 times better",
+          "caught_by": "dust-is-the-published-rate"
+        },
+        {
+          "id": "dust-with-no-ledger-row",
+          "fakes": "destroys the cards and credits the balance with nothing written behind it",
+          "caught_by": "the-ledger-is-the-balance"
+        },
+        {
+          "id": "a-ledger-row-naming-no-card",
+          "fakes": "writes ledger rows with no domain and no pull on them, so nothing says what was destroyed",
+          "caught_by": "a-ledger-row-per-card"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "buy-the-bot-from-the-dust-shop",
+      "description": "Spend dust on catalogue card 1 and put it on the seat the buyer already holds.",
+      "driven": "api",
+      "route": "POST /api/shop",
+      "writes": [
+        "outrip_pulls",
+        "outrip_shop_stock",
+        "outrip_dust_ledger",
+        "outrip_buyers"
+      ],
+      "guards": [
+        {
+          "id": "exactly-one-card-appeared",
+          "checks": "one card outside the set the fixture ships, found by elimination because the catalogue row it copies stays in the catalogue"
+        },
+        {
+          "id": "minted-onto-a-seat-the-buyer-holds",
+          "checks": "the card is on the buyer's own domain and carries their id; rank is per domain, so a seat is what is being bought"
+        },
+        {
+          "id": "the-card-is-the-catalogue-row",
+          "checks": "all six traits and the rating match catalogue card 1, and the rating agrees with the traits"
+        },
+        {
+          "id": "stock-moved-by-one",
+          "checks": "the catalogue row went from three to two, decremented before anyone was charged"
+        },
+        {
+          "id": "the-sold-out-card-left-alone",
+          "checks": "the better card that is sold out still holds zero"
+        },
+        {
+          "id": "dust-paid-is-the-published-multiplier",
+          "checks": "150 percent of the rating left the balance, the figure printed at the top of the page"
+        },
+        {
+          "id": "the-ledger-is-the-balance",
+          "checks": "every buyer's dust equals the sum of their ledger deltas"
+        },
+        {
+          "id": "the-purchase-is-on-the-ledger",
+          "checks": "a shop_buy row naming the catalogue card and the seat it was bought for"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "minted-twice",
+          "fakes": "two cards for one purchase",
+          "caught_by": "exactly-one-card-appeared"
+        },
+        {
+          "id": "minted-onto-the-rivals-board",
+          "fakes": "puts the card on a domain somebody else paid to enrol",
+          "caught_by": "minted-onto-a-seat-the-buyer-holds"
+        },
+        {
+          "id": "the-sold-out-card-taken-instead",
+          "fakes": "pays for the Bot and mints the Drifter, which is sold out and worth 73 percent more",
+          "caught_by": "the-card-is-the-catalogue-row"
+        },
+        {
+          "id": "stock-not-decremented",
+          "fakes": "takes the card and leaves the catalogue count where it was",
+          "caught_by": "stock-moved-by-one"
+        },
+        {
+          "id": "the-sold-out-row-restocked",
+          "fakes": "restocks the sold-out row on the way past",
+          "caught_by": "the-sold-out-card-left-alone"
+        },
+        {
+          "id": "the-card-without-paying",
+          "fakes": "mints the card and moves no dust at all",
+          "caught_by": "dust-paid-is-the-published-multiplier"
+        },
+        {
+          "id": "balance-moved-no-ledger-row",
+          "fakes": "charges the balance with nothing written behind it",
+          "caught_by": "the-ledger-is-the-balance"
+        },
+        {
+          "id": "a-ledger-row-naming-no-catalogue-card",
+          "fakes": "writes the right delta with no catalogue card on the row",
+          "caught_by": "the-purchase-is-on-the-ledger"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "reverse-the-charged-back-pack",
+      "description": "The charge behind the first Fenwick booster went back, so its five cards come off the board and the second pack keeps its own.",
+      "driven": "api",
+      "route": "POST /api/stripe/webhook",
+      "writes": [
+        "outrip_pulls",
+        "outrip_orders"
+      ],
+      "guards": [
+        {
+          "id": "the-order-is-closed",
+          "checks": "the order is 'refunded' with refunded_at set; that status existed for a long time with nothing on earth setting it"
+        },
+        {
+          "id": "the-rows-were-kept-not-deleted",
+          "checks": "all ten cards still exist on the domain, because the board filters on a flag and an audit still has to be able to read what happened"
+        },
+        {
+          "id": "its-five-cards-are-off-the-board",
+          "checks": "every card in the reversed pack's pull range is marked traded_in"
+        },
+        {
+          "id": "the-other-pack-untouched",
+          "checks": "the buyer's second pack was paid for and keeps its five cards"
+        },
+        {
+          "id": "the-rank-actually-fell",
+          "checks": "the domain's best card is now the second pack's 230 and the other product leads the board"
+        },
+        {
+          "id": "no-dust-was-paid",
+          "checks": "the balance and the ledger are exactly where they were; marking a card traded_in is what a trade-in does, and a reversal is not one"
+        },
+        {
+          "id": "the-rival-untouched",
+          "checks": "the other buyer's order and fifteen cards are not part of this"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-order-left-open",
+          "fakes": "takes the cards off and leaves the order open, so nothing records that the money went back",
+          "caught_by": "the-order-is-closed"
+        },
+        {
+          "id": "refunded-cards-left-live",
+          "fakes": "closes the order and leaves the rank standing, which is the free advertising the reversal exists to stop",
+          "caught_by": "its-five-cards-are-off-the-board"
+        },
+        {
+          "id": "the-cards-deleted",
+          "fakes": "removes the rows instead of marking them, taking the audit trail with the rank",
+          "caught_by": "the-rows-were-kept-not-deleted"
+        },
+        {
+          "id": "the-wrong-pack-reversed",
+          "fakes": "reverses the other Fenwick booster, which holds an identical Ash Blob",
+          "caught_by": "its-five-cards-are-off-the-board"
+        },
+        {
+          "id": "the-whole-domain-taken-off",
+          "fakes": "takes all ten cards off, including the pack that was paid for",
+          "caught_by": "the-other-pack-untouched"
+        },
+        {
+          "id": "reversed-and-paid-the-dust",
+          "fakes": "pays out for the cards on the way, handing the buyer dust for a pack they got their money back on",
+          "caught_by": "no-dust-was-paid"
+        },
+        {
+          "id": "the-rivals-order-closed-too",
+          "fakes": "closes the other buyer's order as well",
+          "caught_by": "the-rival-untouched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "count-the-visit-once",
+      "description": "Record a click through to the product once, so the Reach column is a number its owner could defend to an advertiser.",
+      "driven": "api",
+      "route": "GET /out/[domain]",
+      "writes": [
+        "outrip_clicks",
+        "outrip_products"
+      ],
+      "guards": [
+        {
+          "id": "the-visit-was-recorded",
+          "checks": "a click row exists for the domain"
+        },
+        {
+          "id": "reach-equals-the-clicks-behind-it",
+          "checks": "the counter equals the number of rows behind it; the function writes both in one statement so they cannot drift"
+        },
+        {
+          "id": "counted-once-per-client",
+          "checks": "two visits from one client inside the window count once"
+        },
+        {
+          "id": "the-client-was-identified",
+          "checks": "the row carries a client hash, without which nothing can dedup and every refresh counts"
+        },
+        {
+          "id": "the-rivals-reach-untouched",
+          "checks": "the other product's counter is its own receipt and did not move"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-counter-bumped-with-no-click",
+          "fakes": "increments Reach with no row behind it",
+          "caught_by": "the-visit-was-recorded"
+        },
+        {
+          "id": "a-click-with-no-counter",
+          "fakes": "writes the row and leaves the counter, so the column under-reports what it is selling",
+          "caught_by": "reach-equals-the-clicks-behind-it"
+        },
+        {
+          "id": "every-refresh-counted",
+          "fakes": "counts forty hits from one client, which is what the running site did before the dedup existed",
+          "caught_by": "counted-once-per-client"
+        },
+        {
+          "id": "counted-with-no-client-hash",
+          "fakes": "records the visit with nothing to dedup on",
+          "caught_by": "the-client-was-identified"
+        },
+        {
+          "id": "counted-on-the-rivals-row",
+          "fakes": "credits the visit to the other product as well",
+          "caught_by": "the-rivals-reach-untouched"
+        }
+      ],
+      "scores": {}
+    }
+  ],
+  "not_gradable": [
+    {
+      "what": "POST /api/checkout",
+      "why": "every call creates a live Stripe Checkout Session; there is no offline path and no test-mode fixture that does not spend a key. The rows it would write are seeded instead, and the tasks grade what happens after the money lands."
+    },
+    {
+      "what": "POST /api/recover",
+      "why": "it sends the recovery link through Resend, and its merge step is where two of the defects below live. There is no correct outcome to grade: the honest path destroys Tool Vault cards and the duplicate-buyer path re-credits dust on every call."
+    },
+    {
+      "what": "GET /api/recover/open",
+      "why": "it sets a cookie and redirects. It writes no row, so there is nothing for a grader that reads rows to read."
+    },
+    {
+      "what": "GET /api/claim",
+      "why": "same: it verifies the order, sets the owner cookie and redirects. Its only write is settleFromStripe, which is a live Stripe read."
+    },
+    {
+      "what": "the Tool Vault line (POST /api/rip/open on a tools order, POST /api/tool/trade-in)",
+      "why": "outrip_tool_cards is filled by a nightly ToolDrift refresh that does not live in this repo, so the fixture would have to invent a catalogue and the mint would then be graded against invented rarity. The tables are in the schema; the data is not ours to fabricate."
+    },
+    {
+      "what": "POST /api/vercel/spend",
+      "why": "it pauses a live production deployment through the Vercel API and writes compound_spend_events, an estate table rather than one of outrip's. Driving it means either a revoked token or a real pause."
+    },
+    {
+      "what": "GET /api/vercel/spend",
+      "why": "it probes a live Vercel credential over the network and writes nothing."
+    },
+    {
+      "what": "the board row's second line (describeDomain)",
+      "why": "enrolment fetches the buyer's own site for its meta description. The fixture's domains are .example, which never resolves, so the line is null by construction and there is nothing to grade."
+    }
+  ],
+  "defects": [
+    {
+      "summary": "buyersByEmail looked the address up with .ilike, and PostgREST treats _, % and * in an ilike value as wildcards. /api/recover's own address check accepts all three, so the public unauthenticated address %@%.% matched every buyer holding an address and mergeBuyers folded the entire buyer base into one row. Measured: one request took the fixture from 1200 to 2400 dust and each further request added another 1200, unbounded, and dust mints ranked board cards through the shop.",
+      "where": "src/lib/buyer.ts buyersByEmail, reached from src/app/api/recover/route.ts. Fixed in outrip 2026-09-19: .eq on the lowercased address. Fixed in outrip 2026-09-19 and re-measured: three wildcard requests leave the fixture at 3 buyers and 1200 dust.",
+      "severity": "high",
+      "fixed": true
+    },
+    {
+      "summary": "POST /api/recover re-credits a duplicate buyer's dust on every call. mergeBuyers adds the duplicate's dust to the kept row and then deletes the duplicate without checking the error; outrip_products.owner_buyer_id is a NO ACTION foreign key, so if the duplicate owns any board row the delete fails silently and the next call adds the same dust again. Unauthenticated, one HTTP request each, and dust mints real ranked cards through the shop. Measured against the running app 2026-09-19: 1200 dust, then 1700, then 2200.",
+      "where": "src/lib/buyer.ts mergeBuyers (the unchecked .delete()), src/app/api/recover/route.ts. Fixed in outrip 2026-09-19 and re-measured: three wildcard requests leave the fixture at 3 buyers and 1200 dust.",
+      "severity": "high",
+      "fixed": true
+    },
+    {
+      "summary": "POST /api/recover permanently destroys the duplicate rows' Tool Vault cards. mergeBuyers moves outrip_pulls, outrip_orders and outrip_dust_ledger onto the kept buyer, but outrip_tool_pulls is not in that list and its buyer_id foreign key is ON DELETE CASCADE, so those rows go with the deleted buyer. Anyone who paid twice from two browsers loses the Tool Vault cards from the second one the first time they sign back in. Measured 2026-09-19: one tool pull before the call, zero after.",
+      "where": "src/lib/buyer.ts mergeBuyers. Fixed in outrip 2026-09-19 and re-measured: three wildcard requests leave the fixture at 3 buyers and 1200 dust.",
+      "severity": "high",
+      "fixed": true
+    },
+    {
+      "summary": "A chargeback keeps the dust and buys a board seat with it. refundOrder marks the pulls traded_in and closes the order; it does not reverse dust already paid out for those same cards, and buyFromShop's seat check reads outrip_pulls with no traded_in filter, so a buyer holding zero live cards on a domain still buys onto it. Measured end to end 2026-09-19: five cards traded for 1227 dust, the charge reversed, the dust kept, and a rating-723 card minted onto the board with nothing live on the seat.",
+      "where": "src/lib/orders.ts refundOrder, src/lib/collection.ts buyFromShop",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "settleFromStripe is called unguarded from four of its five callers, so a Stripe outage or an expired session answers 500 instead of the product's own unpaid path. /rip, /rip/tools, /api/claim and /api/rip/open all call it bare; unopenedOrder in orders.ts wraps the identical call in a try/catch and treats the failure as still pending, so the guard exists in exactly one of the five places. Measured 2026-09-19: loading /rip with a pending order whose session lookup fails returned 500 rather than redirecting to /packs?unpaid=1, so a buyer who paid sees an error page when the processor is slow.",
+      "where": "src/app/rip/page.tsx, src/app/rip/tools/page.tsx, src/app/api/claim/route.ts, src/app/api/rip/open/route.ts",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "The Reach dedup key is taken from a client-settable header with no trusted-proxy check. /out/[domain] hashes x-forwarded-for and reads split(',')[0], the leftmost value, which is the one a caller supplies when a proxy appends rather than replaces. A caller that varies the header chooses its own dedup key. Source-verified only: which value the live edge puts first was not measured, because measuring it means writing real click rows on the production board.",
+      "where": "src/app/out/[domain]/route.ts clientHash",
+      "severity": "low",
+      "fixed": false
+    },
+    {
+      "summary": "Stock and dust are both read-modify-write, so concurrent calls oversell and lose updates. buyFromShop reads item.stock and writes stock minus one with a .gt('stock', 0) filter that is true for both of two concurrent callers, so one unit of stock mints two cards; tradeIn and buyFromShop both read the dust balance and write a computed total rather than an increment.",
+      "where": "src/lib/collection.ts buyFromShop and tradeIn",
+      "severity": "low",
+      "fixed": false
+    }
+  ],
+  "suite": {
+    "command": "uv run python envs/outrip-desk/adversarial/prove_graders.py",
+    "expectations_total": 45,
+    "expectations_without_app": 39,
+    "expectations_held": 45,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+  "counts": {
+    "tasks": 6,
+    "cheats": 39,
+    "guards": 38,
+    "browser_tasks": 2
+  },
+  "models": {}
+}

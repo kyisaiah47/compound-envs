@@ -97,6 +97,24 @@ cd "$HERE/app" && npm ci && npm run build && npm start
 `envs/*/app/` is already in `.gitignore`. Building there also keeps the product tree clean, which
 rule 12 below requires anyway.
 
+⛔ **AND YOUR OWN `.next` GOES STALE THE SAME WAY.** Every `up.sh` in this repo had some form of
+`[ -d .next ] || npm run build`, so after a source change the script reported a build and reported
+`already serving on <port>`, and served the bytes from before the change. Measured 2026-09-19 on
+parserail-desk: a live SSRF was fixed in the product, the bring-up was re-run, and the probe still
+handed the caller's API key to the attacker's listener, because `.next/BUILD_ID` was 15:04:08 and
+the fixed route was 15:25:41. The fix was correct and the thing under test was the old build,
+which is a grader measuring code nobody is running. `tools/stale-build.sh` is the shared guard,
+and both halves get called:
+
+```
+. "$HERE/../../tools/stale-build.sh"
+desk_invalidate_stale_build "$APP_DIR" "$API_URL" "$PORT"    # before your build step
+desk_stamp_build "$APP_DIR" "$API_URL"                       # after it
+```
+
+It removes a build that cannot be current and frees the port, because a server started from the
+old build keeps serving it no matter what gets built next.
+
 **10. One NULL token column in the shared `auth.users` 500s admin list-users for everybody.** The
 users table is shared by every environment on this stack. GoTrue's
 `GET /auth/v1/admin/users` scans columns like `confirmation_token`, `recovery_token` and
