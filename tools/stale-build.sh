@@ -31,10 +31,25 @@ desk_invalidate_stale_build() {
     # Any tracked input newer than the build. `find -newer` compares mtime, and the rsync that
     # copies the product in preserves mtimes, so a change in the product tree shows up here too.
     local newer
+    # ⛔ `|| true` INSIDE THE SUBSTITUTION, AND IT IS LOad-BEARING. Every up.sh in this repo runs
+    # `set -euo pipefail`, and a command substitution inherits pipefail. No product tree has all
+    # nine of these paths, so `find` exits non-zero on the ones it cannot stat, pipefail makes
+    # `find | head` non-zero, that becomes the exit status of the ASSIGNMENT, and `set -e` kills
+    # the caller right there. Traced 2026-09-19 with `set -x`: the last line printed is `newer=`
+    # and the script is gone.
     newer="$(cd "$app" 2>/dev/null && find src app public package.json package-lock.json \
              next.config.js next.config.mjs next.config.ts tsconfig.json \
-             -newer .next/BUILD_ID 2>/dev/null | head -1)"
-    [ -n "$newer" ] && reason="a source file changed since the last build ($newer)"
+             -newer .next/BUILD_ID 2>/dev/null | head -1 || true)"
+    # ⛔ AN `if`, NOT `[ -n "$newer" ] && reason=...`. Measured 2026-09-19 building
+    # matchline-desk: every up.sh in this repo runs `set -euo pipefail`, and with the build
+    # CURRENT that `&&` is a simple command evaluating to 1 in statement position, so `set -e`
+    # killed the caller. The symptom is the one this guard exists to prevent, inverted: up.sh
+    # printed "== app build", exited 1 with no message, and never started the server, so the
+    # second bring-up of any environment served nothing at all. Reproduced on parserail-desk's
+    # app tree as well as matchline-desk's, which is every caller.
+    if [ -n "$newer" ]; then
+      reason="a source file changed since the last build ($newer)"
+    fi
   fi
 
   [ -n "$reason" ] || return 0

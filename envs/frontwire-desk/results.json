@@ -456,7 +456,7 @@
   "not_gradable": [
     {
       "what": "POST /api/checkout",
-      "why": "it calls the LIVE Stripe account acct_1Tfe9hQ8LLT4sBIv and creates a real Checkout Session. The product's own README records an audit sweep clicking one on 2026-09-13 and creating cs_live_b1kCli. Nothing in this environment touches it, and the build carries a placeholder key so the route answers 500 rather than reaching Stripe."
+      "why": "it calls the studio's live Stripe account and creates a real Checkout Session. The product's own README records an audit sweep clicking one on 2026-09-13 and creating a live session. Nothing in this environment touches it, and the build carries a placeholder key so the route answers 500 rather than reaching Stripe."
     },
     {
       "what": "POST /api/subscribe",
