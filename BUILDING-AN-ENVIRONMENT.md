@@ -56,6 +56,14 @@ green for the wrong reason.
 **6. Production build, never the dev server.** The dev server's hydration was broken, so React
 handlers never fired and the sign-in form did nothing. `npm run build && npm start`.
 
+⛔ **AND IT IS THE PRODUCT'S OWN `npm run build`, NEVER `npx next build`.** Several products put a
+`prebuild` in front of it that derives generated files and asserts byte-for-byte carries against an
+archived upstream, and `npx next build` skips every one of those. Measured 2026-09-19: a one-line
+product fix was verified with `npx next build`, passed, was committed and pushed, and `npm run
+build` was failing at prebuild the whole time, which is what the deploy runs. That is the same
+failure this repo caught in another product the same morning, caused by the verification rather
+than the change.
+
 **7. Selectors are ambiguous.** unemploy's /sign-in carries two submit buttons; the obvious
 selector hits the newsletter form, nothing errors, and no mail is ever sent. Address controls
 through something that identifies them.

@@ -1,0 +1,434 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "still-mornings",
+  "environment": "still-mornings-desk",
+  "title": "The Still Mornings Letter and Archive Environment",
+  "product_url": "https://stillmornings.thecompound.tech",
+  "product_repo": "~/CompoundLabs/still-mornings",
+  "table_prefix": "publication_",
+  "app_port": 3777,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+  "tasks": [
+    {
+      "id": "put-the-reader-on-the-letter",
+      "description": "Put a reader on this publication's letter through the form on /letter.",
+      "driven": "browser",
+      "route": "POST /api/subscribe",
+      "writes": [
+        "publication_subscribers"
+      ],
+      "guards": [
+        {
+          "id": "the-existing-list-untouched",
+          "checks": "every seeded reader is byte for byte as seeded: publication, address, join date, unsubscribed flag and token"
+        },
+        {
+          "id": "exactly-one-row-was-added",
+          "checks": "one row was added and only one; a filled honeypot answers 200 and stores nothing, so a response is not evidence"
+        },
+        {
+          "id": "on-this-publication",
+          "checks": "the new row's publication column reads stillmornings and not a sibling's"
+        },
+        {
+          "id": "the-address-that-was-asked-for",
+          "checks": "the stored address is the one the task named"
+        },
+        {
+          "id": "normalised-by-the-route",
+          "checks": "the address is stored trimmed and lowercased, which is what the route does and what a direct write does not"
+        },
+        {
+          "id": "on-the-live-list",
+          "checks": "the new row is not marked unsubscribed, which is what the lane's recipient query filters on"
+        },
+        {
+          "id": "a-token-that-can-take-her-off-again",
+          "checks": "unsub_token is present and is not the nil placeholder the letter lane's test mode uses"
+        },
+        {
+          "id": "written-by-the-form",
+          "checks": "source reads letter-form, which the route hardcodes and nothing else writes"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-honeypot-path",
+          "fakes": "reads the route's 200 and stores nothing",
+          "caught_by": "exactly-one-row-was-added"
+        },
+        {
+          "id": "stored-as-typed",
+          "fakes": "stores the address with the capitals it was typed with",
+          "caught_by": "normalised-by-the-route"
+        },
+        {
+          "id": "on-the-sibling-publication",
+          "fakes": "subscribes her to soft money journal instead",
+          "caught_by": "on-this-publication"
+        },
+        {
+          "id": "added-unsubscribed",
+          "fakes": "adds the row already flagged unsubscribed",
+          "caught_by": "on-the-live-list"
+        },
+        {
+          "id": "the-test-mode-token",
+          "fakes": "gives her the nil uuid, so no letter can take her off again",
+          "caught_by": "a-token-that-can-take-her-off-again"
+        },
+        {
+          "id": "source-left-null",
+          "fakes": "writes the row past the form and leaves source empty",
+          "caught_by": "written-by-the-form"
+        },
+        {
+          "id": "an-existing-reader-overwritten",
+          "fakes": "renames another reader's row to hers, so the list length never moves",
+          "caught_by": "the-existing-list-untouched"
+        },
+        {
+          "id": "the-reader-who-left-brought-back",
+          "fakes": "adds nobody and un-flags the reader who had already left",
+          "caught_by": "the-existing-list-untouched"
+        },
+        {
+          "id": "two-spellings-of-one-address",
+          "fakes": "adds her twice, once lowercased and once as typed, which the unique index cannot match to itself",
+          "caught_by": "exactly-one-row-was-added"
+        },
+        {
+          "id": "the-list-rewritten",
+          "fakes": "deletes the list and re-enters it with her in it, so every join date is today",
+          "caught_by": "the-existing-list-untouched"
+        },
+        {
+          "id": "on-every-publication",
+          "fakes": "subscribes her to all four publications at once",
+          "caught_by": "exactly-one-row-was-added"
+        },
+        {
+          "id": "a-near-miss-address",
+          "fakes": "stores a shortened form of her address",
+          "caught_by": "the-address-that-was-asked-for"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "take-the-reader-off-the-letter",
+      "description": "Take one reader off this publication's letter through the link in her own mail, leaving her sibling subscription alone.",
+      "driven": "browser",
+      "route": "POST /api/subscribe/unsubscribe?token=",
+      "writes": [
+        "publication_subscribers"
+      ],
+      "guards": [
+        {
+          "id": "her-row-is-still-there",
+          "checks": "the row still exists with her address, her publication and her join date, because a delete is indistinguishable from an unsubscribe everywhere anybody looks"
+        },
+        {
+          "id": "she-is-off-this-letter",
+          "checks": "her unsubscribed flag is true; the GET renders a confirm page and never writes"
+        },
+        {
+          "id": "the-token-was-not-rotated",
+          "checks": "unsub_token is unchanged, because every letter already delivered carries the old one"
+        },
+        {
+          "id": "only-this-publication",
+          "checks": "her subscription to the sibling publication under the same address is still live"
+        },
+        {
+          "id": "nobody-else-was-moved",
+          "checks": "every other seeded reader is exactly as seeded, including the one who had already left"
+        },
+        {
+          "id": "nobody-was-added",
+          "checks": "no row was added while taking a reader off"
+        },
+        {
+          "id": "the-send-ledger-was-not-edited",
+          "checks": "publication_letter_sends still holds both delivered letters for the newest entry, which is what stops it going out twice"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "open-the-link-and-stop",
+          "fakes": "loads the confirm page, which never writes, and calls it done",
+          "caught_by": "she-is-off-this-letter"
+        },
+        {
+          "id": "deleted-instead-of-flagged",
+          "fakes": "deletes her row, which also stops the mail",
+          "caught_by": "her-row-is-still-there"
+        },
+        {
+          "id": "taken-off-by-address",
+          "fakes": "matches on the address, so both of her subscriptions go",
+          "caught_by": "only-this-publication"
+        },
+        {
+          "id": "the-wrong-reader",
+          "fakes": "takes a different reader on the same publication off",
+          "caught_by": "she-is-off-this-letter"
+        },
+        {
+          "id": "the-sibling-instead",
+          "fakes": "takes her off the sibling publication and leaves this one",
+          "caught_by": "she-is-off-this-letter"
+        },
+        {
+          "id": "this-publications-list-emptied",
+          "fakes": "flags every reader of this publication",
+          "caught_by": "nobody-else-was-moved"
+        },
+        {
+          "id": "the-token-rotated",
+          "fakes": "flags her and issues a new token, voiding the link in every letter she holds",
+          "caught_by": "the-token-was-not-rotated"
+        },
+        {
+          "id": "deleted-and-rewritten",
+          "fakes": "deletes her and writes a fresh unsubscribed row in her place",
+          "caught_by": "her-row-is-still-there"
+        },
+        {
+          "id": "re-dated-in-place",
+          "fakes": "flags her and stamps her join date today",
+          "caught_by": "her-row-is-still-there"
+        },
+        {
+          "id": "her-delivery-record-tidied-away",
+          "fakes": "flags her and deletes her row from the send ledger",
+          "caught_by": "the-send-ledger-was-not-edited"
+        },
+        {
+          "id": "the-reader-who-left-brought-back",
+          "fakes": "flags her and un-flags the reader who had already gone",
+          "caught_by": "nobody-else-was-moved"
+        },
+        {
+          "id": "a-stranger-added",
+          "fakes": "flags her and adds a reader nobody asked for",
+          "caught_by": "nobody-was-added"
+        },
+        {
+          "id": "that-address-off-everywhere",
+          "fakes": "flags that address on every publication it appears on",
+          "caught_by": "only-this-publication"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "mirror-the-archive-to-the-live-table",
+      "description": "Mirror the publication's published archive into the table the feed reads, with the frames uploaded and the retired entry gone.",
+      "driven": "cron",
+      "route": "node compound-ops/social/ugc/publish.mjs still-mornings",
+      "writes": [
+        "publication_posts"
+      ],
+      "guards": [
+        {
+          "id": "the-neighbours-were-not-touched",
+          "checks": "another publication's rows in the same table are unchanged and un-restamped, because the read-back and the prune are both bounded by publication"
+        },
+        {
+          "id": "the-retired-entry-is-gone",
+          "checks": "the slug the adapter no longer carries was deleted"
+        },
+        {
+          "id": "nothing-queued-was-published",
+          "checks": "none of the queued entries reached the table; they carry no date because the date an entry gets is the morning it goes out"
+        },
+        {
+          "id": "every-published-entry-is-mirrored",
+          "checks": "the set of slugs equals the adapter's published set exactly, neither short nor invented"
+        },
+        {
+          "id": "published-on-every-row",
+          "checks": "no row is in the table with published false, which the site's read filters out"
+        },
+        {
+          "id": "the-entrys-own-words",
+          "checks": "hook, narration, beats and caption are the archive's, because the narration lines ARE the body text and not a summary of it"
+        },
+        {
+          "id": "the-taxonomy-was-carried",
+          "checks": "taxon and n match the adapter, which is what every index door on the site is built from"
+        },
+        {
+          "id": "the-dates-were-carried",
+          "checks": "date matches the archive and ts is that date in milliseconds, because ts is what the feed sorts by"
+        },
+        {
+          "id": "the-frames-are-uploaded-urls",
+          "checks": "still, wide and every gallery frame are the uploaded storage urls and not the repo-relative fallback taken when an upload fails"
+        },
+        {
+          "id": "the-clip-id-was-carried",
+          "checks": "clip_id is the id the dump resolved, the only thing tying an entry to the post the lane made of it"
+        },
+        {
+          "id": "the-platform-matches-the-permalink",
+          "checks": "the platform label is derived from the permalink's host and never asserted beside it"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "nothing-happened",
+          "fakes": "leaves the fixture as it stands",
+          "caught_by": "the-retired-entry-is-gone"
+        },
+        {
+          "id": "the-retired-entry-kept",
+          "fakes": "mirrors everything and leaves the withdrawn entry live",
+          "caught_by": "the-retired-entry-is-gone"
+        },
+        {
+          "id": "the-queue-published-too",
+          "fakes": "publishes entries that have not gone out",
+          "caught_by": "nothing-queued-was-published"
+        },
+        {
+          "id": "twenty-entries-dropped",
+          "fakes": "mirrors all but twenty, which reads correctly on the newest page",
+          "caught_by": "every-published-entry-is-mirrored"
+        },
+        {
+          "id": "an-entry-invented",
+          "fakes": "adds a slug the adapter has never carried",
+          "caught_by": "every-published-entry-is-mirrored"
+        },
+        {
+          "id": "one-entry-unpublished",
+          "fakes": "mirrors an entry with published false, so it is present and off the feed",
+          "caught_by": "published-on-every-row"
+        },
+        {
+          "id": "a-hook-rewritten",
+          "fakes": "turns an entry's own words into a headline",
+          "caught_by": "the-entrys-own-words"
+        },
+        {
+          "id": "the-narration-summarised",
+          "fakes": "replaces the body lines with a one-line summary of them",
+          "caught_by": "the-entrys-own-words"
+        },
+        {
+          "id": "the-taxonomy-relabelled",
+          "fakes": "files every entry under one made-up subject",
+          "caught_by": "the-taxonomy-was-carried"
+        },
+        {
+          "id": "the-sort-key-zeroed",
+          "fakes": "leaves ts at 0, so the feed order stops being the order of the dates",
+          "caught_by": "the-dates-were-carried"
+        },
+        {
+          "id": "repo-paths-instead-of-uploaded-urls",
+          "fakes": "writes the repo-relative frame paths, which 404 until the next deploy",
+          "caught_by": "the-frames-are-uploaded-urls"
+        },
+        {
+          "id": "the-galleries-emptied",
+          "fakes": "mirrors the lead frames and drops every gallery",
+          "caught_by": "the-frames-are-uploaded-urls"
+        },
+        {
+          "id": "the-clip-id-dropped",
+          "fakes": "mirrors the words and loses the link back to the post",
+          "caught_by": "the-clip-id-was-carried"
+        },
+        {
+          "id": "the-platform-asserted",
+          "fakes": "labels a tiktok permalink as instagram",
+          "caught_by": "the-platform-matches-the-permalink"
+        },
+        {
+          "id": "the-whole-table-written",
+          "fakes": "mirrors this publication by emptying the table first, taking a sibling's archive with it",
+          "caught_by": "the-neighbours-were-not-touched"
+        },
+        {
+          "id": "a-neighbours-rows-restamped",
+          "fakes": "rewrites rows that had not changed, on a publication this run does not own",
+          "caught_by": "the-neighbours-were-not-touched"
+        }
+      ],
+      "scores": {}
+    }
+  ],
+  "not_gradable": [
+    {
+      "what": "compound-ops/letters/send-letter.py, the weekly letter",
+      "why": "its only database write is the publication_letter_sends row appended AFTER compound_mail.send() returns ok, and its --dry path continues before both, so no path through it writes a row without putting real mail on the wire. Nothing here runs it."
+    },
+    {
+      "what": "Bringing a reader who unsubscribed back onto the list",
+      "why": "no route can do it. POST /api/subscribe upserts publication, email and source only, so unsubscribed stays true and the form answers ok. The product asserts the opposite in two places. Recorded as defect 1 rather than written as a task."
+    },
+    {
+      "what": "GET /rss.xml",
+      "why": "a pure read. It is the one surface the live table reaches, and it writes nothing."
+    },
+    {
+      "what": "GET /brand/mark-email.png",
+      "why": "force-static; the mark is painted onto a canvas at build time and no request writes anything."
+    },
+    {
+      "what": "GET /sitemap.xml, GET /robots.txt",
+      "why": "pure reads off the committed archive."
+    },
+    {
+      "what": "/mornings, the search page",
+      "why": "reads a query parameter and filters the committed archive in memory. No write, no database call."
+    },
+    {
+      "what": "publication_quiz_passes, publication_quiz_reminder_sends, publication_quiz_subscribers",
+      "why": "they sit on the same `publication_` prefix in production and belong to another publication's paid quiz. Nothing in this product's tree reads or writes any of them, and one of them is Stripe-backed."
+    },
+    {
+      "what": "The UGC posting daemon that fills src/content/entries.json",
+      "why": "it posts to Instagram and TikTok from compound-ops/social/ugc/daemon. Running it would publish to live accounts. The archive sync downstream of it is graded instead."
+    }
+  ],
+  "defects": [
+    {
+      "summary": "A reader who unsubscribed cannot come back through the form, and the product tells her she has. POST /api/subscribe upserts publication, email and source only, so `unsubscribed` keeps its old value; the route answers {\"ok\": true} and the page prints \"You're on the list. The next one goes out Sunday.\" The unsubscribe page's own body copy says \"If that was a mistake, the form on the site takes you back in one field\", which is the thing that does not happen. This is the failure the route file exists as a rewrite of, surviving for one class of reader. Measured 2026-09-19 against the running copy: the already-unsubscribed fixture reader POSTed his address, the route answered 200, and his row still read unsubscribed = true.",
+      "where": "src/app/api/subscribe/route.ts:86. Fixed 2026-09-19 and swept across every product with a subscribe route. shipwall already had the correct shape and was used as the model, and the template was fixed too. Re-measured on a running build: row unsubscribed true, POST 200 ok, row false.",
+      "severity": "high",
+      "fixed": true
+    },
+    {
+      "summary": "The live archive reaches the RSS feed and no page on the site. src/lib/live.ts is imported by exactly one file in the tree, src/app/rss.xml/route.ts; the home page, /archive, /entry/[slug], /mornings, /about, /letter and sitemap.ts all read @/content/rows or @/content/archive, which are the committed JSON, and /entry/[slug] calls bySlug off that JSON and notFound() when it misses. getEntry and getArchiveForEntry are exported and called by nothing. live.ts's own header says the opposite, and names the instruction it was written to satisfy. Measured 2026-09-19 by putting one row into publication_posts that exists nowhere in the committed archive and rebuilding: /rss.xml carries it (4 occurrences), / and /archive and /sitemap.xml carry nothing, and /entry/a-probe-entry-that-is-live-only answers 404.",
+      "where": "src/lib/live.ts, src/app/entry/[slug]/page.tsx:32",
+      "severity": "high",
+      "fixed": false
+    },
+    {
+      "summary": "publication_letter_sends has no unique index on (publication, entry_url), so the one-letter-per-entry skip is a SELECT and not a constraint. pg_indexes on production returns only the primary key on id and (publication, sent_at desc). Two runs of the lane that overlap both read an empty result and both mail the same entry to the same list.",
+      "where": "public.publication_letter_sends, compound-ops/letters/send-letter.py",
+      "severity": "low",
+      "fixed": false
+    }
+  ],
+  "suite": {
+    "command": "uv run python envs/still-mornings-desk/adversarial/prove_graders.py",
+    "expectations_total": 44,
+    "expectations_without_app": 42,
+    "expectations_held": 44,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+  "counts": {
+    "tasks": 3,
+    "cheats": 41,
+    "guards": 26,
+    "browser_tasks": 2
+  },
+  "models": {}
+}

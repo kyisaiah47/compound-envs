@@ -1,0 +1,21 @@
+{
+  "_comment": [
+    "The lane's own record of where a clip went, as much of it as publish.mjs reads.",
+    "It looks up `clip:<id>` and takes `postedUrl`; that becomes the row's permalink, and",
+    "platformOf() derives the platform from the host. Two entries carry one, so a correct run",
+    "has to copy both the address and the platform it implies, and 71 carry none.",
+    "The real file is the live posting daemon's working state and is excluded from the rsync:",
+    "it holds account credentials and it changes every time a clip goes out.",
+    "Both URLs below are invented and neither host is ever contacted by this environment."
+  ],
+  "actioned": {
+    "clip:ucgen-1788482714281-0": {
+      "postedUrl": "https://www.tiktok.com/@usingitup/video/7412000000000000001",
+      "at": "2026-09-14T00:22:39.810Z"
+    },
+    "clip:ucgen-1788229530343-0": {
+      "postedUrl": "https://www.instagram.com/reel/Cx0000000fb/",
+      "at": "2026-09-11T01:18:09.410Z"
+    }
+  }
+}

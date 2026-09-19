@@ -1,0 +1,1995 @@
+{
+ "_doc": "Written by scripts/build-fixture.py by running the publication's own adapter through compound-ops/social/ugc/publication-dump.mts. Do not hand edit.",
+ "publication": "stillmornings",
+ "site": "https://stillmornings.thecompound.tech",
+ "total": 86,
+ "published_count": 73,
+ "queued_slugs": [
+  "i-check-the-leaves-first",
+  "i-make-the-bed-first",
+  "i-sit-with-the-small-light",
+  "i-read-until-i-soften",
+  "i-stay-for-one-chapter",
+  "i-give-myself-one-quiet-sip",
+  "i-let-the-morning-linger",
+  "i-water-it-before-rushing",
+  "i-make-room-for-quiet-mornings",
+  "i-started-letting-the-kettle-finish-on-its-own-instead-of",
+  "i-started-hanging-my-coat-up-the-second-i-walk-in-instead-of",
+  "i-started-running-the-water-until-its-warm-before-i-wash-my",
+  "i-started-taking-the-trash-out-at-night-instead-of-in-the"
+ ],
+ "published": [
+  {
+   "slug": "i-stopped-closing-the-curtains-at-noon",
+   "n": 1,
+   "hook": "i stopped closing the curtains at noon",
+   "narration": [
+    "i stopped closing the curtains at noon",
+    "for years i shut the light out by noon, like brightness was something to manage",
+    "now the room warms on its own and i let it",
+    "being in a bright room is not a task i have to finish"
+   ],
+   "beats": [
+    "the room gets warm on its own",
+    "nothing here needs doing",
+    "i just let it be bright"
+   ],
+   "caption": "the room does this without me",
+   "date": "2026-09-13T13:17:03.354Z",
+   "taxon": "light",
+   "still": "/stills/sunlit-window-curtain-8749101-p1.jpg",
+   "wide": "/stills/sunlit-window-curtain-8749101-w.jpg",
+   "gallery": [
+    "/stills/sunlit-window-curtain-31037597-p1.jpg",
+    "/stills/sunlit-window-curtain-35621604-p1.jpg",
+    "/stills/sunlit-window-curtain-8860234-p1.jpg"
+   ],
+   "clipId": "iagen-1788605390433-0"
+  },
+  {
+   "slug": "i-finish-it-while-its-hot",
+   "n": 2,
+   "hook": "i finish it while it's hot",
+   "narration": [
+    "i finish it while it's hot",
+    "for years the mug went cold three feet from my hand, and i drank the last of it lukewarm without noticing",
+    "the version of me that stays with the cup until it's empty is a calmer person than the one who reheated it twice",
+    "nothing changed except that i stopped leaving it"
+   ],
+   "beats": [
+    "the mug used to go cold on the desk",
+    "i drank it lukewarm, standing up, half reading",
+    "now i hold it until the last sip"
+   ],
+   "caption": "warm cup, both hands, nowhere else to be",
+   "date": "2026-09-12T14:17:18.569Z",
+   "taxon": "warmth",
+   "still": "/stills/hands-holding-mug-35650737-p1.jpg",
+   "wide": "/stills/hands-holding-mug-35650737-w.jpg",
+   "gallery": [
+    "/stills/hands-holding-mug-9034578-p1.jpg",
+    "/stills/hands-holding-mug-5935109-p1.jpg",
+    "/stills/hands-holding-mug-6343840-p1.jpg"
+   ],
+   "clipId": "iagen-1788603843733-0"
+  },
+  {
+   "slug": "i-light-it-for-nothing",
+   "n": 3,
+   "hook": "i light it for nothing",
+   "narration": [
+    "i light it for nothing.",
+    "there's no dinner, no one coming over, nothing to mark.",
+    "i just wanted something in the room to be soft while i sat here.",
+    "the flame doesn't ask what the occasion is, and neither do i anymore."
+   ],
+   "beats": [
+    "no occasion, no guests",
+    "just me and the small light",
+    "the evening is allowed to be plain"
+   ],
+   "caption": "lighting it on a tuesday for no reason at all",
+   "date": "2026-09-11T13:58:15.600Z",
+   "taxon": "flame",
+   "still": "/stills/candle-flame-calm-38796679-p1.jpg",
+   "wide": "/stills/candle-flame-calm-38796679-w.jpg",
+   "gallery": [
+    "/stills/candle-flame-calm-8477243-p1.jpg",
+    "/stills/candle-flame-calm-6270175-p1.jpg",
+    "/stills/candle-flame-calm-36461819-p1.jpg"
+   ],
+   "clipId": "iagen-1788525591512-0"
+  },
+  {
+   "slug": "the-light-lands-on-fabric",
+   "n": 4,
+   "hook": "the light lands on fabric",
+   "narration": [
+    "the light lands on fabric",
+    "it drifts across the curtain all morning, never in the same place twice",
+    "i used to shut it out before i was awake enough to notice",
+    "now i let the room warm itself while i sit here"
+   ],
+   "beats": [
+    "it moves a little all morning",
+    "i stopped closing it out of habit",
+    "the room gets warmer without me"
+   ],
+   "caption": "the softest part of the day is already here",
+   "date": "2026-09-10T15:11:06.093Z",
+   "taxon": "light",
+   "still": "/stills/sunlit-window-curtain-39334752-p1.jpg",
+   "wide": "/stills/sunlit-window-curtain-39334752-w.jpg",
+   "gallery": [
+    "/stills/sunlit-window-curtain-39265311-p1.jpg",
+    "/stills/sunlit-window-curtain-8331899-p1.jpg",
+    "/stills/sunlit-window-curtain-34056835-p1.jpg"
+   ],
+   "clipId": "iagen-1788439429346-0"
+  },
+  {
+   "slug": "i-pour-it-slowly-now",
+   "n": 5,
+   "hook": "i pour it slowly now",
+   "narration": [
+    "i pour it slowly now",
+    "i used to splash it in on my way past, half-watching",
+    "now i wait for the soil to go dark all the way across",
+    "it takes ninety seconds and i give it ninety seconds"
+   ],
+   "beats": [
+    "it used to be a splash between meetings",
+    "now i wait for the soil to darken",
+    "the water takes the time it takes"
+   ],
+   "caption": "the plant does not care how fast i am",
+   "date": "2026-09-09T14:07:08.337Z",
+   "taxon": "rooms",
+   "still": "/stills/watering-houseplant-9725107-p1.jpg",
+   "wide": "/stills/watering-houseplant-9725107-w.jpg",
+   "gallery": [
+    "/stills/watering-houseplant-8511013-p1.jpg",
+    "/stills/watering-houseplant-6912205-p1.jpg",
+    "/stills/watering-houseplant-8988488-p1.jpg"
+   ],
+   "clipId": "iagen-1788297806590-0"
+  },
+  {
+   "slug": "i-stopped-needing-the-overhead-light",
+   "n": 6,
+   "hook": "i stopped needing the overhead light",
+   "narration": [
+    "i stopped needing the overhead light.",
+    "one small flame turned out to be enough to see by.",
+    "the whole room goes softer when the ceiling stays dark.",
+    "my evenings got quieter, and i didn't have to try."
+   ],
+   "beats": [
+    "one small flame is enough to see by",
+    "the room goes softer when the ceiling stays off",
+    "my evenings got quieter without me trying"
+   ],
+   "caption": "the ceiling light stays off now",
+   "date": "2026-09-08T14:14:03.621Z",
+   "taxon": "flame",
+   "still": "/stills/candle-flame-calm-38796656-p1.jpg",
+   "wide": "/stills/candle-flame-calm-38796656-w.jpg",
+   "gallery": [
+    "/stills/candle-flame-calm-7414830-p1.jpg",
+    "/stills/candle-flame-calm-6343635-p1.jpg",
+    "/stills/candle-flame-calm-8477250-p1.jpg"
+   ],
+   "clipId": "iagen-1788181817777-0"
+  },
+  {
+   "slug": "i-stopped-putting-it-down",
+   "n": 7,
+   "hook": "i stopped putting it down",
+   "narration": [
+    "i stopped putting it down.",
+    "i used to carry it around, set it somewhere, forget it, find it cold.",
+    "now i just hold it until it's gone. that's the whole thing.",
+    "the warm part was never the drink. it was standing still long enough to feel it."
+   ],
+   "beats": [
+    "the mug stays in both hands until it's empty",
+    "i used to drink it walking, half of it cold",
+    "now the warm part is the point"
+   ],
+   "caption": "the cup stays warm when you stay still",
+   "date": "2026-09-07T20:24:47.325Z",
+   "taxon": "warmth",
+   "still": "/stills/hands-holding-mug-34382042-p1.jpg",
+   "wide": "/stills/hands-holding-mug-34382042-w.jpg",
+   "gallery": [
+    "/stills/hands-holding-mug-7250694-p1.jpg",
+    "/stills/hands-holding-mug-6638503-p1.jpg",
+    "/stills/hands-holding-mug-13324066-p1.jpg"
+   ],
+   "clipId": "iagen-1788095868389-0"
+  },
+  {
+   "slug": "i-watch-the-curtain-breathe",
+   "n": 8,
+   "hook": "i watch the curtain breathe",
+   "narration": [
+    "i watch the curtain breathe",
+    "the window's open and the light keeps moving across the wall",
+    "i used to shut it because i couldn't focus with something shifting",
+    "now that shifting is what i sit down for, and the day starts softer"
+   ],
+   "beats": [
+    "the window is open and the fabric keeps lifting",
+    "i used to close it because the movement distracted me",
+    "now the movement is the thing i sit down for"
+   ],
+   "caption": "the curtain moves and i just let it",
+   "date": "2026-09-06T13:05:18.809Z",
+   "taxon": "light",
+   "still": "/stills/sunlit-window-curtain-32144167-p1.jpg",
+   "wide": "/stills/sunlit-window-curtain-32144167-w.jpg",
+   "gallery": [
+    "/stills/sunlit-window-curtain-35695257-p1.jpg",
+    "/stills/sunlit-window-curtain-15346821-p1.jpg",
+    "/stills/sunlit-window-curtain-5854061-p1.jpg"
+   ],
+   "clipId": "iagen-1787922131077-0"
+  },
+  {
+   "slug": "i-keep-the-curtain-thin",
+   "n": 9,
+   "hook": "i keep the curtain thin",
+   "narration": [
+    "i keep the curtain thin.",
+    "the heavy one held the room at one dull colour until night.",
+    "now the light moves across it, and i can tell what time it is without looking.",
+    "the room changes on its own, and i get to watch."
+   ],
+   "beats": [
+    "a thick curtain kept the room in one flat colour all day",
+    "a thin one lets the light change from hour to hour",
+    "the room becomes something i notice instead of something i'm in"
+   ],
+   "caption": "the light does the decorating",
+   "date": "2026-09-05T13:05:44.294Z",
+   "taxon": "light",
+   "still": "/stills/sunlit-window-curtain-7507813-p1.jpg",
+   "wide": "/stills/sunlit-window-curtain-7507813-w.jpg",
+   "gallery": [
+    "/stills/sunlit-window-curtain-8313352-p1.jpg",
+    "/stills/sunlit-window-curtain-6446332-p1.jpg",
+    "/stills/sunlit-window-curtain-5854054-p1.jpg"
+   ],
+   "clipId": "iagen-1787835222255-0"
+  },
+  {
+   "slug": "i-notice-the-light-move",
+   "n": 10,
+   "hook": "i notice the light move",
+   "narration": [
+    "i notice the light move.",
+    "it crosses the curtain a little further every hour, and it always has.",
+    "i used to only catch it later, in a photo of a room i was too busy to be in.",
+    "now i sit here and let it happen in front of me."
+   ],
+   "beats": [
+    "the sun crosses the curtain slowly all morning",
+    "i used to only see it in photos of my own room",
+    "now i just watch it happen"
+   ],
+   "caption": "the same light, finally witnessed",
+   "date": "2026-09-04T12:44:51.805Z",
+   "taxon": "light",
+   "still": "/stills/sunlit-window-curtain-39209651-p1.jpg",
+   "wide": "/stills/sunlit-window-curtain-39209651-w.jpg",
+   "gallery": [
+    "/stills/sunlit-window-curtain-35339558-p1.jpg",
+    "/stills/sunlit-window-curtain-30784701-p1.jpg",
+    "/stills/sunlit-window-curtain-35595032-p1.jpg"
+   ],
+   "clipId": "iagen-1787760106817-0"
+  },
+  {
+   "slug": "i-talk-to-them-now",
+   "n": 11,
+   "hook": "i talk to them now",
+   "narration": [
+    "i talk to them now",
+    "not out loud, exactly \u2014 but i check the soil with my thumb and i notice things",
+    "it's the only part of my day where nothing is measured and nothing is late",
+    "the water goes in, the leaves lift a little, and that's the whole task"
+   ],
+   "beats": [
+    "the pouring is the only slow part of my day",
+    "they don't need me to be impressive",
+    "five minutes of being needed by something quiet"
+   ],
+   "caption": "the leaves lift a little and that's enough",
+   "date": "2026-09-03T12:48:19.203Z",
+   "taxon": "rooms",
+   "still": "/stills/watering-houseplant-9467010-p1.jpg",
+   "wide": "/stills/watering-houseplant-9467010-w.jpg",
+   "gallery": [
+    "/stills/watering-houseplant-9466786-p1.jpg",
+    "/stills/watering-houseplant-8051633-p1.jpg",
+    "/stills/watering-houseplant-7814905-p1.jpg"
+   ],
+   "clipId": "iagen-1787672260186-0"
+  },
+  {
+   "slug": "i-open-it-for-the-sound",
+   "n": 12,
+   "hook": "i open it for the sound",
+   "narration": [
+    "i open it for the sound.",
+    "not for the air, not for the light \u2014 for the small noise outside that means the day already started without me needing to run it.",
+    "the curtain lifts, the room gets a little colder, and i stand there longer than i need to.",
+    "nothing about the morning is different. i just started listening to it."
+   ],
+   "beats": [
+    "the window is open before anything else is",
+    "the room is loud in a way that is not noise",
+    "nothing about the morning changed except my attention"
+   ],
+   "caption": "the quietest part of the morning is the part i almost slept through",
+   "date": "2026-09-02T14:40:00.118Z",
+   "taxon": "light",
+   "still": "/stills/open-window-morning-breeze-35451217-p1.jpg",
+   "wide": "/stills/open-window-morning-breeze-35451217-w.jpg",
+   "gallery": [
+    "/stills/open-window-morning-breeze-11953761-p1.jpg",
+    "/stills/open-window-morning-breeze-6639956-p1.jpg",
+    "/stills/open-window-morning-breeze-4153809-p1.jpg"
+   ],
+   "clipId": "iagen-1787584633494-0"
+  },
+  {
+   "slug": "i-date-the-boring-pages",
+   "n": 13,
+   "hook": "i date the boring pages",
+   "narration": [
+    "i date the boring pages.",
+    "for a long time i only wrote on the days that felt like something, so the notebook skipped whole months of my actual life.",
+    "now every page gets a date, even the ones that just say i slept badly and the kitchen was cold.",
+    "those are the pages i reread. the big days i remember without help."
+   ],
+   "beats": [
+    "most of what i write down is not important",
+    "i started dating the entries anyway",
+    "the ordinary ones are the ones i reread"
+   ],
+   "caption": "the quiet pages are the ones i go back to",
+   "date": "2026-09-01T21:27:10.740Z",
+   "taxon": "page",
+   "still": "/stills/journaling-notebook-8626591-p1.jpg",
+   "wide": "/stills/journaling-notebook-8626591-w.jpg",
+   "gallery": [
+    "/stills/journaling-notebook-6930965-p1.jpg",
+    "/stills/journaling-notebook-9033981-p1.jpg",
+    "/stills/journaling-notebook-8706225-p1.jpg"
+   ],
+   "clipId": "iagen-1787489338794-0"
+  },
+  {
+   "slug": "i-open-it-before-coffee",
+   "n": 14,
+   "hook": "i open it before coffee",
+   "narration": [
+    "i open it before coffee.",
+    "the window goes up first \u2014 before the kettle, before my phone, before i decide what kind of day this is.",
+    "the air comes through and moves the room a little, and that's the whole event.",
+    "nothing else has to happen. the morning already counted."
+   ],
+   "beats": [
+    "the window goes up first, before anything else in the morning",
+    "cold air moving through the room is the only signal the day started",
+    "nothing else has to happen for it to count as a good morning"
+   ],
+   "caption": "the window before anything else",
+   "date": "2026-08-31T13:14:03.449Z",
+   "taxon": "light",
+   "still": "/stills/open-window-morning-breeze-37354725-p1.jpg",
+   "wide": "/stills/open-window-morning-breeze-37354725-w.jpg",
+   "gallery": [
+    "/stills/open-window-morning-breeze-28962556-p1.jpg",
+    "/stills/open-window-morning-breeze-30298086-p1.jpg",
+    "/stills/open-window-morning-breeze-8492726-p1.jpg"
+   ],
+   "clipId": "iagen-1787401753698-0"
+  },
+  {
+   "slug": "i-water-them-on-tuesdays",
+   "n": 15,
+   "hook": "i water them on tuesdays",
+   "narration": [
+    "i water them on tuesdays.",
+    "nothing happens if i skip it, which is exactly why i don't.",
+    "i pour slow enough to watch it soak in instead of run out.",
+    "one small thing on this earth is doing fine because of me."
+   ],
+   "beats": [
+    "the plant is the only thing that notices the schedule",
+    "slow pour, not a quick splash",
+    "the leaves get wiped after"
+   ],
+   "caption": "tuesdays are for the plants",
+   "date": "2026-08-30T13:21:57.787Z",
+   "taxon": "rooms",
+   "still": "/stills/watering-houseplant-9384649-p1.jpg",
+   "wide": "/stills/watering-houseplant-9384649-w.jpg",
+   "gallery": [
+    "/stills/watering-houseplant-9467011-p1.jpg",
+    "/stills/watering-houseplant-9467006-p1.jpg",
+    "/stills/watering-houseplant-7204673-p1.jpg"
+   ],
+   "clipId": "iagen-1787316037849-0"
+  },
+  {
+   "slug": "i-hold-it-with-both-hands",
+   "n": 16,
+   "hook": "i hold it with both hands",
+   "narration": [
+    "i hold it with both hands.",
+    "one hand means i'm on my way somewhere. two means i'm already here.",
+    "the warmth gets to me before the first sip does, and i let it.",
+    "nothing else is in my hands right now, and that's the point."
+   ],
+   "beats": [
+    "both hands, not one \u2014 the mug is the whole task",
+    "the warmth arrives before the first sip",
+    "nothing else is in my hands right now"
+   ],
+   "caption": "two hands on the mug and nowhere to be",
+   "date": "2026-08-29T12:33:05.631Z",
+   "taxon": "warmth",
+   "still": "/stills/hands-holding-mug-38943639-p1.jpg",
+   "wide": "/stills/hands-holding-mug-38943639-w.jpg",
+   "gallery": [
+    "/stills/hands-holding-mug-38707084-p1.jpg",
+    "/stills/hands-holding-mug-13737093-p1.jpg",
+    "/stills/hands-holding-mug-8298094-p1.jpg"
+   ],
+   "clipId": "iagen-1787228853903-0"
+  },
+  {
+   "slug": "i-keep-the-curtain-closed",
+   "n": 17,
+   "hook": "i keep the curtain closed",
+   "narration": [
+    "i keep the curtain closed.",
+    "the light comes through it anyway \u2014 just softer, slower, spread thin across the room.",
+    "i used to pull everything open like i had to earn the whole view.",
+    "now i let it arrive filtered. it's still light. it still finds me."
+   ],
+   "beats": [
+    "the light comes through it anyway, softer",
+    "i stopped needing the whole view",
+    "filtered is still light"
+   ],
+   "caption": "the curtain stays closed and the morning gets in anyway",
+   "date": "2026-08-28T13:43:06.595Z",
+   "taxon": "light",
+   "still": "/stills/sunlit-window-curtain-17909735-p1.jpg",
+   "wide": "/stills/sunlit-window-curtain-17909735-w.jpg",
+   "gallery": [
+    "/stills/sunlit-window-curtain-4058891-p1.jpg",
+    "/stills/sunlit-window-curtain-6234910-p1.jpg",
+    "/stills/sunlit-window-curtain-10524877-p1.jpg"
+   ],
+   "clipId": "iagen-1787149134181-0"
+  },
+  {
+   "slug": "i-let-morning-arrive-slowly",
+   "n": 18,
+   "hook": "i let morning arrive slowly",
+   "narration": [
+    "I let morning arrive slowly.",
+    "The softer the light feels, the less I rush to meet the day.",
+    "For a few minutes, nothing is asking me to become anyone.",
+    "I am learning that quiet is already a full beginning."
+   ],
+   "beats": [
+    "soft light changes my pace",
+    "nothing needs me yet",
+    "quiet can be enough"
+   ],
+   "caption": "letting the day begin gently",
+   "date": "2026-08-27T12:57:16.916Z",
+   "taxon": "light",
+   "still": "/stills/sunlit-window-curtain-35876587-p1.jpg",
+   "wide": "/stills/sunlit-window-curtain-35876587-w.jpg",
+   "gallery": [
+    "/stills/sunlit-window-curtain-5486055-p1.jpg",
+    "/stills/sunlit-window-curtain-26764047-p1.jpg",
+    "/stills/sunlit-window-curtain-30223263-p1.jpg"
+   ],
+   "clipId": "iagen-1787079740510-0"
+  },
+  {
+   "slug": "i-lie-there-on-purpose",
+   "n": 19,
+   "hook": "i lie there on purpose",
+   "narration": [
+    "i lie there on purpose",
+    "for a while i thought staying under the covers meant i was behind",
+    "now i lie still and let the room get bright around me",
+    "nothing out there starts until i sit up, so i sit up when i'm ready"
+   ],
+   "beats": [
+    "the bed is still warm and i am not reaching for anything",
+    "staying is a decision, not a delay",
+    "the day starts when i say it does"
+   ],
+   "caption": "the morning waits for me now",
+   "date": "2026-08-26T13:56:14.783Z",
+   "taxon": "waking",
+   "still": "/stills/slow-morning-bed-31809533-p1.jpg",
+   "wide": "/stills/slow-morning-bed-31809533-w.jpg",
+   "gallery": [
+    "/stills/slow-morning-bed-6603232-p1.jpg",
+    "/stills/slow-morning-bed-5379822-p1.jpg",
+    "/stills/slow-morning-bed-7597165-p1.jpg"
+   ],
+   "clipId": "iagen-1786969713502-0"
+  },
+  {
+   "slug": "the-air-comes-in-cold",
+   "n": 20,
+   "hook": "the air comes in cold",
+   "narration": [
+    "the air comes in cold",
+    "i used to shut it before the room could get chilly",
+    "now i let it move through and i stand in it for a second",
+    "it's the only part of the morning i don't have to make happen"
+   ],
+   "beats": [
+    "morning air arrives before anything else does",
+    "cold on the arms is a small proof of being awake",
+    "the room resets itself without being asked"
+   ],
+   "caption": "the window does more for my mornings than any routine ever did",
+   "date": "2026-08-25T15:41:49.496Z",
+   "taxon": "light",
+   "still": "/stills/open-window-morning-breeze-34717533-p1.jpg",
+   "wide": "/stills/open-window-morning-breeze-34717533-w.jpg",
+   "gallery": [
+    "/stills/open-window-morning-breeze-38682061-p1.jpg",
+    "/stills/open-window-morning-breeze-34504644-p1.jpg",
+    "/stills/open-window-morning-breeze-33594196-p1.jpg"
+   ],
+   "clipId": "iagen-1786880176985-0"
+  },
+  {
+   "slug": "i-stay-after-the-alarm",
+   "n": 21,
+   "hook": "i stay after the alarm",
+   "narration": [
+    "i stay after the alarm.",
+    "for a long time the first thing i did every morning was leave.",
+    "now i lie here and let the room get light around me. the sheets are warm. nothing is asking for me yet.",
+    "by the time i get up, the day already feels like mine."
+   ],
+   "beats": [
+    "the alarm went off and i didn't move",
+    "the room is doing something without me",
+    "i let the bed hold me a little longer"
+   ],
+   "caption": "the softest part of the morning is the part i used to skip",
+   "date": "2026-08-24T16:16:58.508Z",
+   "taxon": "waking",
+   "still": "/stills/slow-morning-bed-6955270-p1.jpg",
+   "wide": "/stills/slow-morning-bed-6955270-w.jpg",
+   "gallery": [
+    "/stills/slow-morning-bed-25391808-p1.jpg",
+    "/stills/slow-morning-bed-6810976-p1.jpg",
+    "/stills/slow-morning-bed-7131568-p1.jpg"
+   ],
+   "clipId": "iagen-1786669806994-0"
+  },
+  {
+   "slug": "i-eat-by-candlelight-now",
+   "n": 22,
+   "hook": "i eat by candlelight now",
+   "narration": [
+    "i eat by candlelight now.",
+    "not for anyone. just one small flame on the table while i eat.",
+    "the light only reaches as far as the bowl, so that's the whole room for a while.",
+    "same dinner i always made. it just feels like it was made for someone."
+   ],
+   "beats": [
+    "one flame is enough light for one bowl",
+    "the room gets smaller and softer around it",
+    "nothing about the food changed"
+   ],
+   "caption": "the food didn't change, the light did",
+   "date": "2026-08-23T12:52:47.093Z",
+   "taxon": "flame",
+   "still": "/stills/candle-flame-calm-36461672-p1.jpg",
+   "wide": "/stills/candle-flame-calm-36461672-w.jpg",
+   "gallery": [
+    "/stills/candle-flame-calm-6306000-p1.jpg",
+    "/stills/candle-flame-calm-8015409-p1.jpg",
+    "/stills/candle-flame-calm-4785259-p1.jpg"
+   ],
+   "clipId": "iagen-1786591766043-0"
+  },
+  {
+   "slug": "i-sit-with-the-flame",
+   "n": 23,
+   "hook": "i sit with the flame",
+   "narration": [
+    "i sit with the flame",
+    "for a while it's the only thing in the room that moves",
+    "i used to need every quiet hour to turn into something",
+    "now the sitting is the thing"
+   ],
+   "beats": [
+    "the flame is the only thing moving",
+    "i stopped needing the hour to produce something",
+    "sitting still counts as a thing i did"
+   ],
+   "caption": "the flame moves so i don't have to",
+   "date": "2026-08-22T12:32:40.837Z",
+   "taxon": "flame",
+   "still": "/stills/candle-flame-calm-35045835-p1.jpg",
+   "wide": "/stills/candle-flame-calm-35045835-w.jpg",
+   "gallery": [
+    "/stills/candle-flame-calm-33997119-p1.jpg",
+    "/stills/candle-flame-calm-7235103-p1.jpg",
+    "/stills/candle-flame-calm-36962592-p1.jpg"
+   ],
+   "clipId": "iagen-1786499142739-0"
+  },
+  {
+   "slug": "i-leave-it-open-while-i-work",
+   "n": 24,
+   "hook": "i leave it open while i work",
+   "narration": [
+    "i leave it open while i work.",
+    "the curtain lifts, settles, lifts again \u2014 that's my whole clock now.",
+    "i used to need a playlist to make the room feel occupied.",
+    "turns out it just needed somewhere for the air to go."
+   ],
+   "beats": [
+    "the window stays open the whole time i'm at the desk",
+    "the air moving is the only thing telling me time is passing",
+    "i stopped needing music to feel like the room was alive"
+   ],
+   "caption": "i used to put a playlist on to make the room feel occupied",
+   "date": "2026-08-21T12:45:52.872Z",
+   "taxon": "light",
+   "still": "/stills/open-window-morning-breeze-6799015-p1.jpg",
+   "wide": "/stills/open-window-morning-breeze-6799015-w.jpg",
+   "gallery": [
+    "/stills/open-window-morning-breeze-12627234-p1.jpg",
+    "/stills/open-window-morning-breeze-6151320-p1.jpg",
+    "/stills/open-window-morning-breeze-8045183-p1.jpg"
+   ],
+   "clipId": "iagen-1786412197675-0"
+  },
+  {
+   "slug": "the-breeze-rearranges-the-room",
+   "n": 25,
+   "hook": "the breeze rearranges the room",
+   "narration": [
+    "the breeze rearranges the room",
+    "i open it before i decide anything else, and the air does the deciding",
+    "the curtain lifts, the light shifts, the whole room changes temperature",
+    "nothing in here needed me for that \u2014 it just needed the window open"
+   ],
+   "beats": [
+    "the curtain lifts and the whole room changes temperature",
+    "nothing in here moved on its own until i let the outside in",
+    "the room is doing something without me"
+   ],
+   "caption": "the air does the deciding before i do",
+   "date": "2026-08-20T12:30:47.037Z",
+   "taxon": "light",
+   "still": "/stills/open-window-morning-breeze-13927551-p1.jpg",
+   "wide": "/stills/open-window-morning-breeze-13927551-w.jpg",
+   "gallery": [
+    "/stills/open-window-morning-breeze-36833825-p1.jpg",
+    "/stills/open-window-morning-breeze-32575074-p1.jpg",
+    "/stills/open-window-morning-breeze-35526451-p1.jpg"
+   ],
+   "clipId": "iagen-1786330042983-0"
+  },
+  {
+   "slug": "i-read-under-the-blanket",
+   "n": 26,
+   "hook": "i read under the blanket",
+   "narration": [
+    "i read under the blanket.",
+    "not because the book is good \u2014 because the blanket makes me stay in one place long enough to finish a page.",
+    "i used to think i needed a quiet house. i just needed to be warm enough to stop moving.",
+    "now the weight of it on my legs is the signal. i'm here, i'm not going anywhere."
+   ],
+   "beats": [
+    "the blanket is the whole ritual, not the book",
+    "warmth is what makes me stay still",
+    "the same corner, same weight, every evening"
+   ],
+   "caption": "i thought i needed a quiet house. i just needed to be warm enough to stop moving",
+   "date": "2026-08-19T14:24:49.589Z",
+   "taxon": "waking",
+   "still": "/stills/cozy-blanket-reading-9969030-p1.jpg",
+   "wide": "/stills/cozy-blanket-reading-9969030-w.jpg",
+   "gallery": [
+    "/stills/cozy-blanket-reading-15863264-p1.jpg",
+    "/stills/cozy-blanket-reading-5353260-p1.jpg",
+    "/stills/cozy-blanket-reading-5678962-p1.jpg"
+   ],
+   "clipId": "iagen-1786248619470-0"
+  },
+  {
+   "slug": "i-moved-my-chair",
+   "n": 27,
+   "hook": "i moved my chair",
+   "narration": [
+    "i moved my chair",
+    "for two years it faced the room, and i faced the room with it. now it faces the window, and the curtain does that slow breathing thing whenever the air moves.",
+    "nothing else about my mornings changed. same coffee, same hour, same everything i can't fix yet.",
+    "but i sit down and there's something to look at that isn't a screen, and i stay a little longer than i mean to."
+   ],
+   "beats": [
+    "the chair used to face the room; now it faces the window",
+    "nothing about the day changed except what i was looking at",
+    "the light does the same thing every morning and i finally get to watch it"
+   ],
+   "caption": "for two years it faced the room. now it faces the window",
+   "date": "2026-08-18T19:05:46.715Z",
+   "taxon": "light",
+   "still": "/stills/sunlit-window-curtain-5854062-p1.jpg",
+   "wide": "/stills/sunlit-window-curtain-5854062-w.jpg",
+   "gallery": [
+    "/stills/sunlit-window-curtain-35311246-p1.jpg",
+    "/stills/sunlit-window-curtain-8517524-p1.jpg",
+    "/stills/sunlit-window-curtain-5835540-p1.jpg"
+   ],
+   "clipId": "iagen-1786243075302-0"
+  },
+  {
+   "slug": "i-watch-it-steep",
+   "n": 28,
+   "hook": "i watch it steep",
+   "narration": [
+    "i watch it steep.",
+    "no timer. i just stand here and watch the water go amber.",
+    "it's the only part of my day i'm not also doing something else.",
+    "and then i hold it a while before i drink it."
+   ],
+   "beats": [
+    "the water going amber, no timer, no phone",
+    "standing at the counter doing nothing else",
+    "the cup warm in both hands before the first sip"
+   ],
+   "caption": "the one part of the day i'm not also doing something else",
+   "date": "2026-08-17T12:32:40.889Z",
+   "taxon": "warmth",
+   "still": "/stills/making-tea-calm-8298093-p1.jpg",
+   "wide": "/stills/making-tea-calm-8298093-w.jpg",
+   "gallery": [
+    "/stills/making-tea-calm-31963728-p1.jpg",
+    "/stills/making-tea-calm-9789742-p1.jpg",
+    "/stills/making-tea-calm-33600860-p1.jpg"
+   ],
+   "clipId": "iagen-1786188796044-0"
+  },
+  {
+   "slug": "i-light-it-before-dark",
+   "n": 29,
+   "hook": "i light it before dark",
+   "narration": [
+    "i light it before dark",
+    "i used to wait until the day was officially over to make the room feel like this",
+    "now the flame goes first and i catch up to it",
+    "by the time i sit down, the room is already calm \u2014 i just join it"
+   ],
+   "beats": [
+    "the flame is doing the waiting for me",
+    "nobody is coming over. it's still lit",
+    "the room gets softer before i do"
+   ],
+   "caption": "the flame goes first and i catch up to it",
+   "date": "2026-08-16T00:22:01.227Z",
+   "taxon": "flame",
+   "still": "/stills/candle-flame-calm-6270599-p1.jpg",
+   "wide": "/stills/candle-flame-calm-6270599-w.jpg",
+   "gallery": [
+    "/stills/candle-flame-calm-9985819-p1.jpg",
+    "/stills/candle-flame-calm-29567291-p1.jpg",
+    "/stills/candle-flame-calm-34807234-p1.jpg"
+   ],
+   "clipId": "iagen-1786112740790-0"
+  },
+  {
+   "slug": "i-read-one-page",
+   "n": 30,
+   "hook": "i read one page",
+   "narration": [
+    "i read one page.",
+    "some nights that's all i get, and i've stopped calling that failing.",
+    "the blanket does most of the work anyway \u2014 i just have to sit down in it.",
+    "nobody's timing me. the page will still be there tomorrow."
+   ],
+   "beats": [
+    "one page, then i put it down",
+    "the blanket does most of the work",
+    "nobody's timing me"
+   ],
+   "caption": "one page counts.",
+   "date": "2026-08-15T00:15:35.480Z",
+   "taxon": "waking",
+   "still": "/stills/cozy-blanket-reading-5955637-p1.jpg",
+   "wide": "/stills/cozy-blanket-reading-5955637-w.jpg",
+   "gallery": [
+    "/stills/cozy-blanket-reading-7477007-p1.jpg",
+    "/stills/cozy-blanket-reading-9969028-p1.jpg",
+    "/stills/cozy-blanket-reading-34435369-p1.jpg"
+   ],
+   "clipId": "iagen-1786107292632-0"
+  },
+  {
+   "slug": "i-write-down-boring-days",
+   "n": 31,
+   "hook": "i write down boring days",
+   "narration": [
+    "i started writing down the boring days.",
+    "most of what's on this page is nothing \u2014 the weather, what i ate, who texted me back.",
+    "i used to only open this when something was wrong, so every page was a bad one.",
+    "now it's mostly ordinary, and i think i want to remember being this ordinary."
+   ],
+   "beats": [
+    "the page fills up with nothing important",
+    "tuesday, the light, what i ate",
+    "i want to remember being this ordinary"
+   ],
+   "caption": "the boring pages are the ones i reread",
+   "date": "2026-08-14T00:42:35.057Z",
+   "taxon": "page",
+   "still": "/stills/journaling-notebook-7576277-p1.jpg",
+   "wide": "/stills/journaling-notebook-7576277-w.jpg",
+   "gallery": [
+    "/stills/journaling-notebook-33350918-p1.jpg",
+    "/stills/journaling-notebook-6414261-p1.jpg",
+    "/stills/journaling-notebook-7698438-p1.jpg"
+   ],
+   "clipId": "iagen-1786101865857-0"
+  },
+  {
+   "slug": "i-lit-it-for-nothing",
+   "n": 32,
+   "hook": "i lit it for nothing",
+   "narration": [
+    "i lit it for nothing.",
+    "no occasion. no one coming over. nothing on the calendar to earn it.",
+    "just me, and this small moving light, and a room that got quieter around it.",
+    "the whole evening softened for the cost of one match."
+   ],
+   "beats": [
+    "no occasion, no guests, no reason on the calendar",
+    "just me and a small moving light in a quiet room",
+    "the whole evening got softer for the cost of a match"
+   ],
+   "caption": "nothing had to happen for this to count \ud83d\udd6f\ufe0f",
+   "date": "2026-08-13T00:21:57.321Z",
+   "taxon": "flame",
+   "still": "/stills/candle-flame-calm-6961633-p1.jpg",
+   "wide": "/stills/candle-flame-calm-6961633-w.jpg",
+   "gallery": [
+    "/stills/candle-flame-calm-34807255-p1.jpg",
+    "/stills/candle-flame-calm-26536165-p1.jpg",
+    "/stills/candle-flame-calm-35072537-p1.jpg"
+   ],
+   "clipId": "iagen-1786069357833-0"
+  },
+  {
+   "slug": "i-drink-it-while-its-hot",
+   "n": 33,
+   "hook": "i drink it while it's hot",
+   "narration": [
+    "i drink it while it's hot.",
+    "for years the cup went cold on the counter while i did three other things first.",
+    "now i sit down with it in the light and let the day wait ten more minutes.",
+    "nothing about my life changed. i just stopped leaving before the good part."
+   ],
+   "beats": [
+    "the cup used to go cold on the counter every single morning",
+    "now i sit down with it before the day gets a say",
+    "nothing changed except that i stayed for it"
+   ],
+   "caption": "the whole reset was staying at the table until the cup was empty \u2615",
+   "date": "2026-08-12T00:12:20.818Z",
+   "taxon": "warmth",
+   "still": "/stills/morning-coffee-sunlight-7235439-p1.jpg",
+   "wide": "/stills/morning-coffee-sunlight-7235439-w.jpg",
+   "gallery": [
+    "/stills/morning-coffee-sunlight-9046240-p1.jpg",
+    "/stills/morning-coffee-sunlight-7986495-p1.jpg",
+    "/stills/morning-coffee-sunlight-36136766-p1.jpg"
+   ],
+   "clipId": "iagen-1785928135318-0"
+  },
+  {
+   "slug": "the-curtain-moves-on-its-own",
+   "n": 34,
+   "hook": "the curtain moves on its own",
+   "narration": [
+    "the curtain moves on its own.",
+    "i didn't do anything to make that happen \u2014 the air just came in, the way it does every morning whether or not i'm awake to notice.",
+    "nothing in this room is trying to be anything. the light is just landing. the fabric is just moving.",
+    "and i used to think a good morning had to be earned. it doesn't. it's already here, breathing at the window."
+   ],
+   "beats": [
+    "the air came in before i asked it to",
+    "nothing in the room is trying to be anything",
+    "this is the whole thing"
+   ],
+   "caption": "the window was open the whole time",
+   "date": "2026-08-11T00:04:08.985Z",
+   "taxon": "light",
+   "still": "/stills/open-window-morning-breeze-18800841-p1.jpg",
+   "wide": "/stills/open-window-morning-breeze-18800841-w.jpg",
+   "gallery": [
+    "/stills/open-window-morning-breeze-25391804-p1.jpg",
+    "/stills/open-window-morning-breeze-29532409-p1.jpg",
+    "/stills/open-window-morning-breeze-38781080-p1.jpg"
+   ],
+   "clipId": "iagen-1785901068181-0"
+  },
+  {
+   "slug": "i-wait-for-the-light",
+   "n": 35,
+   "hook": "i wait for the light",
+   "narration": [
+    "i wait for the light.",
+    "the cup sits in the sun a while before i pick it up, and i let it.",
+    "nothing is happening in this room and that's the entire point of it.",
+    "i'm not behind on anything. i'm just here, in the warm part of the morning."
+   ],
+   "beats": [
+    "the cup sits in the sun before i pick it up",
+    "nothing is happening and that's the point",
+    "i'm not late, i'm just here"
+   ],
+   "caption": "the warm part of the morning is worth standing in",
+   "date": "2026-08-10T01:14:48.843Z",
+   "taxon": "warmth",
+   "still": "/stills/morning-coffee-sunlight-36124880-p1.jpg",
+   "wide": "/stills/morning-coffee-sunlight-36124880-w.jpg",
+   "gallery": [
+    "/stills/morning-coffee-sunlight-28772518-p1.jpg",
+    "/stills/morning-coffee-sunlight-20736942-p1.jpg",
+    "/stills/morning-coffee-sunlight-38049627-p1.jpg"
+   ],
+   "clipId": "iagen-1785808210557-0"
+  },
+  {
+   "slug": "my-handwriting-got-slower",
+   "n": 36,
+   "hook": "my handwriting got slower",
+   "narration": [
+    "my handwriting got slower.",
+    "the first line is always careful, like someone might grade it.",
+    "by the third page i've stopped performing, and it just looks like a hand moving.",
+    "nobody reads this but me. that's the whole point."
+   ],
+   "beats": [
+    "the first line is always careful",
+    "by the third page i stop performing it",
+    "nobody reads this but me"
+   ],
+   "caption": "the pages nobody grades",
+   "date": "2026-08-09T02:40:03.305Z",
+   "taxon": "page",
+   "still": "/stills/journaling-notebook-6250581-p1.jpg",
+   "wide": "/stills/journaling-notebook-6250581-w.jpg",
+   "gallery": [
+    "/stills/journaling-notebook-5874560-p1.jpg",
+    "/stills/journaling-notebook-7316372-p1.jpg",
+    "/stills/journaling-notebook-7260659-p1.jpg"
+   ],
+   "clipId": "iagen-1785726259971-0"
+  },
+  {
+   "slug": "i-wait-for-the-steam",
+   "n": 37,
+   "hook": "i wait for the steam",
+   "narration": [
+    "i wait for the steam.",
+    "there's this stretch of nothing between the water going on and the cup being ready.",
+    "i used to fill it with my phone, every single time, without deciding to.",
+    "now i just stand here and let the morning catch up to me."
+   ],
+   "beats": [
+    "the water goes on, and there's this stretch of nothing before it's ready",
+    "i used to fill that gap with my phone, every single time",
+    "now i just stand here and watch the cup get warm"
+   ],
+   "caption": "the waiting part is the point",
+   "date": "2026-08-08T00:57:51.792Z",
+   "taxon": "warmth",
+   "still": "/stills/making-tea-calm-36981383-p1.jpg",
+   "wide": "/stills/making-tea-calm-36981383-w.jpg",
+   "gallery": [
+    "/stills/making-tea-calm-34419806-p1.jpg",
+    "/stills/making-tea-calm-8296148-p1.jpg",
+    "/stills/making-tea-calm-8298064-p1.jpg"
+   ],
+   "clipId": "iagen-1785686736127-0"
+  },
+  {
+   "slug": "i-warm-my-hands-first",
+   "n": 38,
+   "hook": "i warm my hands first",
+   "narration": [
+    "i warm my hands first.",
+    "before i drink any of it, i just hold the cup and let the heat move into my fingers.",
+    "somewhere in there my shoulders come down, and i stop bracing for the day.",
+    "the coffee is almost beside the point. i'm here for the thirty seconds before it."
+   ],
+   "beats": [
+    "before the first sip, i just hold it",
+    "the heat gets into my fingers and my shoulders drop",
+    "that's the whole ritual \u2014 nothing else has to happen yet"
+   ],
+   "caption": "the thirty seconds before the first sip",
+   "date": "2026-08-07T00:50:09.883Z",
+   "taxon": "warmth",
+   "still": "/stills/hands-holding-mug-37976248-p1.jpg",
+   "wide": "/stills/hands-holding-mug-37976248-w.jpg",
+   "gallery": [
+    "/stills/hands-holding-mug-7657794-p1.jpg",
+    "/stills/hands-holding-mug-6316973-p1.jpg",
+    "/stills/hands-holding-mug-6343844-p1.jpg"
+   ],
+   "clipId": "iagen-1785581638312-0"
+  },
+  {
+   "slug": "i-stopped-finishing-books",
+   "n": 39,
+   "hook": "i stopped finishing books",
+   "narration": [
+    "i stopped finishing books.",
+    "now i pull the blanket up first, and the book is really just the excuse to sit still under it.",
+    "some nights i read four pages and set it down, and the page stays open next to me like it doesn't mind.",
+    "nothing here needs to get finished. i just wanted somewhere soft to be for a while."
+   ],
+   "beats": [
+    "the blanket comes first, the book is just the excuse",
+    "i read four pages and put it down warm",
+    "nothing gets completed and i'm still here"
+   ],
+   "caption": "four pages is still a whole evening \u00b7",
+   "date": "2026-08-06T00:42:58.318Z",
+   "taxon": "waking",
+   "still": "/stills/cozy-blanket-reading-5258464-p1.jpg",
+   "wide": "/stills/cozy-blanket-reading-5258464-w.jpg",
+   "gallery": [
+    "/stills/cozy-blanket-reading-6638344-p1.jpg",
+    "/stills/cozy-blanket-reading-15501200-p1.jpg",
+    "/stills/cozy-blanket-reading-7033439-p1.jpg"
+   ],
+   "clipId": "iagen-1785493517170-0"
+  },
+  {
+   "slug": "the-page-is-still-blank",
+   "n": 40,
+   "hook": "the page is still blank",
+   "narration": [
+    "the page is still blank.",
+    "nothing has to go on it yet.",
+    "i just like sitting here with it open, the way you'd sit with someone who doesn't need you to talk.",
+    "some mornings that's the whole thing. i close it and go make my coffee."
+   ],
+   "beats": [
+    "nothing has to go here yet",
+    "i just like sitting with it open",
+    "some mornings that's the whole practice"
+   ],
+   "caption": "blank pages count too \ud83e\udd0d",
+   "date": "2026-08-05T00:27:01.101Z",
+   "taxon": "page",
+   "still": "/stills/journaling-notebook-12474225-p1.jpg",
+   "wide": "/stills/journaling-notebook-12474225-w.jpg",
+   "gallery": [
+    "/stills/journaling-notebook-27599861-p1.jpg",
+    "/stills/journaling-notebook-38295033-p1.jpg",
+    "/stills/journaling-notebook-29706163-p1.jpg"
+   ],
+   "clipId": "iagen-1785465924546-0"
+  },
+  {
+   "slug": "i-stopped-making-the-bed",
+   "n": 41,
+   "hook": "i stopped making the bed",
+   "narration": [
+    "i stopped making the bed the second i get up",
+    "for years an unmade bed felt like proof i was already behind on the day",
+    "now i let it stay soft a while longer, the sheets still holding where i was",
+    "i pull it together later, once the light has moved off it, and it feels like a choice instead of a chore"
+   ],
+   "beats": [
+    "the unmade bed used to feel like proof i was behind",
+    "now it's the last warm thing in the room",
+    "i leave it soft until the light moves off it"
+   ],
+   "caption": "the bed can wait until the light moves",
+   "date": "2026-08-04T01:52:09.850Z",
+   "taxon": "waking",
+   "still": "/stills/slow-morning-bed-17041569-p1.jpg",
+   "wide": "/stills/slow-morning-bed-17041569-w.jpg",
+   "gallery": [
+    "/stills/slow-morning-bed-17041569-p1.jpg",
+    "/stills/slow-morning-bed-17041569-p2.jpg",
+    "/stills/slow-morning-bed-17041569-p3.jpg"
+   ],
+   "clipId": "iagen-1785334558101-0"
+  },
+  {
+   "slug": "the-pen-lives-here-now",
+   "n": 42,
+   "hook": "the pen lives here now",
+   "narration": [
+    "the pen lives here now.",
+    "i stopped putting it away, so the notebook just stays open on the table all day.",
+    "i write one line every time i walk past it. nothing important.",
+    "and by the end of the day there's a whole life in there i almost didn't notice."
+   ],
+   "beats": [
+    "it stays open on the same page all day",
+    "i write one line when i walk past it",
+    "by evening there's a whole day in there"
+   ],
+   "caption": "one open page, all day long \ud83e\udd0d",
+   "date": "2026-08-03T03:13:30.446Z",
+   "taxon": "page",
+   "still": "/stills/journaling-notebook-6948566-p1.jpg",
+   "wide": "/stills/journaling-notebook-6948566-w.jpg",
+   "gallery": [
+    "/stills/journaling-notebook-6948566-p1.jpg",
+    "/stills/journaling-notebook-6948566-p2.jpg",
+    "/stills/journaling-notebook-6948566-p3.jpg"
+   ],
+   "clipId": "iagen-1785329114914-0"
+  },
+  {
+   "slug": "the-light-gets-here-first",
+   "n": 43,
+   "hook": "the light gets here first",
+   "narration": [
+    "the light gets here first.",
+    "before the alarm i actually get up for, before anything is decided, it's already coming through the curtain, moving a little.",
+    "i used to walk past this like it was the waiting room before the real day started.",
+    "now i stand here until the room is warm, and the day starts when i say it does."
+   ],
+   "beats": [
+    "the curtain moves before anything else in the apartment does",
+    "i stopped treating this part of the morning like a waiting room",
+    "nothing is required of me until i decide something is"
+   ],
+   "caption": "the first warm thing in the room, and it asks nothing of me",
+   "date": "2026-08-02T16:15:48.357Z",
+   "taxon": "light",
+   "still": "/stills/sunlit-window-curtain-10756505-p1.jpg",
+   "wide": "/stills/sunlit-window-curtain-10756505-w.jpg",
+   "gallery": [
+    "/stills/sunlit-window-curtain-10756505-p1.jpg",
+    "/stills/sunlit-window-curtain-10756505-p2.jpg",
+    "/stills/sunlit-window-curtain-10756505-p3.jpg"
+   ],
+   "clipId": "iagen-1785279837189-0"
+  },
+  {
+   "slug": "i-water-it-before-i-check-my-phone",
+   "n": 44,
+   "hook": "i water it before i check my phone",
+   "narration": [
+    "i water it before i check my phone",
+    "turns out the first thing i tend to sets the tone for who i am the rest of the day",
+    "one small living thing that needs me before the world does",
+    "and it never once asks me to hurry"
+   ],
+   "beats": [
+    "hand tips the can, slow stream into the soil",
+    "leaves catching the warm morning light",
+    "she steps back, lets the quiet hold"
+   ],
+   "caption": "the first thing i tend to isn't the inbox",
+   "date": "2026-08-01T12:34:43.381Z",
+   "taxon": "rooms",
+   "still": "/stills/watering-houseplant-4503965-p1.jpg",
+   "wide": "/stills/watering-houseplant-4503965-w.jpg",
+   "gallery": [
+    "/stills/watering-houseplant-4503965-p1.jpg",
+    "/stills/watering-houseplant-4503965-p2.jpg",
+    "/stills/watering-houseplant-4503965-p3.jpg"
+   ],
+   "clipId": "iagen-1784690715065-0"
+  },
+  {
+   "slug": "ten-minutes-i-dont-earn",
+   "n": 45,
+   "hook": "ten minutes i don't earn",
+   "narration": [
+    "i started staying in bed ten extra minutes on purpose, before i've done anything to deserve the day.",
+    "i don't reach for my phone, i just watch the light come up across the sheets.",
+    "it's the only part of the morning i'm not already getting ready for the next thing.",
+    "turns out the softest part of my day was there the whole time, i just kept getting up too fast for it."
+   ],
+   "beats": [
+    "stay under the covers on purpose",
+    "let the light move across the sheets",
+    "no getting ready, no next thing"
+   ],
+   "caption": "the ten minutes before the day starts asking for things",
+   "date": "2026-07-31T02:54:56.487Z",
+   "taxon": "waking",
+   "still": "/stills/slow-morning-bed-4057249-p1.jpg",
+   "wide": "/stills/slow-morning-bed-4057249-w.jpg",
+   "gallery": [
+    "/stills/slow-morning-bed-4057249-p1.jpg",
+    "/stills/slow-morning-bed-4057249-p2.jpg",
+    "/stills/slow-morning-bed-4057249-p3.jpg"
+   ],
+   "clipId": "iagen-1784647117376-0"
+  },
+  {
+   "slug": "i-open-the-window-first",
+   "n": 46,
+   "hook": "i open the window first",
+   "narration": [
+    "before i check anything, i open the window and just let the morning come in.",
+    "the curtain lifts a little, and the whole room feels like it's finally breathing.",
+    "the air is cool and it smells like outside, like the day hasn't asked me for anything yet.",
+    "i stand there for a second in that quiet, and it's enough to start soft instead of rushed."
+   ],
+   "beats": [
+    "the breeze moves the curtain, and the room starts breathing",
+    "cool air before the noise of the day gets in",
+    "nothing to fix here \u2014 just letting the morning arrive"
+   ],
+   "caption": "the first thing i let in every day",
+   "date": "2026-07-30T18:30:57.732Z",
+   "taxon": "light",
+   "still": "/stills/open-window-morning-breeze-17637554-p1.jpg",
+   "wide": "/stills/open-window-morning-breeze-17637554-w.jpg",
+   "gallery": [
+    "/stills/open-window-morning-breeze-17637554-p1.jpg",
+    "/stills/open-window-morning-breeze-17637554-p2.jpg",
+    "/stills/open-window-morning-breeze-17637554-p3.jpg"
+   ],
+   "clipId": "iagen-1784637719359-0"
+  },
+  {
+   "slug": "i-keep-the-messy-pages",
+   "n": 47,
+   "hook": "i keep the messy pages",
+   "narration": [
+    "i keep the messy pages",
+    "the crossed-out lines, the days i only wrote one shaky sentence",
+    "i used to tear them out so the notebook would look calm and finished",
+    "now those pages are the only proof i actually kept showing up for myself"
+   ],
+   "beats": [
+    "open on the notebook, a page half-filled with crossed-out lines",
+    "hand turns back to earlier, uglier entries instead of a fresh one",
+    "settles on the worn, written-in pages, pen resting in the fold"
+   ],
+   "caption": "the ugly entries count too. maybe most.",
+   "date": "2026-07-28T23:10:35.690Z",
+   "taxon": "page",
+   "still": "/stills/journaling-notebook-6391735-p1.jpg",
+   "wide": "/stills/journaling-notebook-6391735-w.jpg",
+   "gallery": [
+    "/stills/journaling-notebook-6391735-p1.jpg",
+    "/stills/journaling-notebook-6391735-p2.jpg",
+    "/stills/journaling-notebook-6391735-p3.jpg"
+   ],
+   "clipId": "iagen-1784594834877-0"
+  },
+  {
+   "slug": "i-started-making-the-bed-with-the-window-open-and-now-the-room",
+   "n": 48,
+   "hook": "i started making the bed with the window open, and now the room smells like outside for the rest of the day",
+   "narration": [
+    "I started making the bed with the window open, and now the room smells like outside for the rest of the day.",
+    "Thirty seconds, window open. The whole ritual is shorter than finding my keys.",
+    "And the room smells like outside all day. Cold air in the sheets, a little bit of morning left in the corners.",
+    "The whole day starts in fresher air. Such a small thing to change, and I notice it every single evening."
+   ],
+   "beats": [
+    "thirty seconds, window open",
+    "the room smells like outside all day",
+    "the whole day starts in fresher air"
+   ],
+   "caption": "the whole ritual is thirty seconds and it changes the air in here.",
+   "date": "2026-07-22T02:58:09.083Z",
+   "taxon": "warmth",
+   "still": "/stills/making-tea-calm-5976242-p1.jpg",
+   "wide": "/stills/making-tea-calm-5976242-w.jpg",
+   "gallery": [
+    "/stills/making-tea-calm-5976242-p1.jpg",
+    "/stills/making-tea-calm-5976242-p2.jpg",
+    "/stills/making-tea-calm-5976242-p3.jpg"
+   ],
+   "clipId": "iagen-1784503544818-0"
+  },
+  {
+   "slug": "i-started-buying-flowers-for-the-version-of-me-who-gets-home",
+   "n": 49,
+   "hook": "i started buying flowers for the version of me who gets home at 7 on a tuesday, not for a table anyone else will ever sit at",
+   "narration": [
+    "I started buying flowers for the version of me who gets home at seven on a Tuesday, not for a table anyone else will ever sit at.",
+    "Not for guests. Not for a dinner. Nobody is coming, and that's not the sad part of this.",
+    "They're for the version of me who walks in at seven with her coat still on and nothing left in her.",
+    "She gets the nice ones too. I don't know why that took me so long to work out."
+   ],
+   "beats": [
+    "not for guests, not for a table",
+    "for the version of me home at seven",
+    "she gets the nice ones too"
+   ],
+   "caption": "she deserves the nice ones too",
+   "date": "2026-07-22T00:21:26.807Z",
+   "taxon": "waking",
+   "still": "/stills/slow-morning-bed-9642768-p1.jpg",
+   "wide": "/stills/slow-morning-bed-9642768-w.jpg",
+   "gallery": [
+    "/stills/slow-morning-bed-9642768-p1.jpg",
+    "/stills/slow-morning-bed-9642768-p2.jpg",
+    "/stills/slow-morning-bed-9642768-p3.jpg"
+   ],
+   "clipId": "iagen-1784501942191-0"
+  },
+  {
+   "slug": "i-started-eating-breakfast-at-the-table-instead-of-standing",
+   "n": 50,
+   "hook": "i started eating breakfast at the table instead of standing over the counter, and it added maybe six minutes to my morning and gave me back something i can't name",
+   "narration": [
+    "I started eating breakfast at the table instead of standing over the counter, and it added maybe six minutes to my morning and gave me back something I can't name.",
+    "Six extra minutes. Sitting down. I timed it once because I was sure it had to be more.",
+    "Standing over the counter felt like an errand. Something to get through on the way to the real day.",
+    "Sitting turned it into a meal. Same food, same morning, and somehow I arrive at the rest of the day already there."
+   ],
+   "beats": [
+    "six extra minutes, sitting down",
+    "standing at the counter felt like an errand",
+    "sitting turned it into a meal"
+   ],
+   "caption": "six minutes, sitting down.",
+   "date": "2026-07-21T14:52:55.561Z",
+   "taxon": "waking",
+   "still": "/stills/cozy-blanket-reading-10758625-p1.jpg",
+   "wide": "/stills/cozy-blanket-reading-10758625-w.jpg",
+   "gallery": [
+    "/stills/cozy-blanket-reading-10758625-p1.jpg",
+    "/stills/cozy-blanket-reading-10758625-p2.jpg",
+    "/stills/cozy-blanket-reading-10758625-p3.jpg"
+   ],
+   "clipId": "iagen-1784489488333-0"
+  },
+  {
+   "slug": "i-thought-i-needed-a-quieter-apartment-turns-out-i-just-needed",
+   "n": 51,
+   "hook": "i thought i needed a quieter apartment. turns out i just needed to stop narrating my own day to myself while i lived it",
+   "narration": [
+    "I thought I needed a quieter apartment. Turns out I just needed to stop narrating my own day to myself while I lived it.",
+    "I blamed the street. The neighbors. The thin walls. I was sure the problem was out there somewhere.",
+    "The noise was the running commentary in my head. A voice describing every hour while I was still inside it.",
+    "I can live an hour now without narrating it. It's quieter in here than I ever thought it could be."
+   ],
+   "beats": [
+    "i blamed the street, the neighbors, the walls",
+    "the noise was the commentary in my head",
+    "you can live an hour without describing it"
+   ],
+   "caption": "the noise was never coming from outside",
+   "date": "2026-07-21T12:14:35.074Z",
+   "taxon": "warmth",
+   "still": "/stills/making-tea-calm-8298098-p1.jpg",
+   "wide": "/stills/making-tea-calm-8298098-w.jpg",
+   "gallery": [
+    "/stills/making-tea-calm-8298098-p1.jpg",
+    "/stills/making-tea-calm-8298098-p2.jpg",
+    "/stills/making-tea-calm-8298098-p3.jpg"
+   ],
+   "clipId": "iagen-1784481437626-0"
+  },
+  {
+   "slug": "i-started-keeping-the-good-candle-out-on-the-counter-instead",
+   "n": 52,
+   "hook": "i started keeping the good candle out on the counter instead of saving it for a night that never comes",
+   "narration": [
+    "I started keeping the good candle out on the counter instead of saving it for a night that never comes.",
+    "I was saving it for something. I couldn't have told you what. Some evening special enough to deserve it.",
+    "It turned out the occasion was Tuesday. It was always going to be a Tuesday.",
+    "I use the nice thing on an ordinary day now. The ordinary days are most of my life, and it turns out they are allowed to be lovely."
+   ],
+   "beats": [
+    "i was saving it for a night that never came",
+    "the occasion was tuesday",
+    "use the nice thing on an ordinary day"
+   ],
+   "caption": "turns out the occasion was tuesday",
+   "date": "2026-07-21T03:00:54.029Z",
+   "taxon": "waking",
+   "still": "/stills/slow-morning-bed-10554785-p1.jpg",
+   "wide": "/stills/slow-morning-bed-10554785-w.jpg",
+   "gallery": [
+    "/stills/slow-morning-bed-10554785-p1.jpg",
+    "/stills/slow-morning-bed-10554785-p2.jpg",
+    "/stills/slow-morning-bed-10554785-p3.jpg"
+   ],
+   "clipId": "iagen-1784479877393-0"
+  },
+  {
+   "slug": "i-started-rinsing-the-sink-out-before-bed-and-now-the-first",
+   "n": 53,
+   "hook": "i started rinsing the sink out before bed, and now the first thing i see in the morning is proof that someone was looking out for me",
+   "narration": [
+    "I started rinsing the sink out before bed, and now the first thing I see in the morning is proof that someone was looking out for me.",
+    "It's two minutes at night. Usually less. I do it while the last of the tea cools.",
+    "And the morning starts without a small debt waiting in it. Nothing to clear before I've even begun.",
+    "It's proof that someone was looking out for me. It's only ever me, and that still counts."
+   ],
+   "beats": [
+    "two minutes at night",
+    "the morning starts without a small debt",
+    "proof someone was looking out for me"
+   ],
+   "caption": "the smallest kindness i do for tomorrow-me",
+   "date": "2026-07-21T00:19:26.695Z",
+   "taxon": "warmth",
+   "still": "/stills/hands-holding-mug-37977292-p1.jpg",
+   "wide": "/stills/hands-holding-mug-37977292-w.jpg",
+   "gallery": [
+    "/stills/hands-holding-mug-37977292-p1.jpg",
+    "/stills/hands-holding-mug-37977292-p2.jpg",
+    "/stills/hands-holding-mug-37977292-p3.jpg"
+   ],
+   "clipId": "iagen-1784478310426-0"
+  },
+  {
+   "slug": "i-started-putting-my-book-on-the-pillow-before-i-leave-the",
+   "n": 54,
+   "hook": "i started putting my book on the pillow before i leave the room in the morning, so coming home already feels like someone was expecting me",
+   "narration": [
+    "I started putting my book on the pillow before I leave the room in the morning, so coming home already feels like someone was expecting me.",
+    "It takes thirty seconds before I walk out the door. That's the entire cost of it.",
+    "And then I come home to something already set out. The night has a plan and I didn't have to make one while tired.",
+    "Small setups for future me. She's had a long day, and someone left the light on for her."
+   ],
+   "beats": [
+    "thirty seconds before i leave",
+    "coming home to something already set out",
+    "small setups for future me"
+   ],
+   "caption": "the small setups you leave for future you",
+   "date": "2026-07-20T17:22:26.069Z",
+   "taxon": "waking",
+   "still": "/stills/slow-morning-bed-5353262-p1.jpg",
+   "wide": "/stills/slow-morning-bed-5353262-w.jpg",
+   "gallery": [
+    "/stills/slow-morning-bed-5353262-p1.jpg",
+    "/stills/slow-morning-bed-5353262-p2.jpg",
+    "/stills/slow-morning-bed-5353262-p3.jpg"
+   ],
+   "clipId": "iagen-1784476800721-0"
+  },
+  {
+   "slug": "i-started-leaving-one-lamp-on-instead-of-the-overhead-light",
+   "n": 55,
+   "hook": "i started leaving one lamp on instead of the overhead light, and the whole apartment stopped feeling like a place i just sleep in",
+   "narration": [
+    "I started leaving one lamp on instead of the overhead light, and the whole apartment stopped feeling like a place I just sleep in.",
+    "The overhead light makes a room feel like a task. Everything is visible and everything looks unfinished.",
+    "One lamp makes it feel like an evening. Same room, same furniture, completely different hour.",
+    "Soft light changed how the room asks me to move through it. I slow down without deciding to."
+   ],
+   "beats": [
+    "overhead light makes a room feel like a task",
+    "one lamp makes it feel like an evening",
+    "the light changes how you move through a room"
+   ],
+   "caption": "one lamp instead of the overhead light",
+   "date": "2026-07-20T14:47:23.303Z",
+   "taxon": "page",
+   "still": "/stills/journaling-notebook-6948580-p1.jpg",
+   "wide": "/stills/journaling-notebook-6948580-w.jpg",
+   "gallery": [
+    "/stills/journaling-notebook-6948580-p1.jpg",
+    "/stills/journaling-notebook-6948580-p2.jpg",
+    "/stills/journaling-notebook-6948580-p3.jpg"
+   ],
+   "clipId": "iagen-1784475275837-0"
+  },
+  {
+   "slug": "i-started-making-my-coffee-before-i-open-a-single-curtain-so",
+   "n": 56,
+   "hook": "i started making my coffee before i open a single curtain, so the first thing i taste in the morning is something i made slowly and on purpose",
+   "narration": [
+    "I started making my coffee before I open a single curtain, so the first thing I taste in the morning is something I made slowly and on purpose.",
+    "The room is still dark, and that's the point. Nothing outside has started yet.",
+    "Nothing has been asked of me. No light, no notifications, no day. Just the kettle and me in a quiet kitchen.",
+    "So the first thing I taste is something I made slowly and on purpose. That sets a tone the rest of the morning keeps."
+   ],
+   "beats": [
+    "the room is still dark, and that's the point",
+    "nothing has been asked of me yet",
+    "the first thing i taste, i made slowly"
+   ],
+   "caption": "the quiet part of the morning is the part i keep for myself",
+   "date": "2026-07-20T12:11:56.718Z",
+   "taxon": "warmth",
+   "still": "/stills/making-tea-calm-11866333-p1.jpg",
+   "wide": "/stills/making-tea-calm-11866333-w.jpg",
+   "gallery": [
+    "/stills/making-tea-calm-11866333-p1.jpg",
+    "/stills/making-tea-calm-11866333-p2.jpg",
+    "/stills/making-tea-calm-11866333-p3.jpg"
+   ],
+   "clipId": "iagen-1784473719232-0"
+  },
+  {
+   "slug": "i-started-washing-my-one-mug-by-hand-right-after-my-coffee-and",
+   "n": 57,
+   "hook": "i started washing my one mug by hand right after my coffee, and now the quietest part of my day is standing at the sink watching the water go clear",
+   "narration": [
+    "I started washing my one mug by hand right after my coffee, and now the quietest part of my day is standing at the sink watching the water go clear.",
+    "Warm water, one mug, nothing pending. There's no version of this that takes more than a minute.",
+    "No screen, no list. Just the water and my hands and the small sound of it.",
+    "Watching it go clear is the whole reset. Something about it ends the morning properly, and I never have to think about it again."
+   ],
+   "beats": [
+    "warm water, one mug, nothing pending",
+    "no screen, no list, just the water",
+    "watching it go clear is the whole reset"
+   ],
+   "caption": "the small things were never small. tea steam, warm dishes, morning light.",
+   "date": "2026-07-20T01:11:11.539Z",
+   "taxon": "warmth",
+   "still": "/stills/hands-holding-mug-37977293-p1.jpg",
+   "wide": "/stills/hands-holding-mug-37977293-w.jpg",
+   "gallery": [
+    "/stills/hands-holding-mug-37977293-p1.jpg",
+    "/stills/hands-holding-mug-37977293-p2.jpg",
+    "/stills/hands-holding-mug-37977293-p3.jpg"
+   ],
+   "clipId": "iagen-1784472123488-0"
+  },
+  {
+   "slug": "i-started-drinking-my-tea-by-the-window-instead-of-at-my-desk",
+   "n": 58,
+   "hook": "i started drinking my tea by the window instead of at my desk, and now the morning feels like it belongs to me",
+   "narration": [
+    "I started drinking my tea by the window instead of at my desk, and now the morning feels like it belongs to me.",
+    "Same tea. Different chair. That's genuinely the only thing that changed.",
+    "The desk always wanted something from me. Even before I opened anything, it was already a place with a list.",
+    "The window doesn't ask for anything. I sit there for ten minutes and nobody even knows it's happening."
+   ],
+   "beats": [
+    "same tea, different chair",
+    "the desk always wanted something from me",
+    "the window doesn't ask for anything"
+   ],
+   "caption": "the quietest ten minutes of my whole day, and no one even knows it's happening.",
+   "date": "2026-07-19T23:00:36.714Z",
+   "taxon": "flame",
+   "still": "/stills/candle-flame-calm-34807184-p1.jpg",
+   "wide": "/stills/candle-flame-calm-34807184-w.jpg",
+   "gallery": [
+    "/stills/candle-flame-calm-34807184-p1.jpg",
+    "/stills/candle-flame-calm-34807184-p2.jpg",
+    "/stills/candle-flame-calm-34807184-p3.jpg"
+   ],
+   "clipId": "iagen-1784470609699-0"
+  },
+  {
+   "slug": "i-started-folding-the-laundry-while-its-still-warm-from-the",
+   "n": 59,
+   "hook": "i started folding the laundry while it's still warm from the dryer, and somehow that turned the most boring chore into the softest part of my evening",
+   "narration": [
+    "I started folding the laundry while it's still warm from the dryer, and somehow that turned the most boring chore into the softest part of my evening.",
+    "Warm from the dryer changes everything. It's the same task and it feels like a completely different one.",
+    "It stopped being something I owed someone. It became a thing I do with my hands while the evening settles.",
+    "Now it's the softest ten minutes of the night. Warm cotton, no rush, nothing else asking for me."
+   ],
+   "beats": [
+    "warm from the dryer changes everything",
+    "it stopped being something i owed someone",
+    "the softest ten minutes of the evening"
+   ],
+   "caption": "the small warm things are the whole life, actually",
+   "date": "2026-07-19T19:33:14.145Z",
+   "taxon": "waking",
+   "still": "/stills/cozy-blanket-reading-10758621-p1.jpg",
+   "wide": "/stills/cozy-blanket-reading-10758621-w.jpg",
+   "gallery": [
+    "/stills/cozy-blanket-reading-10758621-p1.jpg",
+    "/stills/cozy-blanket-reading-10758621-p2.jpg",
+    "/stills/cozy-blanket-reading-10758621-p3.jpg"
+   ],
+   "clipId": "iagen-1784469091015-0"
+  },
+  {
+   "slug": "i-used-to-rush-past-the-part-of-the-morning-where-the-light",
+   "n": 60,
+   "hook": "i used to rush past the part of the morning where the light comes through the curtains. now that's the part i stay for.",
+   "narration": [
+    "I used to rush past the part of the morning where the light comes through the curtains. Now that's the part I stay for.",
+    "I used to walk straight past it. It was on the way to something, and the something always felt more important.",
+    "Now I stand there until it moves. It takes maybe a minute, and nothing in my day has ever suffered for it.",
+    "The slow part turned out to be the whole point. Everything else was just the errands around it."
+   ],
+   "beats": [
+    "i used to walk straight past it",
+    "now i stand there until it moves",
+    "the slow part is the part i stay for"
+   ],
+   "caption": "the slow part is the whole point.",
+   "date": "2026-07-19T16:52:02.611Z",
+   "taxon": "warmth",
+   "still": "/stills/making-tea-calm-8296126-p1.jpg",
+   "wide": "/stills/making-tea-calm-8296126-w.jpg",
+   "gallery": [
+    "/stills/making-tea-calm-8296126-p1.jpg",
+    "/stills/making-tea-calm-8296126-p2.jpg",
+    "/stills/making-tea-calm-8296126-p3.jpg"
+   ],
+   "clipId": "iagen-1784467448126-0"
+  },
+  {
+   "slug": "i-light-the-same-candle-every-evening-and-somehow-that-one",
+   "n": 61,
+   "hook": "i light the same candle every evening, and somehow that one small ritual holds the whole day together",
+   "narration": [
+    "I light the same candle every evening, and somehow that one small ritual holds the whole day together.",
+    "The same candle, roughly the same hour. I don't think about it anymore. I just do it.",
+    "It tells my body the day is closing. Before I've decided anything, something in me lets go.",
+    "It was never really about the candle. It's about having one small thing that says the day is over now, and you did enough."
+   ],
+   "beats": [
+    "the same candle, roughly the same hour",
+    "it tells my body the day is closing",
+    "it was never really about the candle"
+   ],
+   "caption": "the smallest rituals are the ones keeping me soft",
+   "date": "2026-07-19T13:26:18.389Z",
+   "taxon": "rooms",
+   "still": "/stills/watering-houseplant-7551493-p1.jpg",
+   "wide": "/stills/watering-houseplant-7551493-w.jpg",
+   "gallery": [
+    "/stills/watering-houseplant-7551493-p1.jpg",
+    "/stills/watering-houseplant-7551493-p2.jpg",
+    "/stills/watering-houseplant-7551493-p3.jpg"
+   ],
+   "clipId": "iagen-1784466635725-0"
+  },
+  {
+   "slug": "day-one-of-becoming-the-person-who-resets-instead-of-spirals",
+   "n": 62,
+   "hook": "day one of becoming the person who resets instead of spirals",
+   "narration": [
+    "Day one of becoming the person who resets instead of spirals.",
+    "Resetting is a skill, not a mood. You don't wait to feel like it. You just practice the turn.",
+    "One page. One slow breath. One honest line about where I actually am. That's the whole reset.",
+    "And day one is allowed to happen again. As many times as it needs to. That's not starting over, that's just the practice."
+   ],
+   "beats": [
+    "resetting is a skill, not a mood",
+    "one page, one breath, one honest line",
+    "day one is allowed to happen again"
+   ],
+   "caption": "day one. again is allowed.",
+   "date": "2026-07-18T02:11:23.488Z",
+   "taxon": "rooms",
+   "still": "/stills/watering-houseplant-19162383-p1.jpg",
+   "wide": "/stills/watering-houseplant-19162383-w.jpg",
+   "gallery": [
+    "/stills/watering-houseplant-19162383-p1.jpg",
+    "/stills/watering-houseplant-19162383-p2.jpg",
+    "/stills/watering-houseplant-19162383-p3.jpg"
+   ],
+   "clipId": "ia-12"
+  },
+  {
+   "slug": "you-dont-need-a-whole-new-life-you-need-one-honest-page-and-a",
+   "n": 63,
+   "hook": "you don't need a whole new life. you need one honest page and a slower morning",
+   "narration": [
+    "You don't need a whole new life. You need one honest page and a slower morning.",
+    "The overhaul never survives the week. It asks for a version of you who isn't tired yet.",
+    "The small thing survives the year. It's still there in December, quietly having changed everything.",
+    "So I started smaller than it felt worth. That is the size that stayed."
+   ],
+   "beats": [
+    "the overhaul never survives the week",
+    "the small thing survives the year",
+    "start smaller than feels worth it"
+   ],
+   "caption": "smaller than it felt worth.",
+   "date": "2026-07-18T00:12:53.268Z",
+   "taxon": "page",
+   "still": "/stills/journaling-notebook-12908963-p1.jpg",
+   "wide": "/stills/journaling-notebook-12908963-w.jpg",
+   "gallery": [
+    "/stills/journaling-notebook-12908963-p1.jpg",
+    "/stills/journaling-notebook-12908963-p2.jpg",
+    "/stills/journaling-notebook-12908963-p3.jpg"
+   ],
+   "clipId": "ia-11"
+  },
+  {
+   "slug": "i-traced-every-calm-season-of-my-life-back-to-the-same-five",
+   "n": 64,
+   "hook": "i traced every calm season of my life back to the same five quiet minutes",
+   "narration": [
+    "I traced every calm season of my life back to the same five quiet minutes.",
+    "Every good stretch had a slow morning somewhere inside it. Not a perfect one. Just a slow one.",
+    "And every hard season, when I looked back, had lost it first. The mornings went, and then everything else did.",
+    "That's the only pattern I ever found. Five minutes at the start, and the rest of it follows."
+   ],
+   "beats": [
+    "every calm stretch had a slow morning in it",
+    "every hard one didn't",
+    "that's the only pattern i ever found"
+   ],
+   "caption": "five minutes, every time.",
+   "date": "2026-07-17T13:54:29.954Z",
+   "taxon": "flame",
+   "still": "/stills/candle-flame-calm-26536165-p1.jpg",
+   "wide": "/stills/candle-flame-calm-26536165-w.jpg",
+   "gallery": [
+    "/stills/candle-flame-calm-26536165-p1.jpg",
+    "/stills/candle-flame-calm-26536165-p2.jpg",
+    "/stills/candle-flame-calm-26536165-p3.jpg"
+   ],
+   "clipId": "ia-10"
+  },
+  {
+   "slug": "steam-a-made-bed-one-page-no-rush-this-is-the-whole-practice",
+   "n": 65,
+   "hook": "steam, a made bed, one page, no rush \u2014 this is the whole practice",
+   "narration": [
+    "Steam, a made bed, one page, no rush. This is the whole practice.",
+    "None of it costs anything. I keep waiting for the part where it gets expensive, and it never comes.",
+    "None of it takes ten minutes. You could do all four before the kettle is even cool.",
+    "And somehow it holds the whole day together. Small things, done gently, in the same order every morning."
+   ],
+   "beats": [
+    "none of it costs anything",
+    "none of it takes ten minutes",
+    "and it holds the whole day together"
+   ],
+   "caption": "the whole practice.",
+   "date": "2026-07-17T12:06:59.150Z",
+   "taxon": "warmth",
+   "still": "/stills/making-tea-calm-11866333-p1.jpg",
+   "wide": "/stills/making-tea-calm-11866333-w.jpg",
+   "gallery": [
+    "/stills/making-tea-calm-11866333-p1.jpg",
+    "/stills/making-tea-calm-11866333-p2.jpg",
+    "/stills/making-tea-calm-11866333-p3.jpg"
+   ],
+   "clipId": "ia-09"
+  },
+  {
+   "slug": "nobody-tells-you-that-a-slow-morning-is-how-you-stop-living",
+   "n": 66,
+   "hook": "nobody tells you that a slow morning is how you stop living the same day on repeat",
+   "narration": [
+    "Nobody tells you that a slow morning is how you stop living the same day on repeat.",
+    "Rushed mornings all blur into one. A month of them and you can't tell a single one apart.",
+    "The slow ones you actually remember. There's something in them to hold onto.",
+    "You notice the light, and suddenly the day has an edge to it. It becomes its own day instead of another copy."
+   ],
+   "beats": [
+    "rushed mornings all blur into one",
+    "slow ones you actually remember",
+    "you notice the light, and the day has an edge"
+   ],
+   "caption": "not the same day again.",
+   "date": "2026-07-17T02:02:20.793Z",
+   "taxon": "light",
+   "still": "/stills/open-window-morning-breeze-11953761-p1.jpg",
+   "wide": "/stills/open-window-morning-breeze-11953761-w.jpg",
+   "gallery": [
+    "/stills/open-window-morning-breeze-11953761-p1.jpg",
+    "/stills/open-window-morning-breeze-11953761-p2.jpg",
+    "/stills/open-window-morning-breeze-11953761-p3.jpg"
+   ],
+   "clipId": "ia-08"
+  },
+  {
+   "slug": "the-girl-who-writes-one-page-before-the-noise-starts-is-on-a",
+   "n": 67,
+   "hook": "the girl who writes one page before the noise starts is on a different frequency",
+   "narration": [
+    "The girl who writes one page before the noise starts is on a different frequency.",
+    "She isn't calmer by nature. I know, because she used to be me on a loud morning.",
+    "She just got there first. Before the day had a chance to set the tone, she set it herself.",
+    "One page, before anything is asked of her. And then the noise arrives to find her already settled."
+   ],
+   "beats": [
+    "she isn't calmer by nature",
+    "she just got there first",
+    "one page, before anything is asked of her"
+   ],
+   "caption": "one page, before the noise.",
+   "date": "2026-07-17T00:12:38.474Z",
+   "taxon": "page",
+   "still": "/stills/hand-writing-journal-15764765-p1.jpg",
+   "wide": "/stills/hand-writing-journal-15764765-w.jpg",
+   "gallery": [
+    "/stills/hand-writing-journal-15764765-p1.jpg",
+    "/stills/hand-writing-journal-15764765-p2.jpg",
+    "/stills/hand-writing-journal-15764765-p3.jpg"
+   ],
+   "clipId": "ia-07"
+  },
+  {
+   "slug": "i-stopped-checking-my-phone-before-i-checked-in-with-myself",
+   "n": 68,
+   "hook": "i stopped checking my phone before i checked in with myself \u2014 and my whole week got quiet",
+   "narration": [
+    "I stopped checking my phone before I checked in with myself, and my whole week got quiet.",
+    "The phone hands you everyone else's morning before you've had your own. You're answering before you've even arrived.",
+    "Now I ask myself one question first. How am I, actually. That's it. Nothing more complicated than that.",
+    "The week borrows whatever the morning sets. Mine got something slow, and it kept the shape all the way to Friday."
+   ],
+   "beats": [
+    "the phone hands you everyone else's morning",
+    "one question for myself, first",
+    "the week borrows whatever the morning sets"
+   ],
+   "caption": "the quiet reset.",
+   "date": "2026-07-16T17:01:21.117Z",
+   "taxon": "warmth",
+   "still": "/stills/morning-coffee-sunlight-15039552-p1.jpg",
+   "wide": "/stills/morning-coffee-sunlight-15039552-w.jpg",
+   "gallery": [
+    "/stills/morning-coffee-sunlight-15039552-p1.jpg",
+    "/stills/morning-coffee-sunlight-15039552-p2.jpg",
+    "/stills/morning-coffee-sunlight-15039552-p3.jpg"
+   ],
+   "clipId": "ia-06"
+  },
+  {
+   "slug": "discipline-was-never-about-5am-it-was-about-being-gentle",
+   "n": 69,
+   "hook": "discipline was never about 5am. it was about being gentle enough to keep going",
+   "narration": [
+    "Discipline was never about five a.m. It was about being gentle enough to keep going.",
+    "The harsh routines always ended around week two. I'd miss one morning and quietly decide I'd failed.",
+    "The gentle ones are still here in June. Not because I'm stronger, but because there was nothing to fail at.",
+    "I kept the one that didn't punish me. That is all my consistency has ever been."
+   ],
+   "beats": [
+    "harsh routines end in two weeks",
+    "gentle ones are still here in june",
+    "you keep what doesn't punish you"
+   ],
+   "caption": "gentle is sustainable.",
+   "date": "2026-07-16T12:24:13.077Z",
+   "taxon": "warmth",
+   "still": "/stills/hands-holding-mug-10568206-p1.jpg",
+   "wide": "/stills/hands-holding-mug-10568206-w.jpg",
+   "gallery": [
+    "/stills/hands-holding-mug-10568206-p1.jpg",
+    "/stills/hands-holding-mug-10568206-p2.jpg",
+    "/stills/hands-holding-mug-10568206-p3.jpg"
+   ],
+   "clipId": "ia-05"
+  },
+  {
+   "slug": "i-stopped-confusing-chaos-with-purpose-and-my-whole-life-got",
+   "n": 70,
+   "hook": "i stopped confusing chaos with purpose and my whole life got quiet",
+   "narration": [
+    "I stopped confusing chaos with purpose, and my whole life got quiet.",
+    "For a long time busy felt like proof that I mattered. If the day was full, I must be doing something right.",
+    "It was only noise wearing a schedule. None of it was taking me anywhere I wanted to go.",
+    "Quiet turned out to be the thing I was after the whole time. It just never announced itself."
+   ],
+   "beats": [
+    "busy felt like proof i mattered",
+    "it was only noise wearing a schedule",
+    "quiet was the thing i actually wanted"
+   ],
+   "caption": "quieter on purpose.",
+   "date": "2026-07-16T01:05:55.356Z",
+   "taxon": "waking",
+   "still": "/stills/cozy-blanket-reading-10758621-p1.jpg",
+   "wide": "/stills/cozy-blanket-reading-10758621-w.jpg",
+   "gallery": [
+    "/stills/cozy-blanket-reading-10758621-p1.jpg",
+    "/stills/cozy-blanket-reading-10758621-p2.jpg",
+    "/stills/cozy-blanket-reading-10758621-p3.jpg"
+   ],
+   "clipId": "ia-04"
+  },
+  {
+   "slug": "nobody-warns-you-how-much-five-quiet-minutes-every-morning",
+   "n": 71,
+   "hook": "nobody warns you how much five quiet minutes every morning changes who you are",
+   "narration": [
+    "Nobody warns you how much five quiet minutes every morning changes who you are.",
+    "Five minutes is small enough that you actually keep it. That's the only reason it works.",
+    "It was never really about the minutes. It's about being someone who pauses before the day starts pulling.",
+    "And slowly I turned into someone who checks in with herself first. Everything after that got a little softer."
+   ],
+   "beats": [
+    "five minutes is small enough to keep",
+    "it was never about the minutes",
+    "you become someone who checks in first"
+   ],
+   "caption": "five minutes. that's the whole thing.",
+   "date": "2026-07-15T22:50:01.171Z",
+   "taxon": "light",
+   "still": "/stills/sunlit-window-curtain-10308537-p1.jpg",
+   "wide": "/stills/sunlit-window-curtain-10308537-w.jpg",
+   "gallery": [
+    "/stills/sunlit-window-curtain-10308537-p1.jpg",
+    "/stills/sunlit-window-curtain-10308537-p2.jpg",
+    "/stills/sunlit-window-curtain-10308537-p3.jpg"
+   ],
+   "clipId": "ia-03"
+  },
+  {
+   "slug": "pov-you-finally-became-the-girl-who-resets-before-she-reaches",
+   "n": 72,
+   "hook": "POV: you finally became the girl who resets before she reaches for her phone",
+   "narration": [
+    "POV. You finally became the girl who resets before she reaches for her phone.",
+    "The first ten minutes belong to me now. That's the only rule I kept, and it turned out to be enough.",
+    "No one else's voice gets in before mine does. Not the messages, not the headlines, not the noise waiting on the other side of the screen.",
+    "And the strange part is the day starts slower, and then it just stays slower. The whole thing carries."
+   ],
+   "beats": [
+    "the first ten minutes belong to me now",
+    "no one's voice in my head before mine",
+    "the day starts slower, and it stays slower"
+   ],
+   "caption": "the quiet reset.",
+   "date": "2026-07-15T20:37:38.031Z",
+   "taxon": "waking",
+   "still": "/stills/slow-morning-bed-10554785-p1.jpg",
+   "wide": "/stills/slow-morning-bed-10554785-w.jpg",
+   "gallery": [
+    "/stills/slow-morning-bed-10554785-p1.jpg",
+    "/stills/slow-morning-bed-10554785-p2.jpg",
+    "/stills/slow-morning-bed-10554785-p3.jpg"
+   ],
+   "clipId": "ia-02"
+  },
+  {
+   "slug": "the-version-of-me-that-journals-every-morning-is-a-completely",
+   "n": 73,
+   "hook": "the version of me that journals every morning is a completely different person",
+   "narration": [
+    "The version of me that journals every morning is a completely different person.",
+    "She isn't doing more than I was. She just decides how the day is going to feel before anyone else gets a say in it.",
+    "One page. Before the day asks anything of me. That's the whole habit, and it's smaller than it sounds.",
+    "Nothing changes overnight. It changes somewhere around page thirty, when you notice you've been calmer for weeks and you can't point to when it started."
+   ],
+   "beats": [
+    "she isn't doing more. she's just deciding first",
+    "one page, before the day asks anything",
+    "nothing changes overnight. it changes around page thirty"
+   ],
+   "caption": "soft mornings, one honest page.",
+   "date": "2026-07-15T15:29:38.544Z",
+   "taxon": "page",
+   "still": "/stills/journaling-notebook-12474225-p1.jpg",
+   "wide": "/stills/journaling-notebook-12474225-w.jpg",
+   "gallery": [
+    "/stills/journaling-notebook-12474225-p1.jpg",
+    "/stills/journaling-notebook-12474225-p2.jpg",
+    "/stills/journaling-notebook-12474225-p3.jpg"
+   ],
+   "clipId": "ia-01"
+  }
+ ]
+}

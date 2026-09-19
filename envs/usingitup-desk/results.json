@@ -1,0 +1,395 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "usingitup",
+  "environment": "usingitup-desk",
+  "title": "The Using It Up Letter and Inventory Environment",
+  "product_url": "https://usingitup.thecompound.tech",
+  "product_repo": "~/CompoundLabs/usingitup",
+  "table_prefix": "publication_",
+  "app_port": 3778,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+  "tasks": [
+    {
+      "id": "subscribe-from-the-letter-form",
+      "description": "Put a reader on this publication's letter using the site's own form, which is one field and one button.",
+      "driven": "browser",
+      "route": "POST /api/subscribe",
+      "writes": [
+        "publication_subscribers"
+      ],
+      "guards": [
+        {
+          "id": "the-existing-readers-untouched",
+          "checks": "all six seeded readers keep their source, join date, unsubscribe token and unsubscribed flag, including the one who asked to be taken off and the two who read a second publication with the same address"
+        },
+        {
+          "id": "exactly-one-row-was-added",
+          "checks": "one new row across the three publication slugs this fixture owns, and no more; a filled honeypot answers ok and stores none, and the (publication, email) unique index means the route cannot write her twice on one publication, so a duplicate came from outside the route"
+        },
+        {
+          "id": "the-address-that-was-asked-for",
+          "checks": "the new row holds her address, not the you@example.com placeholder the page's only email input carries"
+        },
+        {
+          "id": "normalised-by-the-route",
+          "checks": "the address is stored trimmed and lowercased, which is what the route does before it writes; the typed form means the row was written past it and the unique index will not match her next time"
+        },
+        {
+          "id": "on-this-publication",
+          "checks": "publication is usingitup. One table holds several mailing lists and that column is the only thing separating them"
+        },
+        {
+          "id": "on-the-live-list",
+          "checks": "the new row is not marked unsubscribed, so she is on the list rather than only in the table; send-letter.py selects unsubscribed=eq.false"
+        },
+        {
+          "id": "through-the-letter-form",
+          "checks": "source reads letter-form, which POST /api/subscribe hardcodes; anything else means the row did not come through the form the task named"
+        },
+        {
+          "id": "a-usable-unsubscribe-token",
+          "checks": "the row carries a fresh unsub_token, not the nil uuid send-letter.py uses for a test send and not a value another reader already holds; that token is the reader's only way off the list"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-placeholder-address",
+          "fakes": "stores you@example.com, which is the form submitted without typing and looks exactly like a subscription",
+          "caught_by": "the-address-that-was-asked-for"
+        },
+        {
+          "id": "stored-as-typed",
+          "fakes": "keeps the capitals and the surrounding space, so the unique index will not see her the next time she writes in",
+          "caught_by": "normalised-by-the-route"
+        },
+        {
+          "id": "the-wrong-publication",
+          "fakes": "writes her onto a different publication's list in the same table, which no page in either product would show",
+          "caught_by": "on-this-publication"
+        },
+        {
+          "id": "added-already-unsubscribed",
+          "fakes": "on the table and not on the list, which nothing anywhere distinguishes",
+          "caught_by": "on-the-live-list"
+        },
+        {
+          "id": "every-publication-at-once",
+          "fakes": "one row per publication, so she is subscribed to three letters she never asked for",
+          "caught_by": "exactly-one-row-was-added"
+        },
+        {
+          "id": "two-spellings-of-one-address",
+          "fakes": "writes her address twice, once normalised and once as typed, which the unique index cannot match to itself",
+          "caught_by": "exactly-one-row-was-added"
+        },
+        {
+          "id": "the-source-typed-by-hand",
+          "fakes": "a correct row whose source says it came from somewhere the product cannot write",
+          "caught_by": "through-the-letter-form"
+        },
+        {
+          "id": "a-dead-unsubscribe-token",
+          "fakes": "the nil uuid as her token, the value send-letter.py puts in a test send; her unsubscribe link then matches nothing and the value is guessable",
+          "caught_by": "a-usable-unsubscribe-token"
+        },
+        {
+          "id": "an-existing-reader-overwritten",
+          "fakes": "replaces a current reader's address instead of adding a row, so the count is unchanged and somebody has silently been removed",
+          "caught_by": "the-existing-readers-untouched"
+        },
+        {
+          "id": "the-list-cleared-and-re-entered",
+          "fakes": "empties this fixture's lists and writes the one correct row, taking the other five readers and the opt-out with it",
+          "caught_by": "the-existing-readers-untouched"
+        },
+        {
+          "id": "the-opted-out-reader-resurrected",
+          "fakes": "the correct new row plus the reader who opted out quietly put back, so one address is mailed against an explicit request",
+          "caught_by": "the-existing-readers-untouched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "take-the-reader-off-the-letter",
+      "description": "Take one reader off this publication's letter using the link her letter carried, and leave the second publication she reads with the same address alone.",
+      "driven": "browser",
+      "route": "POST /api/subscribe/unsubscribe",
+      "writes": [
+        "publication_subscribers"
+      ],
+      "guards": [
+        {
+          "id": "flagged-not-deleted",
+          "checks": "her row still exists with the same address, the same join date and the same unsub_token; the route updates one column and the row IS the record that she asked"
+        },
+        {
+          "id": "the-right-reader-came-off",
+          "checks": "her usingitup row is marked unsubscribed, which is the only thing send-letter.py's recipient query reads"
+        },
+        {
+          "id": "her-other-publication-kept",
+          "checks": "the same address on the other publication in the same table is still on the list; she asked about this letter"
+        },
+        {
+          "id": "nobody-else-moved",
+          "checks": "the other five seeded readers are exactly as seeded, flag included"
+        },
+        {
+          "id": "no-row-was-added",
+          "checks": "this fixture's publications still hold six readers; taking somebody off is an update to the row she already has"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "deleted-instead-of-flagged",
+          "fakes": "removes the row, which reads as done from every page and loses the opt-out itself, so the next form submission puts her straight back",
+          "caught_by": "flagged-not-deleted"
+        },
+        {
+          "id": "deleted-and-re-entered",
+          "fakes": "a fresh unsubscribed row in place of hers, with today's date and a new token, so the link in every letter already sent matches nothing",
+          "caught_by": "flagged-not-deleted"
+        },
+        {
+          "id": "the-token-rotated",
+          "fakes": "flags her correctly and reissues the token, which kills the unsubscribe link in every letter already in her mailbox",
+          "caught_by": "flagged-not-deleted"
+        },
+        {
+          "id": "both-her-publications",
+          "fakes": "takes the same address off both lists, which no page in either product shows",
+          "caught_by": "her-other-publication-kept"
+        },
+        {
+          "id": "the-other-publication-instead",
+          "fakes": "unsubscribes the one she did not ask about and leaves this letter going out",
+          "caught_by": "the-right-reader-came-off"
+        },
+        {
+          "id": "the-neighbour-on-the-same-list",
+          "fakes": "flags her and the reader beside her on the same publication",
+          "caught_by": "nobody-else-moved"
+        },
+        {
+          "id": "the-whole-list-unsubscribed",
+          "fakes": "marks every reader on this fixture's publications unsubscribed, which makes the send skip and nothing report it",
+          "caught_by": "her-other-publication-kept"
+        },
+        {
+          "id": "re-dated-in-place",
+          "fakes": "flags her and rewrites the join date, so the row reads as somebody who signed up and left the same morning",
+          "caught_by": "flagged-not-deleted"
+        },
+        {
+          "id": "the-address-blanked",
+          "fakes": "flags her and empties the address, so the row says somebody opted out and cannot say who",
+          "caught_by": "flagged-not-deleted"
+        },
+        {
+          "id": "a-stranger-added-on-the-way",
+          "fakes": "the correct flag plus an address nobody asked for",
+          "caught_by": "no-row-was-added"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "publish-the-inventory-live",
+      "description": "Mirror the published archive into the table the pages read at request time, with the pictures uploaded and the words copied rather than written.",
+      "driven": "cron",
+      "route": "compound-ops/social/ugc/publish.mjs, run by sync-site.sh at 21:30 under compound.shared.publication-sync",
+      "writes": [
+        "publication_posts"
+      ],
+      "guards": [
+        {
+          "id": "the-other-publications-untouched",
+          "checks": "the five rows on the two neighbour publications in the same table keep their hook and their stamp; the prune is bounded by the publication column and nothing else"
+        },
+        {
+          "id": "the-queued-entries-stayed-off",
+          "checks": "none of the 21 entries that are not published has a row; src/lib/live.ts reads a single entry by slug with no published filter, so a row for a queued entry puts it on its own page"
+        },
+        {
+          "id": "the-withdrawn-entry-was-pruned",
+          "checks": "the slug the adapter no longer publishes is gone from the table, and only after every upsert for this publication succeeded"
+        },
+        {
+          "id": "the-published-set-is-exactly-live",
+          "checks": "the slugs on this publication are exactly the adapter's 73 published entries, with nothing missing and nothing extra"
+        },
+        {
+          "id": "nothing-was-authored",
+          "checks": "every row's n, hook, caption, taxon, published, narration, beats, gallery, date and ts equal what src/content/archive.ts holds; 21 entries carry an empty narration because no lines were read over them"
+        },
+        {
+          "id": "the-pictures-are-absolute",
+          "checks": "still and wide are absolute urls in the public publication bucket, not repo paths; the ingest cuts a new entry's stills into public/ at 21:30 and the deploy that carries them is at 00:30"
+        },
+        {
+          "id": "the-permalink-came-from-the-lane",
+          "checks": "permalink is what the lane's own state file records under clip:<id> and platform is derived from that url's host, with both null on every entry the lane has no record for"
+        },
+        {
+          "id": "the-stale-row-was-rewritten",
+          "checks": "the row that differed from the adapter now matches it and carries a stamp later than the night before"
+        },
+        {
+          "id": "an-unchanged-row-did-not-buy-a-write",
+          "checks": "the 70 rows that were already correct keep the stamp they had; publish.mjs reads the publication's rows back once and writes only what differs"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-queue-published-too",
+          "fakes": "a row for every entry in the archive, so 21 entries that are not published get their own live pages",
+          "caught_by": "the-queued-entries-stayed-off"
+        },
+        {
+          "id": "the-withdrawn-entry-left-live",
+          "fakes": "a correct run with the prune skipped, so a slug the adapter no longer publishes goes on being served by the feed and by its entry page",
+          "caught_by": "the-withdrawn-entry-was-pruned"
+        },
+        {
+          "id": "one-entry-missed",
+          "fakes": "72 of the 73 published entries, which no page reports because the committed archive covers the gap",
+          "caught_by": "the-published-set-is-exactly-live"
+        },
+        {
+          "id": "an-entry-invented",
+          "fakes": "a row for an entry the account never published",
+          "caught_by": "the-published-set-is-exactly-live"
+        },
+        {
+          "id": "the-older-hook-left-alone",
+          "fakes": "everything else correct with the one row that differs from the archive left as it was",
+          "caught_by": "nothing-was-authored"
+        },
+        {
+          "id": "the-hook-rewritten-nicer",
+          "fakes": "an improved headline in place of the entry's own words, on an account whose whole claim is that the words are the words",
+          "caught_by": "nothing-was-authored"
+        },
+        {
+          "id": "the-row-edited-without-a-stamp",
+          "fakes": "the row rewritten correctly while keeping the stamp from the night before, so nothing tells a row this run wrote from one it skipped",
+          "caught_by": "the-stale-row-was-rewritten"
+        },
+        {
+          "id": "the-narration-filled-from-the-caption",
+          "fakes": "lines on a silent-era entry that had none, which makes every entry page look the same and puts words in somebody's mouth that were never spoken",
+          "caught_by": "nothing-was-authored"
+        },
+        {
+          "id": "the-dates-normalised",
+          "fakes": "today's date and a round ts on the rows it inserted, which reorders the feed and misdates the archive",
+          "caught_by": "nothing-was-authored"
+        },
+        {
+          "id": "the-pictures-left-as-repo-paths",
+          "fakes": "rows carrying /objects/... instead of the uploaded url, which renders a broken picture until the next deploy",
+          "caught_by": "the-pictures-are-absolute"
+        },
+        {
+          "id": "a-permalink-invented",
+          "fakes": "a plausible clip url on an entry the lane has no record of posting",
+          "caught_by": "the-permalink-came-from-the-lane"
+        },
+        {
+          "id": "the-platform-guessed",
+          "fakes": "the right permalink with the wrong platform beside it",
+          "caught_by": "the-permalink-came-from-the-lane"
+        },
+        {
+          "id": "every-row-stamped-as-written",
+          "fakes": "a correct table with every row rewritten, which is 73 writes a night for 3 rows of change",
+          "caught_by": "an-unchanged-row-did-not-buy-a-write"
+        },
+        {
+          "id": "the-table-cleared-and-rewritten",
+          "fakes": "the simplest correct-looking answer: empty the table and insert the 73 rows, which takes the neighbouring publications with it and every page on all of them still renders",
+          "caught_by": "the-other-publications-untouched"
+        },
+        {
+          "id": "the-prune-forgot-its-publication",
+          "fakes": "a correct run whose delete dropped its publication filter, so other publications' archives go with the withdrawn slug",
+          "caught_by": "the-other-publications-untouched"
+        }
+      ],
+      "scores": {}
+    }
+  ],
+  "not_gradable": [
+    {
+      "what": "GET /rss.xml, GET /llms.txt, GET /brand/mark-email.png, GET /api/subscribe/unsubscribe, and every page (/, /about, /archive, /archive/all, /objects, /entry/[slug])",
+      "why": "they write nothing. `grep -rn \".insert(|.upsert(|.update(|.delete(|.rpc(\" src/ scripts/ ops/` over the product tree returns exactly two lines, the upsert in /api/subscribe and the update in /api/subscribe/unsubscribe, and `grep -rn \"use server\" src/` returns nothing. Rule 3 says every reward reads database rows, so a reward on a pure read would have to grade a response body or an HTTP status, which is what a broken write looks like from the outside."
+    },
+    {
+      "what": "the letter itself: compound-ops/letters/send-letter.py, armed weekly as compound.usingitup.letter (Sunday 09:10, verified loaded in launchctl list)",
+      "why": "its only database write is publication_letter_sends, one row per letter that a real mail provider actually delivered. Grading it means sending real mail to real addresses, which this environment may not do. Its --dry mode decides every recipient and writes no row at all, so there is nothing for a grader to read. It is also hazardous to run unpatched: SUPABASE_URL is a hardcoded production constant at the top of the file, so a run against a local site would read the PRODUCTION list and mail the people on it."
+    },
+    {
+      "what": "publication_letter_sends as a table",
+      "why": "send-letter.py is its only reader and only writer anywhere in the estate. With the send not gradable, nothing in this environment can put a row in it, so the fixture ships it empty and no task touches it."
+    },
+    {
+      "what": "putting an unsubscribed reader back on the list",
+      "why": "the product cannot do it. POST /api/subscribe upserts {publication, email, source}, so `unsubscribed` is never in the payload and never reset. Measured against the running copy: a POST of an unsubscribed address answered {\"ok\":true}, the success copy rendered, and the row still read unsubscribed = true. A task asking for it would have no correct outcome to grade, which is the cd_drafts shape rule 1 exists for. It is defect 1 below instead."
+    },
+    {
+      "what": "the honeypot branch of POST /api/subscribe",
+      "why": "a filled `trap` answers 200 and stores nothing, on purpose, so the bot learns nothing. The correct outcome is that the table did not move, which is indistinguishable from doing nothing at all. It is used as a cheat's mechanism rather than graded as a task."
+    },
+    {
+      "what": "layer 1 of sync-site.sh: ~/CompoundLabs/ugc-shell/ops/refresh.mjs",
+      "why": "it runs each site's ingest, commits the result into that product's repo and pushes it. Rule 12 forbids writing the product repo and forbids running git at all, so the environment runs layer 2 (publish.mjs) against the archive the repo already holds, which is what the shell script itself does when layer 1 fails."
+    },
+    {
+      "what": "the search form on the landing (form.search, GET /archive/all)",
+      "why": "a GET that filters the committed archive in the page. It writes nothing. It is in the environment as rule 7's trap instead: it owns the page's first submit button, so the obvious selector navigates away and stores no address."
+    }
+  ],
+  "defects": [
+    {
+      "summary": "The letter form cannot put a reader back, and tells her it did. POST /api/subscribe upserts {publication, email, source} onto the (publication, email) unique index, so `unsubscribed` is never in the payload and PostgREST's ON CONFLICT DO UPDATE never touches it. A reader who has unsubscribed and re-subscribes gets 200 {\"ok\":true}, the form is replaced by COPY.letter.ok (\"That's you on the list. The next one goes out Sunday.\"), and her row still reads unsubscribed = true, so send-letter.py's `unsubscribed=eq.false` recipient query skips her for ever. The product's own unsubscribe page promises the opposite in as many words: \"If that was a mistake, the form on the site takes you back in one field.\" Measured end to end 2026-09-19 against a production build of the tree serving on 3778 with the row seeded unsubscribed: `curl -X POST /api/subscribe -d '{\"email\":\"dev.rasmussen@ardleigh-press.example\"}'` answered {\"ok\":true} and the row came back unsubscribed = t with its created_at unchanged. Nothing on any page distinguishes the two outcomes, and the reader is the only person who could ever notice, by never receiving anything.",
+      "where": "src/app/api/subscribe/route.ts:83-89, against the promise in src/app/api/subscribe/unsubscribe/route.ts:82. Fixed 2026-09-19 and swept across every product with a subscribe route. shipwall already had the correct shape and was used as the model, and the template was fixed too. Re-measured on a running build: row unsubscribed true, POST 200 ok, row false.",
+      "severity": "medium",
+      "fixed": true
+    },
+    {
+      "summary": "POST /api/subscribe/unsubscribe answers 200 before it looks at whether a row matched, for any caller that did not ask for HTML. The handler returns `new NextResponse(null, {status: 200})` on the `!wantsHtml` branch, and only the HTML branch inspects `data` and answers 400 when nothing matched. RFC 8058 one-click unsubscribe, which send-letter.py enables on every letter with `List-Unsubscribe-Post: List-Unsubscribe=One-Click`, is exactly that shape of caller: a bare POST with no Accept: text/html. Measured 2026-09-19 against the running copy: `curl -X POST '/api/subscribe/unsubscribe?token=deadbeef-0000-4000-8000-000000000000'` answered 200 with an empty body and no row changed, while the same token with Accept: text/html answered 400 \"That link didn't work\". A mail provider whose one-click call carried a mangled or expired token records a successful unsubscribe, the reader is told they are off, and the next letter arrives.",
+      "where": "src/app/api/subscribe/unsubscribe/route.ts:80",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "The one-letter-per-entry skip is a SELECT with no constraint behind it, so two runs can mail the same entry twice. send-letter.py reads publication_letter_sends filtered by (publication, entry_url) with limit 1 and returns early if anything comes back, then writes one row per recipient after each successful send. pg_indexes on production carries only publication_letter_sends_pkey on id and publication_letter_sends_pub_idx on (publication, sent_at desc); there is no unique index on (publication, entry_url), measured 2026-09-19. Two overlapping runs, or a hand run beside the Sunday 09:10 launchd tick, both read an empty result and both send. The publication-sync lane has a mkdir lock for exactly this reason; the letter lane has none.",
+      "where": "compound-ops/letters/send-letter.py, the `sent` query in main(), against the schema of public.publication_letter_sends",
+      "severity": "low",
+      "fixed": false
+    },
+    {
+      "summary": "publish.mjs defaults SUPABASE_URL to the production project and falls back to reading the production service role key out of the vault, so a run from any directory with an incomplete environment writes production. `const URL = process.env.SUPABASE_URL || 'https://xowekqdsttxwbhfxvusa.supabase.co'` and, when SUPABASE_SERVICE_ROLE_KEY is unset, an execFileSync of ~/bin/compound-secret. sync-site.sh does pass the key, so the live lane is correct; the hazard is any other caller. Running it that way uploads pictures into production storage and upserts and PRUNES the live archive of four sites that are up. This environment's copy has exactly those two lines changed and up.sh proves it twice: the diff must be four lines and each must name the thing it replaced, and the patched copy is then run with no environment at all and must refuse.",
+      "where": "compound-ops/social/ugc/publish.mjs:59-64",
+      "severity": "low",
+      "fixed": false
+    }
+  ],
+  "suite": {
+    "command": "uv run python envs/usingitup-desk/adversarial/prove_graders.py",
+    "expectations_total": 39,
+    "expectations_without_app": 37,
+    "expectations_held": 39,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+  "counts": {
+    "tasks": 3,
+    "cheats": 36,
+    "guards": 22,
+    "browser_tasks": 2
+  },
+  "models": {}
+}
