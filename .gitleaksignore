@@ -11,3 +11,8 @@
 # rotate.
 aa6abbd2b25e6be3ac57f7a4ab40ee45141e3653:envs/parserail-desk/harness/rollout.mjs:generic-api-key:30
 aa6abbd2b25e6be3ac57f7a4ab40ee45141e3653:envs/parserail-desk/parserail_desk/taskset.py:generic-api-key:78
+
+# matchline-desk's SSRF canary. Not a credential: it is a string the environment's own probe
+# invented for its own listener, quoted in the README's fenced transcript of that measurement so
+# the finding can be read back. It authenticates nothing and never existed outside that probe.
+d04fcdc43ccef59db399abccbd869757a4b29c24:envs/matchline-desk/README.md:generic-api-key:148
