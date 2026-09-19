@@ -1,0 +1,8 @@
+{
+  "name": "soft-money-journal-desk-harness",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "puppeteer": "^24.10.2"
+  }
+}

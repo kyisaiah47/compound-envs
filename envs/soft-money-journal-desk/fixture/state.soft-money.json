@@ -1,0 +1,47 @@
+{
+  "_note": [
+    "THE POSTING LANE'S STATE, INVENTED. This is not a copy of",
+    "compound-ops/social/ugc/daemon/state.soft-money.json, and it must not become one. The real",
+    "file is the live daemon's working directory: it sits beside account credentials and an ARMED",
+    "flag, and its contents change every time a clip goes out, so a fixture that copied it would",
+    "grade a value that moves on its own.",
+    "publish.mjs reads exactly one thing out of it: `actioned`, keyed `clip:<entry id>`. The record",
+    "supplies the permalink, and platformOf() derives the platform from the URL's host. The five",
+    "records below are the five shapes that key can hold, and each one is a guard on task C:",
+    "  a tiktok permalink, an instagram permalink, a youtube permalink (the third branch of",
+    "  platformOf, which no sibling fixture reaches), a record that posted and carries NO url, and",
+    "  a record that is a bare `true` rather than an object. The last two both mean `permalink",
+    "  null`, and publish.mjs gets there by two different code paths:",
+    "    rec && typeof rec === 'object' ? rec.postedUrl ?? null : null",
+    "The entry ids are the product's own, out of src/content/entries.json. Every URL is invented",
+    "and none of them resolves."
+  ],
+  "startDate": "2026-07-02",
+  "paused": false,
+  "actioned": {
+    "clip:smgen-1788312380158-0": {
+      "posted": true,
+      "ts": 1788312380158,
+      "clip": "clips/sm-fixture-a.mp4",
+      "postedUrl": "https://www.tiktok.com/@softmoneyjournal/video/7400000000000000101"
+    },
+    "clip:smgen-1788054658393-0": {
+      "posted": true,
+      "ts": 1788054658393,
+      "clip": "clips/sm-fixture-b.mp4",
+      "postedUrl": "https://www.instagram.com/reel/Cxxfixture02/"
+    },
+    "clip:smgen-1787711023302-0": {
+      "posted": true,
+      "ts": 1787711023302,
+      "clip": "clips/sm-fixture-c.mp4",
+      "postedUrl": "https://www.youtube.com/shorts/smjFixture03"
+    },
+    "clip:smgen-1787274763128-0": {
+      "posted": true,
+      "ts": 1787274763128,
+      "clip": "clips/sm-fixture-d.mp4"
+    },
+    "clip:smgen-1786841525068-0": true
+  }
+}

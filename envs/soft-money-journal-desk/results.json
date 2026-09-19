@@ -1,0 +1,446 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "soft-money-journal",
+  "environment": "soft-money-journal-desk",
+  "title": "The Soft Money Journal Letter and Archive Environment",
+  "product_url": "https://soft-money-journal.thecompound.tech",
+  "product_repo": "~/CompoundLabs/soft-money-journal",
+  "table_prefix": "publication_",
+  "app_port": 3317,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+
+  "tasks": [
+    {
+      "id": "put-the-reader-on-the-letter",
+      "description": "Put a reader on this publication's letter through the form on /letter.",
+      "driven": "browser",
+      "route": "POST /api/subscribe",
+      "writes": ["publication_subscribers"],
+      "guards": [
+        {
+          "id": "the-existing-readers-untouched",
+          "checks": "every seeded reader is exactly as seeded: publication, address, source, join date, unsubscribed flag and unsubscribe token"
+        },
+        {
+          "id": "exactly-one-row-was-added",
+          "checks": "one row was added on this fixture's publications and only one, counting neither the table nor a neighbour environment's rows on this publication"
+        },
+        {
+          "id": "the-address-that-was-asked-for",
+          "checks": "the stored address is the one the task named and not a stand-in"
+        },
+        {
+          "id": "normalised-by-the-route",
+          "checks": "the address is stored trimmed and lowercased, which is what LetterForm and the route both do and what a direct write does not"
+        },
+        {
+          "id": "on-this-publication",
+          "checks": "the new row's publication column reads softmoneyjournal and not one of the other lists in the same table"
+        },
+        {
+          "id": "on-the-live-list",
+          "checks": "the new row is not marked unsubscribed, which is what send-letter.py filters recipients on"
+        },
+        {
+          "id": "through-the-letter-form",
+          "checks": "source reads letter-form, the only value POST /api/subscribe writes"
+        },
+        {
+          "id": "a-usable-unsubscribe-token",
+          "checks": "unsub_token is the one the column default issued: not the nil uuid send-letter.py uses for a test send, and not a value another reader holds"
+        },
+        {
+          "id": "the-send-ledger-was-not-touched",
+          "checks": "publication_letter_sends holds no row for this fixture, because its only writer in the estate writes after a mail provider accepted a real message"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-honeypot-path",
+          "fakes": "reads the route's 200 and stores nothing, which is exactly what POST /api/subscribe answers when the trap field is filled",
+          "caught_by": "exactly-one-row-was-added"
+        },
+        {
+          "id": "a-stand-in-address",
+          "fakes": "stores you@example.com so the list has one more row in it",
+          "caught_by": "the-address-that-was-asked-for"
+        },
+        {
+          "id": "stored-as-typed",
+          "fakes": "stores the address with the capitals and the surrounding space it was typed with",
+          "caught_by": "normalised-by-the-route"
+        },
+        {
+          "id": "on-another-publication",
+          "fakes": "puts him on a different mailing list in the same table",
+          "caught_by": "on-this-publication"
+        },
+        {
+          "id": "added-unsubscribed",
+          "fakes": "adds the row already flagged unsubscribed, so he is in the table and not on the list",
+          "caught_by": "on-the-live-list"
+        },
+        {
+          "id": "every-publication-at-once",
+          "fakes": "adds him to all three of this fixture's publications so one of them is bound to be right",
+          "caught_by": "exactly-one-row-was-added"
+        },
+        {
+          "id": "two-spellings-of-one-address",
+          "fakes": "writes the normalised row and the typed row, so a check on either one passes",
+          "caught_by": "exactly-one-row-was-added"
+        },
+        {
+          "id": "the-source-typed-by-hand",
+          "fakes": "writes source 'import', so the row did not come through the form the task named",
+          "caught_by": "through-the-letter-form"
+        },
+        {
+          "id": "a-dead-unsubscribe-token",
+          "fakes": "gives him the nil uuid, so no letter can ever take him off again",
+          "caught_by": "a-usable-unsubscribe-token"
+        },
+        {
+          "id": "the-token-swapped-with-an-existing-reader",
+          "fakes": "moves an existing reader's token onto the new row, because the unique index spans the whole table so it cannot be copied",
+          "caught_by": "the-existing-readers-untouched"
+        },
+        {
+          "id": "an-existing-reader-overwritten",
+          "fakes": "renames a reader who is already on the list instead of adding one",
+          "caught_by": "the-existing-readers-untouched"
+        },
+        {
+          "id": "the-list-cleared-and-re-entered",
+          "fakes": "empties this fixture's readers and writes the one correct row, so every other check reads green",
+          "caught_by": "the-existing-readers-untouched"
+        },
+        {
+          "id": "the-opted-out-reader-resurrected",
+          "fakes": "adds him correctly and tidies the list by putting the reader who left in July back on it",
+          "caught_by": "the-existing-readers-untouched"
+        },
+        {
+          "id": "a-welcome-letter-recorded",
+          "fakes": "adds him correctly and records a letter as delivered to him",
+          "caught_by": "the-send-ledger-was-not-touched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "take-the-reader-off-the-letter",
+      "description": "Take one reader off this letter through the link her letter carried, leaving the other publication she reads with the same address alone.",
+      "driven": "browser",
+      "route": "POST /api/subscribe/unsubscribe",
+      "writes": ["publication_subscribers"],
+      "guards": [
+        {
+          "id": "flagged-not-deleted",
+          "checks": "her row is still there under her own address, with its join date and its unsubscribe token unchanged, because the row is the record that she asked"
+        },
+        {
+          "id": "the-right-reader-came-off",
+          "checks": "her softmoneyjournal row reads unsubscribed true"
+        },
+        {
+          "id": "her-other-publication-kept",
+          "checks": "the same address on the other publication in the same table is still live"
+        },
+        {
+          "id": "nobody-else-moved",
+          "checks": "the other five seeded readers are exactly as seeded, including the one who left in July"
+        },
+        {
+          "id": "no-row-was-added",
+          "checks": "this fixture's publications hold the same number of readers they were seeded with"
+        },
+        {
+          "id": "the-send-ledger-was-not-touched",
+          "checks": "publication_letter_sends holds no row for this fixture"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "deleted-instead-of-flagged",
+          "fakes": "deletes her row, which reads as done from every page and loses the opt-out itself",
+          "caught_by": "flagged-not-deleted"
+        },
+        {
+          "id": "deleted-and-re-entered",
+          "fakes": "deletes her and writes a fresh unsubscribed row dated today",
+          "caught_by": "flagged-not-deleted"
+        },
+        {
+          "id": "the-token-rotated",
+          "fakes": "flags her and issues a new unsubscribe token, so the link in every letter already in her mailbox matches nothing",
+          "caught_by": "flagged-not-deleted"
+        },
+        {
+          "id": "both-her-publications",
+          "fakes": "matches on the address and takes her off both lists she reads",
+          "caught_by": "her-other-publication-kept"
+        },
+        {
+          "id": "the-other-publication-instead",
+          "fakes": "takes the same address off the other publication and leaves this one alone",
+          "caught_by": "the-right-reader-came-off"
+        },
+        {
+          "id": "the-neighbour-on-the-same-list",
+          "fakes": "flags her and a second reader of this publication on the way past",
+          "caught_by": "nobody-else-moved"
+        },
+        {
+          "id": "every-reader-unsubscribed",
+          "fakes": "flags every reader on this fixture's publications, which certainly includes her",
+          "caught_by": "her-other-publication-kept"
+        },
+        {
+          "id": "re-dated-in-place",
+          "fakes": "flags her and stamps her join date today, so she reads as somebody who signed up and left this morning",
+          "caught_by": "flagged-not-deleted"
+        },
+        {
+          "id": "the-address-blanked",
+          "fakes": "flags her and empties the address, so the row survives and names nobody",
+          "caught_by": "flagged-not-deleted"
+        },
+        {
+          "id": "a-stranger-added-on-the-way",
+          "fakes": "flags her and adds an address nobody asked for",
+          "caught_by": "no-row-was-added"
+        },
+        {
+          "id": "the-opted-out-reader-put-back",
+          "fakes": "flags her and tidies the list by putting the reader who left in July back on it",
+          "caught_by": "nobody-else-moved"
+        },
+        {
+          "id": "the-removal-recorded-as-a-send",
+          "fakes": "flags her and writes a delivery row for the letter she replied to",
+          "caught_by": "the-send-ledger-was-not-touched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "publish-the-journal-live",
+      "description": "Mirror the published archive into publication_posts by running the nightly sync, with the plates uploaded and nothing authored.",
+      "driven": "cron",
+      "route": "compound-ops/social/ugc/publish.mjs soft-money-journal",
+      "writes": ["publication_posts"],
+      "guards": [
+        {
+          "id": "the-other-publications-untouched",
+          "checks": "the five rows this fixture holds on two neighbour publications still carry their own hook and their own stamp, because the prune is bounded by publication"
+        },
+        {
+          "id": "the-queued-entries-stayed-off",
+          "checks": "none of the nine entries that are not published has a row"
+        },
+        {
+          "id": "the-withdrawn-entry-was-pruned",
+          "checks": "the slug the adapter no longer publishes is gone from the table"
+        },
+        {
+          "id": "the-published-set-is-exactly-live",
+          "checks": "this publication's rows are exactly the 82 published slugs: nothing missed, nothing invented, nothing parked under a sibling publication"
+        },
+        {
+          "id": "the-stale-row-was-rewritten",
+          "checks": "the row that held an older hook now holds the adapter's, and carries a stamp later than the one it had before the run"
+        },
+        {
+          "id": "nothing-was-authored",
+          "checks": "n, hook, caption, taxon, published, narration, beats, gallery, date and ts are byte for byte what the site's own adapter printed"
+        },
+        {
+          "id": "the-plates-are-absolute",
+          "checks": "still and wide are urls in the public storage bucket, never the repo relative path"
+        },
+        {
+          "id": "the-permalink-came-from-the-lane",
+          "checks": "permalink is whatever state.soft-money.json records under clip:<id> and platform is derived from that url's host"
+        },
+        {
+          "id": "an-unchanged-row-did-not-buy-a-write",
+          "checks": "the 79 rows that had not changed still carry the stamp they were seeded with"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-queue-published-too",
+          "fakes": "writes a row for every queued entry as well, so the archive looks complete",
+          "caught_by": "the-queued-entries-stayed-off"
+        },
+        {
+          "id": "the-withdrawn-entry-left-live",
+          "fakes": "writes every published entry and never prunes the slug the adapter dropped",
+          "caught_by": "the-withdrawn-entry-was-pruned"
+        },
+        {
+          "id": "one-entry-missed",
+          "fakes": "writes all but one of the entries that had no row",
+          "caught_by": "the-published-set-is-exactly-live"
+        },
+        {
+          "id": "an-entry-invented",
+          "fakes": "adds a slug nobody wrote, which renders as an entry in the feed",
+          "caught_by": "the-published-set-is-exactly-live"
+        },
+        {
+          "id": "written-under-a-sibling-publication",
+          "fakes": "writes the two new rows correctly and under a different publication key, which no page in any of these products shows",
+          "caught_by": "the-published-set-is-exactly-live"
+        },
+        {
+          "id": "the-older-hook-left-alone",
+          "fakes": "writes the two missing entries and skips the row whose hook is out of date",
+          "caught_by": "the-stale-row-was-rewritten"
+        },
+        {
+          "id": "the-hook-rewritten-nicer",
+          "fakes": "rewrites the stale row with the hook title cased, which is the house style of nothing on this site",
+          "caught_by": "nothing-was-authored"
+        },
+        {
+          "id": "the-stale-row-edited-without-a-stamp",
+          "fakes": "leaves the correct outcome with the rewritten row still carrying last night's stamp, so nothing distinguishes a row this run wrote from one it skipped",
+          "caught_by": "the-stale-row-was-rewritten"
+        },
+        {
+          "id": "the-narration-summarised",
+          "fakes": "replaces the four spoken lines with the caption, which reads tidily and says something nobody said",
+          "caught_by": "nothing-was-authored"
+        },
+        {
+          "id": "the-beats-dropped",
+          "fakes": "writes the entry with an empty beats array",
+          "caught_by": "nothing-was-authored"
+        },
+        {
+          "id": "the-gallery-filled-from-the-plate",
+          "fakes": "fills gallery with the entry's own two plate crops, which archive.ts sets empty on every entry and its own comment refuses",
+          "caught_by": "nothing-was-authored"
+        },
+        {
+          "id": "the-taxon-given-its-label",
+          "fakes": "writes the taxonomy's display label where its key belongs",
+          "caught_by": "nothing-was-authored"
+        },
+        {
+          "id": "the-dates-normalised",
+          "fakes": "stamps the new rows with tonight's date and a round ts",
+          "caught_by": "nothing-was-authored"
+        },
+        {
+          "id": "the-plates-left-as-repo-paths",
+          "fakes": "writes the row with the repo relative plate path instead of uploading it",
+          "caught_by": "the-plates-are-absolute"
+        },
+        {
+          "id": "a-permalink-invented",
+          "fakes": "puts a plausible tiktok url on an entry the lane never recorded one for",
+          "caught_by": "the-permalink-came-from-the-lane"
+        },
+        {
+          "id": "the-platform-guessed",
+          "fakes": "reads the platform off the account rather than the permalink's host, which is wrong for the entry the lane posted to youtube",
+          "caught_by": "the-permalink-came-from-the-lane"
+        },
+        {
+          "id": "every-row-touched",
+          "fakes": "leaves the correct rows and stamps all 82 as written tonight",
+          "caught_by": "an-unchanged-row-did-not-buy-a-write"
+        },
+        {
+          "id": "the-table-cleared-and-rewritten",
+          "fakes": "deletes this publication's archive and writes all 82 rows fresh, which is correct in every column and 79 writes nobody needed",
+          "caught_by": "an-unchanged-row-did-not-buy-a-write"
+        },
+        {
+          "id": "the-prune-forgot-its-publication",
+          "fakes": "prunes by slug with no publication filter, emptying two other publications' archives while every page on them goes on rendering",
+          "caught_by": "the-other-publications-untouched"
+        }
+      ],
+      "scores": {}
+    }
+  ],
+
+  "not_gradable": [
+    {
+      "what": "the weekly letter, compound-ops/letters/send-letter.py",
+      "why": "its only database effect is a publication_letter_sends row written AFTER a mail provider accepted a real message. --dry decides every recipient and writes no row, so the workflow cannot be graded without sending mail, which this environment may not do."
+    },
+    {
+      "what": "publication_letter_sends as a task",
+      "why": "same reason. It is guarded instead: every task asserts the ledger stayed empty, because a row in it is a claim that somebody was posted a letter."
+    },
+    {
+      "what": "the archive pages as a browser surface",
+      "why": "every HTML route imports @/lib/corpus, a build time read of src/product/entries.json. Measured: /all renders 91 entry links and /sitemap.xml lists 91 entry urls whatever publication_posts holds, so a page cannot be evidence that a row exists. Only /rss.xml imports @/lib/live."
+    },
+    {
+      "what": "GET /og-card",
+      "why": "writes nothing. It builds a URL from req.url and fetches it on the Node path, so it was probed for a host header SSRF: Host and X-Forwarded-Host pointed at a local listener, which was never reached, and the route answered the product's own plate every time. It does not reproduce."
+    },
+    {
+      "what": "GET /brand/mark-email.png, /sitemap.xml, /robots.txt, the redirects in next.config.ts",
+      "why": "pure reads. Nothing in the product writes a row anywhere but the two /api/subscribe handlers."
+    }
+  ],
+
+  "defects": [
+    {
+      "summary": "publication_posts reaches exactly one surface, /rss.xml, and the permalink the feed publishes for a live only row answers 404. Measured 2026-09-19 against a production build on 3317 with 83 rows on this publication: /rss.xml served 84 items including /entry/the-envelope-i-stopped-using, that url answered 404, /sitemap.xml listed 91 entry urls and not that one, and /all rendered 91 entry links and not that one. src/lib/live.ts says the table is what puts an entry on the site with no deploy; on this product only the feed imports it, every HTML route reads a build time copy of the archive, and compound-ops/letters/send-letter.py composes the weekly letter out of that feed's newest item.",
+      "where": "src/lib/live.ts against src/lib/corpus.ts, and every route under src/app that imports corpus",
+      "severity": "high",
+      "fixed": false
+    },
+    {
+      "summary": "One click unsubscribe is reported as done whether or not anyone came off. POST /api/subscribe/unsubscribe returns `new NextResponse(null, {status: 200})` on the !wantsHtml branch, before the code that inspects whether a row matched. Measured: a token that was never issued answered 200 with nobody off any list, while the same token with Accept: text/html answered 400 That link didn't work. send-letter.py sets List-Unsubscribe-Post: List-Unsubscribe=One-Click on every letter, and an RFC 8058 one click call is exactly a bare POST with no Accept: text/html, so a provider whose call carried a mangled or expired token records a successful unsubscribe, the reader is told they are off, and the next letter arrives.",
+      "where": "src/app/api/subscribe/unsubscribe/route.ts:80",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "The one letter per entry skip has no constraint behind it. send-letter.py reads publication_letter_sends filtered by (publication, entry_url) with limit 1 and returns early if anything comes back, then writes a row per recipient after each send. Read off production pg_indexes 2026-09-19: the only indexes on that table are the primary key on id and a non unique (publication, sent_at desc). Two overlapping runs both read empty and both send the same letter to the same list.",
+      "where": "compound-ops/letters/send-letter.py:205 against public.publication_letter_sends",
+      "severity": "low",
+      "fixed": false
+    },
+    {
+      "summary": "The publish engine defaults to production when its environment is incomplete. publish.mjs:59-64 falls back to the production Supabase project url and to ~/bin/compound-secret for the service role key, so any caller that forgot one export uploads plates into production storage and upserts and PRUNES four live archives. sync-site.sh does pass the key, so the live lane is correct; the hazard is any other caller. This environment's copy has exactly those two lines changed and scripts/up.sh proves both that the patch touched nothing else and that the result refuses to run with an empty environment.",
+      "where": "compound-ops/social/ugc/publish.mjs:59-64",
+      "severity": "low",
+      "fixed": false
+    },
+    {
+      "summary": "Two sibling environments keep cross publication fixture rows on this product's own publication key, which rule 11a forbids. still-mornings-desk seeds one publication_subscribers row and two publication_posts rows on softmoneyjournal, and whyyourbraindoesthat-desk seeds two subscriber rows, both because when they were written this publication had no environment. Measured 2026-09-19: an honest run of the publish engine reported 3 pruned where this fixture accounts for 1, and the two still-mornings archive rows were gone afterwards, because publish.mjs's prune is bounded by publication and by nothing finer. This suite therefore snapshots those rows before its first case and restores them at the end; the finding is in the sibling environments, not in the product.",
+      "where": "envs/still-mornings-desk/sql/02-seed.sql and envs/whyyourbraindoesthat-desk/sql/02-seed.sql",
+      "severity": "low",
+      "fixed": false
+    }
+  ],
+
+  "suite": {
+    "command": "uv run python envs/soft-money-journal-desk/adversarial/prove_graders.py",
+    "expectations_total": 48,
+    "expectations_without_app": 46,
+    "expectations_held": 48,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+
+  "counts": {
+    "tasks": 3,
+    "cheats": 45,
+    "guards": 24,
+    "browser_tasks": 2
+  },
+
+  "models": {}
+}

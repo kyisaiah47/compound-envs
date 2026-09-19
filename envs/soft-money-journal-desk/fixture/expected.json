@@ -1,0 +1,2603 @@
+{
+  "publication": "softmoneyjournal",
+  "published_entries": 82,
+  "queued_entries": 9,
+  "queued_slugs": [
+    "i-drink-it-warm-now",
+    "the-mug-goes-down-first",
+    "i-open-the-notebook-first",
+    "i-count-each-note-slowly",
+    "i-close-the-notebook-calmly",
+    "i-steep-before-i-check",
+    "i-give-money-a-quiet-place",
+    "i-sort-the-cash-before-sunday",
+    "i-leave-the-margins-blank"
+  ],
+  "expected_rows": [
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-let-the-cup-go-cold",
+      "n": 1,
+      "hook": "i let the cup go cold",
+      "narration": [
+        "i let the cup go cold on purpose.",
+        "i sit down with the notebook, check the balance, move one thing where it belongs.",
+        "by the time i'm done the tea has gone lukewarm, and that's the whole reset.",
+        "then i close the book and go make a fresh one."
+      ],
+      "beats": [
+        "the money part takes less time than the tea",
+        "i check, i move one thing, i close it",
+        "cold tea means i didn't spiral"
+      ],
+      "caption": "the tea goes cold and i'm already done",
+      "published": true,
+      "date": "2026-09-14T01:20:57.411Z",
+      "ts": 1789348857411,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p59.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p59-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1788484391267-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-give-the-page-ten-minutes",
+      "n": 2,
+      "hook": "i give the page ten minutes",
+      "narration": [
+        "i give the page ten minutes",
+        "i write down what's due and when it lands, in one column, in my own handwriting",
+        "nothing gets solved on that page — it just gets seen",
+        "then i close the planner, put the pen down, and the money stays there instead of in my head"
+      ],
+      "beats": [
+        "a timer, a pen, one open page",
+        "every bill and every date, written down",
+        "then the page closes and i stop"
+      ],
+      "caption": "ten quiet minutes and the rest of the week is lighter",
+      "published": true,
+      "date": "2026-09-13T00:06:25.082Z",
+      "ts": 1789257985082,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p58.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p58-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1788399774699-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-pay-the-envelopes-in-order",
+      "n": 3,
+      "hook": "i pay the envelopes in order",
+      "narration": [
+        "i pay the envelopes in order.",
+        "the order is decided before the cash ever leaves the bank, the same sequence every payday.",
+        "bills envelope first, then the one i never touch, then groceries — same order every payday.",
+        "whatever is left in my hands after that is allowed to be fun money."
+      ],
+      "beats": [
+        "the order is decided before the cash ever leaves the bank",
+        "each envelope gets filled in the same order every time",
+        "whatever is left over is mine to spend without guilt"
+      ],
+      "caption": "same order every payday and the guilt never shows up",
+      "published": true,
+      "date": "2026-09-12T00:39:56.464Z",
+      "ts": 1789173596464,
+      "taxon": "payday-order",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p57.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p57-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1788312380158-0",
+      "permalink": "https://www.tiktok.com/@softmoneyjournal/video/7400000000000000101",
+      "platform": "tiktok"
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-count-it-into-envelopes",
+      "n": 4,
+      "hook": "i count it into envelopes",
+      "narration": [
+        "i count it into envelopes.",
+        "one trip, one afternoon, and the money stops being a number i'm scared of.",
+        "each envelope already has a job, so i'm not deciding anything while i'm tired.",
+        "whatever's still in my hand at the end is honestly mine to spend."
+      ],
+      "beats": [
+        "cash comes out of the account in one trip",
+        "every envelope gets its job before anything gets spent",
+        "what's left in my hand is honestly mine"
+      ],
+      "caption": "the counting is the calm part",
+      "published": true,
+      "date": "2026-09-11T00:43:47.120Z",
+      "ts": 1789087427120,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p56.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p56-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1788286658349-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-date-every-page",
+      "n": 5,
+      "hook": "i date every page",
+      "narration": [
+        "i date every page.",
+        "before i write a single number, the date goes at the top — so the money has a day attached to it, not a vague feeling.",
+        "then i write down what i actually spent, in my own handwriting, slowly enough to notice it.",
+        "the page is finished when the pen stops. i close the notebook and i don't reopen the thought until tomorrow."
+      ],
+      "beats": [
+        "the date goes at the top before anything else",
+        "then whatever i spent, in my own handwriting",
+        "the page is done when the pen stops"
+      ],
+      "caption": "the date first, then the numbers, then i close it",
+      "published": true,
+      "date": "2026-09-10T00:39:32.781Z",
+      "ts": 1789000772781,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p55.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p55-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1788139029336-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-write-the-same-three-lines",
+      "n": 6,
+      "hook": "i write the same three lines",
+      "narration": [
+        "i write the same three lines every week.",
+        "what came in. what has to go out. what's left after that.",
+        "it takes about four minutes and the page looks the same every time.",
+        "then the pen goes down, and money stops being something i carry around."
+      ],
+      "beats": [
+        "every sunday, same three lines in the same notebook",
+        "what came in, what has to go out, what's left",
+        "then the pen goes down and i'm done thinking about it"
+      ],
+      "caption": "same three lines, same page, every sunday",
+      "published": true,
+      "date": "2026-09-09T00:21:09.538Z",
+      "ts": 1788913269538,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p54.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p54-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1788054658393-0",
+      "permalink": "https://www.instagram.com/reel/Cxxfixture02/",
+      "platform": "instagram"
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-pen-decides-before-i-do",
+      "n": 7,
+      "hook": "the pen decides before i do",
+      "narration": [
+        "the pen decides before i do.",
+        "payday, i sit here and write the order down before a single thing moves.",
+        "bills at the top. then the savings line. then whatever's left is mine to want with.",
+        "when the page is already written, i don't have to negotiate with myself."
+      ],
+      "beats": [
+        "money moves in a fixed order",
+        "the page is written first",
+        "wanting comes last, and calmly"
+      ],
+      "caption": "the order goes on the page before payday touches anything",
+      "published": true,
+      "date": "2026-09-08T00:24:01.628Z",
+      "ts": 1788827041628,
+      "taxon": "payday-order",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p53.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p53-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1787966987514-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "one-drawer-holds-the-money",
+      "n": 8,
+      "hook": "one drawer holds the money",
+      "narration": [
+        "one drawer holds the money.",
+        "every envelope, every note about it, lives in that one place.",
+        "on sunday i take it all out onto the desk and look at it for ten quiet minutes.",
+        "then it goes back in the drawer, and i stop carrying it around all week."
+      ],
+      "beats": [
+        "everything money-related lives in one drawer",
+        "sunday i take it out onto the desk",
+        "it goes back in and i'm done"
+      ],
+      "caption": "the drawer closes and so does the thinking",
+      "published": true,
+      "date": "2026-09-07T00:26:24.453Z",
+      "ts": 1788740784453,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p52.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p52-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1787880538560-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-wipe-the-desk-down",
+      "n": 9,
+      "hook": "i wipe the desk down",
+      "narration": [
+        "i wipe the desk down.",
+        "before a single app opens, the wood gets wiped and the mug gets moved to the corner.",
+        "a clear surface is the only permission slip i need to look at my money without my chest going tight.",
+        "then it's ten quiet minutes, and the rest of the day belongs to me."
+      ],
+      "beats": [
+        "the cloth goes over the wood before anything opens",
+        "a clean surface is the whole permission slip",
+        "then the money part takes ten quiet minutes"
+      ],
+      "caption": "the desk gets wiped before the money gets looked at",
+      "published": true,
+      "date": "2026-09-06T00:27:23.745Z",
+      "ts": 1788654443745,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p51.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p51-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1787798822802-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-notebook-stays-open-here",
+      "n": 10,
+      "hook": "the notebook stays open here",
+      "narration": [
+        "the notebook stays open here.",
+        "i don't put it away between sessions — it lives on the desk, spine flat, one page for the week.",
+        "every time money moves, i walk over and add a line. it takes eight seconds.",
+        "by sunday the page has already done the reset for me. nothing to catch up on."
+      ],
+      "beats": [
+        "the desk is quiet and already clear",
+        "the notebook stays open all week",
+        "i add one line whenever i spend"
+      ],
+      "caption": "leaving it open turned out to be the whole system",
+      "published": true,
+      "date": "2026-09-05T00:07:53.832Z",
+      "ts": 1788566873832,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p50.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p50-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1787711023302-0",
+      "permalink": "https://www.youtube.com/shorts/smjFixture03",
+      "platform": "youtube"
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-pen-goes-back-down",
+      "n": 11,
+      "hook": "the pen goes back down",
+      "narration": [
+        "the pen goes back down.",
+        "i give the money ten quiet minutes on this page, and when the ten minutes are up, the pen goes back down.",
+        "i used to leave it open all evening, checking and re-checking, like watching a pot.",
+        "now the closed planner means it's handled, and i am allowed to think about something else."
+      ],
+      "beats": [
+        "the ritual ends on purpose, not when i run out of worry",
+        "closing the planner is the signal that money time is over",
+        "the calm comes from the ending, not the checking"
+      ],
+      "caption": "the pen going back down is the whole ritual",
+      "published": true,
+      "date": "2026-09-04T00:09:28.502Z",
+      "ts": 1788480568502,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p49.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p49-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1787625191053-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-fill-the-page-before-payday",
+      "n": 12,
+      "hook": "i fill the page before payday",
+      "narration": [
+        "i fill the page before payday.",
+        "the day before, i sit here and write the week out — bills on their lines, savings on its line, one line left for something i want.",
+        "nothing has landed yet, so nothing feels spent. i'm just writing.",
+        "then payday comes and i don't decide anything. i follow the page."
+      ],
+      "beats": [
+        "the planner is open a day early, pen resting on it",
+        "every line written while nothing has landed yet",
+        "when the money arrives the page is already decided"
+      ],
+      "caption": "the page gets written the day before, so payday is just following it.",
+      "published": true,
+      "date": "2026-09-03T00:09:05.469Z",
+      "ts": 1788394145469,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p48.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p48-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1787534237357-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "payday-starts-at-this-desk",
+      "n": 13,
+      "hook": "payday starts at this desk",
+      "narration": [
+        "payday starts at this desk, not in my cart.",
+        "i sit down with the coffee before i touch anything — bills first, so the scary part is over while it's still warm.",
+        "then the savings line, small and boring, moved before i can talk myself out of it.",
+        "whatever's left after that is allowed to be fun. by the time the cup is empty, the money already knows where it's going."
+      ],
+      "beats": [
+        "payday morning, coffee down, nothing spent yet",
+        "bills first, savings second, then the wanting",
+        "the cup empties, the order is already done"
+      ],
+      "caption": "payday runs in the same order every time, and the coffee is part of it",
+      "published": true,
+      "date": "2026-09-02T00:26:39.495Z",
+      "ts": 1788308799495,
+      "taxon": "payday-order",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p47.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p47-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1787447770209-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-ink-has-to-dry",
+      "n": 14,
+      "hook": "the ink has to dry",
+      "narration": [
+        "the ink has to dry.",
+        "i write the month out by hand at this desk, one line per bill, slow enough that the pen has to keep up with me.",
+        "by the time the last line dries i already know what's real, and nothing on the page can surprise me later.",
+        "then the notebook closes, and money is done being the loudest thing in my head."
+      ],
+      "beats": [
+        "one page, one pen, no phone in the frame",
+        "every bill written out longhand before i touch anything",
+        "i close the notebook and let the day go on"
+      ],
+      "caption": "writing it out by hand made it feel handled",
+      "published": true,
+      "date": "2026-09-01T00:35:44.488Z",
+      "ts": 1788222944488,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p46.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p46-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1787360549147-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-sit-in-the-good-light",
+      "n": 15,
+      "hook": "i sit in the good light",
+      "narration": [
+        "i sit in the good light.",
+        "the desk gets the brightest hour, so that's when i look at my money.",
+        "notebook open, pen down, nothing else on the table to distract me.",
+        "ten minutes in that light, then i close the page and don't reopen it till next week."
+      ],
+      "beats": [
+        "the desk gets the brightest hour of the morning",
+        "one notebook, one pen, nothing else on the surface",
+        "ten minutes, then the page closes and i'm done"
+      ],
+      "caption": "the light does half the work",
+      "published": true,
+      "date": "2026-08-31T00:19:06.357Z",
+      "ts": 1788135546357,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p45.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p45-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1787274763128-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-write-the-number-down",
+      "n": 16,
+      "hook": "i write the number down",
+      "narration": [
+        "i write the number down.",
+        "checking my balance on my phone happens in a second and rattles me for an hour.",
+        "writing it by hand takes long enough that i stop bracing and just look at it.",
+        "once it's on the page, it's a fact i wrote, not a thing i'm avoiding."
+      ],
+      "beats": [
+        "the number stops being scary once it's ink",
+        "writing is slower than checking, on purpose",
+        "the page holds it so i don't have to"
+      ],
+      "caption": "the number is easier once it's in my handwriting",
+      "published": true,
+      "date": "2026-08-30T00:19:50.295Z",
+      "ts": 1788049190295,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p44.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p44-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1787189293968-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-sit-down-before-i-decide",
+      "n": 17,
+      "hook": "i sit down before i decide",
+      "narration": [
+        "i sit down before i decide.",
+        "nothing gets moved while i'm standing up in the kitchen.",
+        "i sit, i look at the one page, and i move things in the order i already wrote down.",
+        "by the time the light shifts across the table, money is handled and i'm not thinking about it."
+      ],
+      "beats": [
+        "the chair before the choice",
+        "one look, then the pen",
+        "the morning holds the whole thing"
+      ],
+      "caption": "the chair is the whole ritual",
+      "published": true,
+      "date": "2026-08-29T00:28:22.104Z",
+      "ts": 1787963302104,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p43.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p43-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1787115639540-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "this-room-holds-my-reset",
+      "n": 18,
+      "hook": "this room holds my reset",
+      "narration": [
+        "This room holds my reset.",
+        "I check what came in and what went out.",
+        "I choose what needs my attention next.",
+        "Then I leave money here until next week."
+      ],
+      "beats": [
+        "i check what came in and what went out",
+        "i choose what needs my attention next",
+        "then i leave money here until next week"
+      ],
+      "caption": "a quiet room for a quieter money week",
+      "published": true,
+      "date": "2026-08-28T00:18:46.220Z",
+      "ts": 1787876326220,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p42.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p42-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1787061199614-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-split-it-before-i-spend",
+      "n": 19,
+      "hook": "i split it before i spend",
+      "narration": [
+        "i split it before i spend",
+        "the money comes out once, and then it gets sorted at this table — bills first, so the scary part is already handled",
+        "then the slow envelope, the one i don't touch, counted out the same way every time",
+        "whatever is still in my hands after that is allowed to be spent, and i don't argue with it"
+      ],
+      "beats": [
+        "cash comes out in one trip",
+        "each envelope gets filled in order",
+        "what's left is mine, guilt-free"
+      ],
+      "caption": "the sorting is the whole ritual",
+      "published": true,
+      "date": "2026-08-27T00:28:42.269Z",
+      "ts": 1787790522269,
+      "taxon": "payday-order",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p41.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p41-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1786928633222-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-open-the-curtain-first",
+      "n": 20,
+      "hook": "i open the curtain first",
+      "narration": [
+        "i open the curtain first",
+        "the light hits the desk before i look at a single number",
+        "then the notebook, then the cup, then i start",
+        "ten quiet minutes in the window light, and money is handled for the week"
+      ],
+      "beats": [
+        "light on the desk before anything else",
+        "the notebook and the cup, in that order",
+        "ten quiet minutes, then i close it"
+      ],
+      "caption": "the light comes before the numbers",
+      "published": true,
+      "date": "2026-08-26T01:22:31.494Z",
+      "ts": 1787707351494,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p40.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p40-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1786888766713-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-planner-tells-me-the-order",
+      "n": 21,
+      "hook": "the planner tells me the order",
+      "narration": [
+        "the planner tells me the order.",
+        "i write three lines on the page before i move a single thing.",
+        "bills at the top, then the quiet line i keep for myself.",
+        "then whatever i want, last — and it doesn't feel like a fight."
+      ],
+      "beats": [
+        "pen down, page open, three lines",
+        "bills first, then the quiet line",
+        "then the wanting, on purpose"
+      ],
+      "caption": "the page decides so i don't have to",
+      "published": true,
+      "date": "2026-08-25T00:42:47.336Z",
+      "ts": 1787618567336,
+      "taxon": "payday-order",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p39.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p39-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1786841525068-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-tea-goes-down-first",
+      "n": 22,
+      "hook": "the tea goes down first",
+      "narration": [
+        "the tea goes down first, then i start.",
+        "bills get their turn before anything else. then the savings line. then, only then, the wanting.",
+        "i keep the order because it means i never have to argue with myself at the desk.",
+        "by the time the cup is empty, it's handled. i put the pen down and go be a person."
+      ],
+      "beats": [
+        "set the cup down, open the page",
+        "bills, then savings, then wants",
+        "close it while the tea is warm"
+      ],
+      "caption": "the order is the whole trick — it decides for me so i don't have to",
+      "published": true,
+      "date": "2026-08-24T00:14:18.520Z",
+      "ts": 1787530458520,
+      "taxon": "payday-order",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p38.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p38-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1786757768527-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-leave-the-pen-on-friday",
+      "n": 23,
+      "hook": "i leave the pen on friday",
+      "narration": [
+        "i leave the pen on the page on friday.",
+        "it sits across the open week, so nothing gets closed or put away.",
+        "when i come back, the page is already open and the pen is already there.",
+        "the setup is done, so the sitting down is easy."
+      ],
+      "beats": [
+        "friday: pen goes across the open page",
+        "the page waits all weekend",
+        "sunday: it's already started"
+      ],
+      "caption": "the pen never goes back in the drawer",
+      "published": true,
+      "date": "2026-08-23T00:19:14.294Z",
+      "ts": 1787444354294,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p37.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p37-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1786602709550-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-pay-the-table-first",
+      "n": 24,
+      "hook": "i pay the table first",
+      "narration": [
+        "i pay the table first",
+        "before anything else, i sit here with the light coming in and put the money in its order",
+        "the things that keep this table are handled first, then what's left gets a name",
+        "and by the time the cup is empty, i'm done thinking about it"
+      ],
+      "beats": [
+        "the mug goes down, the light is still low",
+        "one small stack, one small order",
+        "then the morning is mine again"
+      ],
+      "caption": "the whole thing takes one cup of coffee",
+      "published": true,
+      "date": "2026-08-22T00:06:53.316Z",
+      "ts": 1787357213316,
+      "taxon": "payday-order",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p36.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p36-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1786510102099-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-table-is-clear-now",
+      "n": 25,
+      "hook": "the table is clear now",
+      "narration": [
+        "the table is clear now",
+        "this same table used to be a pile of envelopes i walked past for weeks",
+        "now it holds a cup, a pen, and one page with the week written on it",
+        "i didn't get more disciplined. i just made the place i do this feel gentle enough to come back to"
+      ],
+      "beats": [
+        "the same table used to be covered in mail i wouldn't open",
+        "now it holds one cup and one open notebook",
+        "the change wasn't discipline, it was making the table a calm place to sit"
+      ],
+      "caption": "this table used to be a pile of envelopes i walked past for weeks",
+      "published": true,
+      "date": "2026-08-21T00:16:50.020Z",
+      "ts": 1787271410020,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p35.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p35-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1786423096576-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-clear-the-desk-first",
+      "n": 26,
+      "hook": "i clear the desk first",
+      "narration": [
+        "i clear the desk first.",
+        "everything goes except the notebook, the pen, and the coffee.",
+        "then i sit down, and the numbers are just numbers on a page.",
+        "the woman who wipes the desk down first is not the woman who used to avoid it."
+      ],
+      "beats": [
+        "clearing the desk is the first money move",
+        "the notebook and pen stay, nothing else",
+        "by the time i sit down i'm already calm"
+      ],
+      "caption": "the desk gets cleared before the numbers do",
+      "published": true,
+      "date": "2026-08-20T00:05:46.836Z",
+      "ts": 1787184346836,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p34.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p34-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1786340922953-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-keep-one-page-open",
+      "n": 27,
+      "hook": "i keep one page open",
+      "narration": [
+        "i keep one page open",
+        "the planner sits open on the desk all week, pen across it, so nothing has to be remembered",
+        "anything money touches goes on that page the moment it happens, one line, no tidying",
+        "on sunday i read the page once from the top, and then i close it and the week is done"
+      ],
+      "beats": [
+        "the planner stays open on the desk all week, not filed away",
+        "every money thing gets written on that one page as it happens",
+        "sunday i read the page once, then close it"
+      ],
+      "caption": "one page, open all week, closed on sunday",
+      "published": true,
+      "date": "2026-08-19T01:58:28.441Z",
+      "ts": 1787104708441,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p33.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p33-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1786259504050-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-desk-stopped-meaning-dread",
+      "n": 28,
+      "hook": "the desk stopped meaning dread",
+      "narration": [
+        "the desk stopped meaning dread",
+        "for a long time this was where i found out things i didn't want to know",
+        "now it's a notebook, a pen, and ten quiet minutes",
+        "same desk. i'm just not bracing anymore"
+      ],
+      "beats": [
+        "the desk used to be where bad news happened",
+        "now it's just a surface with a notebook on it",
+        "same desk, calmer person"
+      ],
+      "caption": "the desk didn't change. i did.",
+      "published": true,
+      "date": "2026-08-18T12:06:31.905Z",
+      "ts": 1787054791905,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p32.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p32-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1786161678991-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-desk-is-set-before-i-sit",
+      "n": 29,
+      "hook": "the desk is set before i sit",
+      "narration": [
+        "the desk is set before i sit down",
+        "lamp on, notebook open, pen already lying across the page",
+        "i do that the night before, so the version of me who shows up in the morning has nothing left to decide",
+        "she just sits down and the numbers are the only thing waiting"
+      ],
+      "beats": [
+        "the lamp is on, the notebook is open, the pen is already there",
+        "i set it up the night before so morning me has nothing to decide",
+        "i sit down and the only thing left is the numbers"
+      ],
+      "caption": "setting the desk the night before did more for me than any budget app",
+      "published": true,
+      "date": "2026-08-17T00:07:48.629Z",
+      "ts": 1786925268629,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p31.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p31-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1786074783145-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-light-tells-me-its-time",
+      "n": 30,
+      "hook": "the light tells me it's time",
+      "narration": [
+        "the light tells me it's time",
+        "when the sun reaches this side of the table, i sit down and open the notebook",
+        "one cup, one page, three numbers. what came in, what's owed, what's left",
+        "by the time the light moves off the table, i'm finished. the rest of the day doesn't have to be about money"
+      ],
+      "beats": [
+        "morning light on the table means the ten quiet minutes start",
+        "one cup, one page, three numbers — nothing more",
+        "by the time the light moves, i'm done thinking about money"
+      ],
+      "caption": "the table gets ten quiet minutes, then i let it go",
+      "published": true,
+      "date": "2026-08-16T00:23:10.680Z",
+      "ts": 1786839790680,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p30.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p30-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1785987939981-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-give-the-week-a-page",
+      "n": 31,
+      "hook": "i give the week a page",
+      "narration": [
+        "i give the week a page",
+        "one page, one week, and i fill it in before i open anything else",
+        "bills go down the left side, the things i want go on the right, in the same handwriting",
+        "then the pen goes down, the planner stays open on the desk, and i go do something else"
+      ],
+      "beats": [
+        "one page, one week, before anything else",
+        "bills on the left, wants on the right",
+        "then the pen goes down and i leave it alone"
+      ],
+      "caption": "the whole ritual fits on one page",
+      "published": true,
+      "date": "2026-08-15T00:17:09.592Z",
+      "ts": 1786753029592,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p29.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p29-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1785906502522-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-count-it-out-loud",
+      "n": 32,
+      "hook": "i count it out loud",
+      "narration": [
+        "i count it out loud.",
+        "the money comes out of the envelope and i count it slow, like it's someone else's.",
+        "saying the number out loud takes the flinch out of it. it's just a number in a room.",
+        "then it goes back in the envelope and i don't think about it again till next week."
+      ],
+      "beats": [
+        "cash comes out of the envelope and gets counted slowly, on purpose",
+        "saying the number out loud takes the fear out of it",
+        "then it goes back in and i'm done thinking about it"
+      ],
+      "caption": "the counting is the calm part, not the scary part",
+      "published": true,
+      "date": "2026-08-14T00:44:07.909Z",
+      "ts": 1786668247909,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p28.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p28-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1785819176380-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-planner-opens-first",
+      "n": 33,
+      "hook": "the planner opens first",
+      "narration": [
+        "the planner opens first",
+        "before i open anything else, i open this page and put the pen on it",
+        "one line for what's already spoken for. one line for what's actually mine",
+        "then the pen goes down, the planner closes, and money is handled until next week"
+      ],
+      "beats": [
+        "before the app, before the balance, the page gets opened",
+        "one line for what's already spoken for, one line for what's mine",
+        "pen down, planner closed, the money is handled for the week"
+      ],
+      "caption": "the page goes first, the app goes second",
+      "published": true,
+      "date": "2026-08-13T00:23:28.692Z",
+      "ts": 1786580608692,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p27.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p27-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1785732278249-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-mug-is-the-timer",
+      "n": 34,
+      "hook": "the mug is the timer",
+      "narration": [
+        "the mug is the timer.",
+        "i sit down while it's still hot, open the notebook, and go through the numbers once — no second lap.",
+        "warm light, one page, whatever's true today gets written down calmly.",
+        "when the cup is empty, i close it and the money part of my day is done."
+      ],
+      "beats": [
+        "the ritual is bounded by the cup, not by a mood",
+        "one warm desk, one notebook, one pass at the numbers",
+        "when the coffee's gone, the money part of the day is over"
+      ],
+      "caption": "one pass at the numbers, no second lap",
+      "published": true,
+      "date": "2026-08-12T00:14:08.875Z",
+      "ts": 1786493648875,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p26.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p26-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1785698201780-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-date-the-page-first",
+      "n": 35,
+      "hook": "i date the page first",
+      "narration": [
+        "i date the page first.",
+        "before a single number goes down, i write the day at the top — that's the whole start of it.",
+        "then the pen just moves. what came in, what went out, no opinion attached.",
+        "and when the notebook closes, it's a record. not a worry i carry around all week."
+      ],
+      "beats": [
+        "before any number goes down, i write the day's date at the top of the page",
+        "then the pen just moves — what came in, what went out, nothing i have to feel about it",
+        "by the time i close the notebook, the money is a record instead of a worry"
+      ],
+      "caption": "the page gets the date before it gets the numbers 🤍",
+      "published": true,
+      "date": "2026-08-11T00:05:37.321Z",
+      "ts": 1786406737321,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p25.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p25-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1785554513947-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-cup-buys-me-ten-minutes",
+      "n": 36,
+      "hook": "the cup buys me ten minutes",
+      "narration": [
+        "the cup buys me ten minutes.",
+        "i don't start with the numbers. i start with the coffee, and the numbers get however long it stays warm.",
+        "pen, paper, the desk exactly like this. what came in, what's leaving, nothing else.",
+        "empty cup, closed notebook. that's the whole ritual, and it holds all week."
+      ],
+      "beats": [
+        "the coffee is the timer — while it's hot, the money gets looked at",
+        "one page, one pen, no apps open yet",
+        "when the cup is empty i'm done, and it stays done till next week"
+      ],
+      "caption": "the coffee is the timer and honestly that's the only rule",
+      "published": true,
+      "date": "2026-08-10T01:16:17.963Z",
+      "ts": 1786324577963,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p24.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p24-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1785396459774-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-pen-stays-on-the-page",
+      "n": 37,
+      "hook": "the pen stays on the page",
+      "narration": [
+        "the pen stays on the page.",
+        "one notebook, one pen, ten minutes at the table.",
+        "i write what came in, then what's already spoken for, and nothing else.",
+        "then the pen goes down, the book closes, and i don't think about it again until next week."
+      ],
+      "beats": [
+        "one notebook, one pen, ten minutes",
+        "i write what came in, then what's spoken for",
+        "the pen goes down and i'm done until next week"
+      ],
+      "caption": "ten minutes with a pen and the week feels held",
+      "published": true,
+      "date": "2026-08-09T01:06:54.156Z",
+      "ts": 1786237614156,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p23.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p23-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1784767444753-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-page-hears-the-numbers-first",
+      "n": 38,
+      "hook": "the page hears the numbers first",
+      "narration": [
+        "the page hears the numbers first.",
+        "before the app, before the panic, i open the notebook and just write what's real.",
+        "what came in, what's going out, one honest line each.",
+        "then i close it, and the numbers stay on the page instead of in my chest."
+      ],
+      "beats": [
+        "open the notebook, pen down, no app yet",
+        "write what came in, what's leaving, nothing else",
+        "close it — the worry stays on the page"
+      ],
+      "caption": "the notebook goes first, always",
+      "published": true,
+      "date": "2026-08-08T00:59:47.008Z",
+      "ts": 1786150787008,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p22.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p22-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1784689146960-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "payday-in-three-small-moves",
+      "n": 39,
+      "hook": "payday, in three small moves",
+      "narration": [
+        "payday, in three small moves.",
+        "first the bills, while the coffee's still hot.",
+        "then the small amount that's just for later.",
+        "then i close the notebook, and the rest of the day is mine."
+      ],
+      "beats": [
+        "hand opening the notebook under the lamp",
+        "pen resting beside a warm coffee",
+        "closing the cover, desk left tidy"
+      ],
+      "caption": "three moves and i'm done thinking about it",
+      "published": true,
+      "date": "2026-08-07T00:50:55.930Z",
+      "ts": 1786063855930,
+      "taxon": "payday-order",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p21.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p21-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1784684392525-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-became-a-clear-desk-person",
+      "n": 40,
+      "hook": "i became a clear-desk person",
+      "narration": [
+        "i became a clear-desk person",
+        "turns out the desk came first, the calm followed",
+        "now the money sits at one tidy table, not everywhere at once",
+        "nothing on it i haven't already made peace with"
+      ],
+      "beats": [
+        "clear desk, one notebook open",
+        "the calm of nothing owed a decision",
+        "money handled at this small table"
+      ],
+      "caption": "the desk got quiet and so did the money",
+      "published": true,
+      "date": "2026-08-06T00:43:44.791Z",
+      "ts": 1785977024791,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p20.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p20-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1784667430006-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-do-money-at-tea-temperature",
+      "n": 41,
+      "hook": "i do money at tea temperature",
+      "narration": [
+        "i do money at tea temperature.",
+        "not braced, not rushed — warm, and a little slow.",
+        "the tea gives my hands something to do while i look at the number.",
+        "by the time the cup's empty, the week is quietly handled."
+      ],
+      "beats": [
+        "tea steeping beside an open notebook, unhurried",
+        "hands resting, the number looked at calmly",
+        "empty cup, week already handled"
+      ],
+      "caption": "the ritual is half the reset",
+      "published": true,
+      "date": "2026-08-05T00:27:49.279Z",
+      "ts": 1785889669279,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p19.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p19-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1784659668675-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-sit-down-for-this-now",
+      "n": 42,
+      "hook": "i sit down for this now",
+      "narration": [
+        "i sit down for this now.",
+        "there was a version of me who avoided the desk, who let the numbers pile up in the dark.",
+        "this one pulls out the chair, turns on the lamp, and stays for ten quiet minutes.",
+        "nothing about the money changed first. i did. the calm followed me here."
+      ],
+      "beats": [
+        "settling at the warm desk, no bracing",
+        "the notebook and lamp make it a place, not a task",
+        "closing the book, calm, moving on with the day"
+      ],
+      "caption": "the desk taught me before the numbers did",
+      "published": true,
+      "date": "2026-08-04T00:18:17.947Z",
+      "ts": 1785802697947,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p18.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p18-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1784653356318-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "each-envelope-has-one-job",
+      "n": 43,
+      "hook": "each envelope has one job",
+      "narration": [
+        "each envelope has one job",
+        "i count it out by hand, slow, on a sunday",
+        "this one for the roof, this one for the week, this one for the small wants",
+        "when every envelope is full, i stop thinking about the money"
+      ],
+      "beats": [
+        "hands counting cash into a labeled envelope",
+        "sorting the stack into separate envelopes",
+        "sealing the last one and setting it down"
+      ],
+      "caption": "giving each part of it a place to sit",
+      "published": true,
+      "date": "2026-08-03T01:26:16.339Z",
+      "ts": 1785720376339,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p17.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p17-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1784643940101-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-write-the-numbers-by-hand",
+      "n": 44,
+      "hook": "i write the numbers by hand",
+      "narration": [
+        "i write the numbers by hand",
+        "not because a screen can't hold them",
+        "but because my hand goes slow enough to actually see them",
+        "the page doesn't autocomplete the panic. i just write, then close it"
+      ],
+      "beats": [
+        "hand moving a pen across an open journal page",
+        "the same figures, copied slowly instead of scrolled past",
+        "pen resting on the closed notebook, done for the week"
+      ],
+      "caption": "the slowest way to look at money is the calmest one",
+      "published": true,
+      "date": "2026-08-02T00:43:40.184Z",
+      "ts": 1785631420184,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p16.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p16-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1784640787668-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-do-the-numbers-at-first-light",
+      "n": 45,
+      "hook": "i do the numbers at first light",
+      "narration": [
+        "i do the numbers at first light.",
+        "before the day gets loud, i sit with the number for a minute.",
+        "not to fix anything — just to know where i am.",
+        "then i close it, and the morning is mine again."
+      ],
+      "beats": [
+        "morning light on the table, hands settling in",
+        "the small morning look at the money",
+        "closing it before the day gets loud"
+      ],
+      "caption": "the quietest part of my morning is the honest part",
+      "published": true,
+      "date": "2026-08-01T01:35:21.882Z",
+      "ts": 1785548121882,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p15.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p15-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1784599685786-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-budget-by-candlelight-now-seriously-it-changed-the",
+      "n": 46,
+      "hook": "i budget by candlelight now. seriously. it changed the whole relationship",
+      "narration": [
+        "I budget by candlelight now. Seriously. It changed the whole relationship.",
+        "The numbers didn't change. The room did. Warm light, no overhead glare, nothing clinical about it.",
+        "Your body decides how hard a task feels long before your mind gets a vote. A soft room makes a soft task.",
+        "So ambience turned out to be the strategy. It sounded silly right up until it was the reason I sat down."
+      ],
+      "beats": [
+        "the numbers didn't change, the room did",
+        "your body decides how hard a task feels",
+        "ambience is a strategy"
+      ],
+      "caption": "ambience is a strategy.",
+      "published": true,
+      "date": "2026-07-31T01:12:46.253Z",
+      "ts": 1785460366253,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p07.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p07-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-27",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "coffee-first-then-the-numbers",
+      "n": 47,
+      "hook": "coffee first, then the numbers",
+      "narration": [
+        "coffee first, then the numbers",
+        "i don't open the app until the cup is poured and i'm actually sitting down",
+        "one quiet look while it's still warm — nothing to fix, just to know",
+        "then i close it and finish the coffee, and the day starts on my terms"
+      ],
+      "beats": [
+        "pour the coffee, sit down before opening anything",
+        "one calm look at the accounts while it's still warm",
+        "close the app, finish the cup, start the day held"
+      ],
+      "caption": "the morning money ritual that keeps me calm",
+      "published": true,
+      "date": "2026-07-30T01:02:36.372Z",
+      "ts": 1785373356372,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p14.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p14-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1784598070025-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "payday-order-of-operations-rent-then-the-savings-transfer",
+      "n": 48,
+      "hook": "payday order of operations: rent, then the savings transfer, then i close the app and go make lunch",
+      "narration": [
+        "My payday order of operations. Rent, then the savings transfer, then I close the app and go make lunch.",
+        "Rent first, because it isn't a choice. Doing it first stops it from following me through the day.",
+        "Savings second, before the wanting starts. Not a grand gesture. Just before, rather than after.",
+        "Then I close the app and leave. No lingering, no scrolling through the history looking for a reason to feel bad.",
+        "Four minutes, and it buys me a week of not thinking about it. That's the trade, and it's a good one."
+      ],
+      "beats": [
+        "rent first, because it isn't a choice",
+        "savings second, before the wanting starts",
+        "then i close the app and leave",
+        "four minutes, one quiet week"
+      ],
+      "caption": "the whole thing takes four minutes and buys me a week of not thinking about it",
+      "published": true,
+      "date": "2026-07-23T00:18:15.681Z",
+      "ts": 1784765895681,
+      "taxon": "payday-order",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p13.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p13-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1784579090242-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-started-keeping-receipts-in-one-small-dish-instead",
+      "n": 49,
+      "hook": "i started keeping receipts in one small dish instead of six pockets. i think that's what growing up looked like",
+      "narration": [
+        "I started keeping receipts in one small dish instead of six pockets. I think that's what growing up actually looked like.",
+        "Six pockets meant six places to dread. Every coat was a small unopened question.",
+        "One dish means one place to look. The dread has a location now, and it's the size of a saucer.",
+        "One dish, one Sunday, and everything else got quieter. Nothing about it was dramatic."
+      ],
+      "beats": [
+        "six pockets meant six places to dread",
+        "one dish means one place to look",
+        "one sunday, and everything else got quieter"
+      ],
+      "caption": "one dish. one sunday. everything else got quieter",
+      "published": true,
+      "date": "2026-07-22T02:31:15.700Z",
+      "ts": 1784687475700,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p12.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p12-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1784572762791-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-used-to-think-being-good-with-money-meant",
+      "n": 50,
+      "hook": "i used to think being good with money meant knowing more. it meant flinching less",
+      "narration": [
+        "I used to think being good with money meant knowing more. It turned out to mean flinching less.",
+        "I kept collecting information I never used. Saved articles, downloaded apps, watched explainers at midnight.",
+        "The gap was never knowledge. It was the sitting down. I could explain things I refused to look at.",
+        "Ten minutes and a pen. That's the whole thing. It was never as complicated as I needed it to be."
+      ],
+      "beats": [
+        "i kept collecting information i never used",
+        "the gap was never knowledge",
+        "ten minutes and a pen. that's the whole thing"
+      ],
+      "caption": "the reset is ten minutes and a pen. that's the whole thing",
+      "published": true,
+      "date": "2026-07-22T00:22:53.007Z",
+      "ts": 1784679773007,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p11.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p11-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1784561969035-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-money-moves-before-i-have-an-opinion-about",
+      "n": 51,
+      "hook": "the money moves before i have an opinion about it",
+      "narration": [
+        "The money moves before I have an opinion about it.",
+        "Opinions arrive late and loud. Usually somewhere around the second scroll of the evening.",
+        "So the order runs first, on purpose. Before the mood shows up with suggestions.",
+        "That way I don't have to do the deciding. The sequence already did it, back when I was calm."
+      ],
+      "beats": [
+        "opinions arrive late and loud",
+        "the order runs first, on purpose",
+        "so i don't have to do the deciding"
+      ],
+      "caption": "the order does the deciding so i don't have to",
+      "published": true,
+      "date": "2026-07-21T20:31:54.276Z",
+      "ts": 1784665914276,
+      "taxon": "payday-order",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p10.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p10-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1784554175623-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "payday-has-an-order-and-i-dont-have-to",
+      "n": 52,
+      "hook": "payday has an order and i don't have to decide anything on the day",
+      "narration": [
+        "Payday has an order, and I don't have to decide anything on the day.",
+        "The deciding already happened, weeks ago, when I was calm and nothing was urgent.",
+        "Today I just follow it. Step, step, step, close the app, go make lunch.",
+        "No negotiating with a tired brain. That's really what the order is protecting me from."
+      ],
+      "beats": [
+        "the deciding happened weeks ago",
+        "today i just follow it",
+        "no negotiating with a tired brain"
+      ],
+      "caption": "the deciding already happened. today i just follow it",
+      "published": true,
+      "date": "2026-07-21T17:54:13.597Z",
+      "ts": 1784656453597,
+      "taxon": "payday-order",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p09.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p09-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1784517607324-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-used-to-open-my-banking-app-braced-now",
+      "n": 53,
+      "hook": "i used to open my banking app braced. now i open it the way i open a drawer",
+      "narration": [
+        "I used to open my banking app braced. Now I open it the way I open a drawer.",
+        "The bracing was a habit, not a reaction. My shoulders did it before the screen even loaded.",
+        "A drawer is just a place where things are kept. You open it to find out what's in there. That's all.",
+        "Nothing changed except the flinch. And that turned out to be the entire change."
+      ],
+      "beats": [
+        "bracing was a habit, not a reaction",
+        "a drawer is just a place where things are kept",
+        "nothing changed except the flinch"
+      ],
+      "caption": "nothing changed except the flinch — that was the whole change",
+      "published": true,
+      "date": "2026-07-21T16:11:54.279Z",
+      "ts": 1784650314279,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p08.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p08-w.jpg",
+      "gallery": [],
+      "clip_id": "smgen-1784509880141-0",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "sunday-tea-notebook-numbers-the-week-can-come-now",
+      "n": 54,
+      "hook": "sunday. tea, notebook, numbers. the week can come now",
+      "narration": [
+        "Sunday. Tea, notebook, numbers. The week can come now.",
+        "Everything is written down and nothing is hiding. Whatever's true is already on the page.",
+        "Which means I don't have to hold any of it. The holding is what used to exhaust me.",
+        "Ready is quiet. It doesn't feel like triumph. It feels like a room after you've tidied it."
+      ],
+      "beats": [
+        "everything is written down and nothing is hiding",
+        "i don't have to hold any of it",
+        "ready is quiet"
+      ],
+      "caption": "ready is quiet.",
+      "published": true,
+      "date": "2026-07-21T13:59:06.583Z",
+      "ts": 1784642346583,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p04.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p04-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-30",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "money-got-lighter-the-day-it-got-a-routine",
+      "n": 55,
+      "hook": "money got lighter the day it got a routine",
+      "narration": [
+        "Money got lighter the day it got a routine.",
+        "Before that I carried it constantly and never once set it down. It was always half-open in the background.",
+        "A routine gives it somewhere to live. A time, a place, a page. Somewhere that isn't my head.",
+        "Carried daily, it weighs less. Held all at once, it weighs everything."
+      ],
+      "beats": [
+        "before, i carried it constantly and never set it down",
+        "a routine gives it somewhere to live",
+        "carried daily, weighs less"
+      ],
+      "caption": "carried daily, weighs less.",
+      "published": true,
+      "date": "2026-07-21T12:16:00.706Z",
+      "ts": 1784636160706,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p03.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p03-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-29",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-goal-was-never-more-the-goal-was-calm",
+      "n": 56,
+      "hook": "the goal was never more. the goal was calm arithmetic",
+      "narration": [
+        "The goal was never more. The goal was calm arithmetic.",
+        "More without order is still loud. The noise doesn't leave on its own just because the number moved.",
+        "What I actually wanted was numbers I could look at plainly, on an ordinary Tuesday, without bracing.",
+        "Arithmetic that doesn't shout. That was the thing I was chasing the entire time."
+      ],
+      "beats": [
+        "more without order is still loud",
+        "i wanted numbers i could look at plainly",
+        "arithmetic that doesn't shout"
+      ],
+      "caption": "numbers that don't shout.",
+      "published": true,
+      "date": "2026-07-21T01:42:08.422Z",
+      "ts": 1784598128422,
+      "taxon": "feel-seen",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p05.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p05-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-28",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "quiet-money-isnt-rich-money-its-known-money",
+      "n": 57,
+      "hook": "quiet money isn't rich money. it's known money",
+      "narration": [
+        "Quiet money isn't rich money. It's known money.",
+        "Guessing is what makes it loud. The not-knowing fills the room with worst cases.",
+        "And knowing is available at any size. It doesn't wait for a better year to become possible.",
+        "Known beats guessed. That's the whole difference between the page I dreaded and the page I just read."
+      ],
+      "beats": [
+        "guessing is what makes it loud",
+        "knowing is available at any size",
+        "known beats guessed"
+      ],
+      "caption": "known beats guessed.",
+      "published": true,
+      "date": "2026-07-20T19:59:43.150Z",
+      "ts": 1784577583150,
+      "taxon": "feel-seen",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p01.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p01-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-26",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-version-of-me-that-looks-at-the-number",
+      "n": 58,
+      "hook": "the version of me that looks at the number before it looks at me",
+      "narration": [
+        "The version of me that looks at the number before the number looks at me.",
+        "She goes first, on her own schedule, in her own kitchen, with tea. Nothing gets to arrive at her.",
+        "Being surprised was always what actually hurt. Not the amount. The ambush.",
+        "First move wins. That's most of it, honestly."
+      ],
+      "beats": [
+        "she goes first, on her own schedule",
+        "being surprised is what actually hurt",
+        "first move wins"
+      ],
+      "caption": "first move wins.",
+      "published": true,
+      "date": "2026-07-20T17:49:05.563Z",
+      "ts": 1784569745563,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p02.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p02-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-25",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "you-dont-need-a-better-spreadsheet-you-need-a",
+      "n": 59,
+      "hook": "you don't need a better spreadsheet. you need a gentler appointment with the one you have",
+      "narration": [
+        "You don't need a better spreadsheet. You need a gentler appointment with the one you already have.",
+        "The new app is usually just avoidance in a nicer font. Setup feels like progress, and setup is free.",
+        "You never actually abandoned the tool. You abandoned the sitting down. That's the part that got hard.",
+        "It was never the tool. Once the sitting down got small and kind, the spreadsheet I already had held fine."
+      ],
+      "beats": [
+        "the new app is just avoidance in a nicer font",
+        "you never abandoned the tool, you abandoned the sitting-down",
+        "it's not the tool"
+      ],
+      "caption": "it's not the tool.",
+      "published": true,
+      "date": "2026-07-20T15:14:19.750Z",
+      "ts": 1784560459750,
+      "taxon": "feel-seen",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p06.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p06-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-24",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-romanticize-the-money-reset-the-way-people-romanticize",
+      "n": 60,
+      "hook": "i romanticize the money reset the way people romanticize sunday cleaning. same relief",
+      "narration": [
+        "I romanticize the money reset the way people romanticize Sunday cleaning. It's the same relief.",
+        "It's the same instinct, really. Put the mess somewhere you can see it, and it stops feeling infinite.",
+        "The relief comes from order, not from having more. That's true of a countertop and it's true of a page.",
+        "Clean numbers, clean counters. Both of them just let the week start without a backlog."
+      ],
+      "beats": [
+        "same instinct: put the mess where you can see it",
+        "the relief comes from order, not from more",
+        "clean numbers, clean counters"
+      ],
+      "caption": "clean numbers, clean counters.",
+      "published": true,
+      "date": "2026-07-20T12:13:20.611Z",
+      "ts": 1784549600611,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p07.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p07-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-23",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-bills-paid-themselves-on-time-because-past-you",
+      "n": 61,
+      "hook": "the bills paid themselves on time because past-you set the table",
+      "narration": [
+        "The bills paid themselves on time, because past-you set the table.",
+        "She made the decisions on a calm afternoon, when nothing was urgent and nothing was tempting.",
+        "So today required nothing from you at all. No remembering, no scrambling, no apology emails.",
+        "Nothing about today was work. It was built by someone I already was."
+      ],
+      "beats": [
+        "she made the decisions on a calm afternoon",
+        "today required nothing from you",
+        "thank her later"
+      ],
+      "caption": "past-me set the table.",
+      "published": true,
+      "date": "2026-07-20T02:54:41.915Z",
+      "ts": 1784516081915,
+      "taxon": "payday-order",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p03.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p03-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-22",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "small-money-rituals-are-how-you-become-someone-money",
+      "n": 62,
+      "hook": "small money rituals are how you become someone money feels safe around",
+      "narration": [
+        "Small money rituals are how you become someone money feels safe around.",
+        "You slowly learn that you can look at it without falling apart. That's the whole lesson.",
+        "The trust isn't really in the money. It's in yourself, in how you handle what you find.",
+        "And it builds one quiet Sunday at a time. Nobody arrives there in a weekend."
+      ],
+      "beats": [
+        "you learn you can look without falling apart",
+        "the trust is really trust in yourself",
+        "it builds one quiet sunday at a time"
+      ],
+      "caption": "trust builds both ways.",
+      "published": true,
+      "date": "2026-07-20T00:19:04.806Z",
+      "ts": 1784506744806,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p04.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p04-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-21",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-notebook-doesnt-judge-thats-why-it-works",
+      "n": 63,
+      "hook": "the notebook doesn't judge. that's why it works",
+      "narration": [
+        "The notebook doesn't judge. That's exactly why it works.",
+        "No notifications. No tone. No little opinion about the week I just had.",
+        "It just holds what I tell it, in my own handwriting, at my own pace.",
+        "Paper is patient. It'll wait for me, and it never once made me feel behind."
+      ],
+      "beats": [
+        "no notifications, no tone, no opinion",
+        "it just holds what i tell it",
+        "paper is patient"
+      ],
+      "caption": "paper is patient.",
+      "published": true,
+      "date": "2026-07-19T19:33:55.706Z",
+      "ts": 1784489635706,
+      "taxon": "feel-seen",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p00.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p00-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-20",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-stopped-checking-my-account-at-midnight-we-talk",
+      "n": 64,
+      "hook": "i stopped checking my account at midnight. we talk during business hours now",
+      "narration": [
+        "I stopped checking my account at midnight. We talk during business hours now.",
+        "Nothing I find at midnight can actually be acted on. It's pure looking with nowhere to put it.",
+        "And a tired brain reads every number worse than it is. Midnight makes fine things look dire.",
+        "So I keep boundaries, even with my own banking app. It can have my attention. It just can't have my night."
+      ],
+      "beats": [
+        "nothing at midnight can be acted on",
+        "the tired brain reads every number worse",
+        "boundaries, even with my own bank app"
+      ],
+      "caption": "boundaries with my own bank app.",
+      "published": true,
+      "date": "2026-07-19T17:18:50.333Z",
+      "ts": 1784481530333,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p06.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p06-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-19",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "money-anxiety-shrinks-when-its-scheduled-it-grows-when",
+      "n": 65,
+      "hook": "money anxiety shrinks when it's scheduled. it grows when it's ambient",
+      "narration": [
+        "Money anxiety shrinks when it's scheduled. It grows when it's ambient.",
+        "Ambient worry has no end point. It follows you into the shower, into bed, into perfectly good afternoons.",
+        "A scheduled worry has a door out. You go in, you look, you leave. It has a shape.",
+        "So I gave it an appointment. Not to make it bigger — to give it edges it didn't have before."
+      ],
+      "beats": [
+        "ambient worry has no end point",
+        "a scheduled worry has a door out",
+        "give it an appointment"
+      ],
+      "caption": "scheduled, not ambient.",
+      "published": true,
+      "date": "2026-07-19T15:09:23.267Z",
+      "ts": 1784473763267,
+      "taxon": "feel-seen",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p05.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p05-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-18",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-unsubscribed-from-every-store-email-and-started-hearing",
+      "n": 66,
+      "hook": "i unsubscribed from every store email and started hearing my own opinions again",
+      "narration": [
+        "I unsubscribed from every store email, and I started hearing my own opinions again.",
+        "So much of my wanting had been scheduled by someone else. A sale arrived, and a feeling followed.",
+        "Quiet inbox, quieter wants. It took about two weeks for the noise to drain out.",
+        "The things I still want after that are actually mine. That's a much shorter list, and a much better one."
+      ],
+      "beats": [
+        "most of my wanting was scheduled by someone else",
+        "quiet inbox, quieter wants",
+        "the things i still want are actually mine"
+      ],
+      "caption": "quiet inbox, quiet wants.",
+      "published": true,
+      "date": "2026-07-19T12:08:10.450Z",
+      "ts": 1784462890450,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p02.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p02-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-17",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "ten-minutes-on-sunday-saves-me-five-small-panics",
+      "n": 67,
+      "hook": "ten minutes on sunday saves me five small panics by thursday",
+      "narration": [
+        "Ten minutes on Sunday saves me about five small panics by Thursday.",
+        "The panics were never about the money itself. They were about not knowing, at a bad moment.",
+        "One look on Sunday answers all of them at once. Thursday-me just remembers instead of guessing.",
+        "It's cheap insurance. Ten quiet minutes, traded for a week of not startling myself."
+      ],
+      "beats": [
+        "the panics were always about not knowing",
+        "one look answers all of them at once",
+        "cheap insurance"
+      ],
+      "caption": "cheap insurance.",
+      "published": true,
+      "date": "2026-07-19T02:27:14.679Z",
+      "ts": 1784428034679,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p04.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p04-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-16",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "my-bank-balance-is-information-not-a-grade",
+      "n": 68,
+      "hook": "my bank balance is information, not a grade",
+      "narration": [
+        "My bank balance is information. It is not a grade.",
+        "A number can't have an opinion about me. It doesn't know how my year went or what it cost.",
+        "I gave it the meaning it had. Which means I'm allowed to take that meaning back.",
+        "Data, not judgment. Once it's just data, I can actually look at it without bracing."
+      ],
+      "beats": [
+        "a number can't have an opinion about you",
+        "i gave it the meaning, so i can take it back",
+        "data, not judgment"
+      ],
+      "caption": "data, not judgment.",
+      "published": true,
+      "date": "2026-07-19T00:19:21.312Z",
+      "ts": 1784420361312,
+      "taxon": "feel-seen",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p06.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p06-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-15",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "its-payday-and-you-move-the-money-in-the",
+      "n": 69,
+      "hook": "it's payday, and you move the money in the same order as always. no drama, just choreography",
+      "narration": [
+        "It's payday, and you move the money in the same order as always. No drama. Just choreography.",
+        "The order got decided on a calm day, weeks ago, by someone who wasn't tired or tempted.",
+        "So payday isn't a decision anymore. It's a sequence. You just follow the steps you already agreed to.",
+        "Rehearsed calm beats fresh willpower every single time. Willpower runs out. A sequence doesn't."
+      ],
+      "beats": [
+        "the order was decided on a calm day",
+        "payday isn't a decision anymore, it's a sequence",
+        "rehearsed calm beats fresh willpower"
+      ],
+      "caption": "rehearsed calm.",
+      "published": true,
+      "date": "2026-07-18T19:09:41.758Z",
+      "ts": 1784401781758,
+      "taxon": "payday-order",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p03.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p03-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-14",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-calmest-thing-i-own-is-a-notebook-that",
+      "n": 70,
+      "hook": "the calmest thing i own is a notebook that knows where my money goes",
+      "narration": [
+        "The calmest thing I own is a notebook that knows where my money goes.",
+        "It remembers so I don't have to. That's its entire job, and it never forgets.",
+        "Nothing lives in my head rent free anymore. It's all on a page I can go find.",
+        "An outsourced memory is a quiet one. The relief isn't in the numbers. It's in not carrying them."
+      ],
+      "beats": [
+        "it remembers so i don't have to",
+        "nothing lives in my head rent free",
+        "an outsourced memory is a quiet one"
+      ],
+      "caption": "it remembers so i can rest.",
+      "published": true,
+      "date": "2026-07-18T17:02:57.264Z",
+      "ts": 1784394177264,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p00.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p00-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-13",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "wanting-things-is-fine-the-ritual-just-asks-me",
+      "n": 71,
+      "hook": "wanting things is fine. the ritual just asks me to want them on purpose",
+      "narration": [
+        "Wanting things is fine. The ritual just asks me to want them on purpose.",
+        "It never says no. There's no forbidden list, no punishment for enjoying something.",
+        "It just asks me to say the want out loud first. Half of them don't survive being said out loud.",
+        "On purpose is the whole trick. The ones that do survive, I get to have without a single ounce of guilt."
+      ],
+      "beats": [
+        "the ritual doesn't say no",
+        "it just asks me to say it out loud first",
+        "on purpose is the whole trick"
+      ],
+      "caption": "on purpose is the whole trick.",
+      "published": true,
+      "date": "2026-07-18T14:26:16.183Z",
+      "ts": 1784384776183,
+      "taxon": "feel-seen",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p01.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p01-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-12",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-write-down-what-i-spent-like-id-tell",
+      "n": 72,
+      "hook": "i write down what i spent like i'd tell a friend — no verdict, just the truth",
+      "narration": [
+        "I write down what I spent the way I'd tell a friend. No verdict, just the truth.",
+        "A friend gets the facts without the lecture. That's the tone I aim for on the page.",
+        "Because shame makes you stop writing things down. And a half-written page tells you nothing.",
+        "Honest pages only happen in kind rooms. The kindness isn't soft. It's what keeps the record accurate."
+      ],
+      "beats": [
+        "a friend gets the facts without the lecture",
+        "shame makes you stop writing things down",
+        "honest pages only happen in kind rooms"
+      ],
+      "caption": "honesty without a lecture.",
+      "published": true,
+      "date": "2026-07-18T12:16:35.377Z",
+      "ts": 1784376995377,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p05.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p05-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-11",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "a-money-ritual-isnt-about-the-math-its-about",
+      "n": 73,
+      "hook": "a money ritual isn't about the math. it's about not flinching",
+      "narration": [
+        "A money ritual isn't really about the math. It's about not flinching.",
+        "The math was never the hard part. Most of us can add. We just can't look.",
+        "Repetition is what takes the charge out of it. The tenth time you sit down, it's mundane.",
+        "The flinch turned out to be optional. It was a habit like any other, and mine softened once the ritual got boring."
+      ],
+      "beats": [
+        "the math was never the hard part",
+        "repetition is what takes the charge out",
+        "the flinch is optional"
+      ],
+      "caption": "the flinch is optional.",
+      "published": true,
+      "date": "2026-07-18T03:10:08.308Z",
+      "ts": 1784344208308,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p04.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p04-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-10",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-version-of-me-that-knows-whats-coming-out",
+      "n": 74,
+      "hook": "the version of me that knows what's coming out this week sleeps differently",
+      "narration": [
+        "The version of me that knows what's coming out this week sleeps differently.",
+        "No surprises means no three a.m. math. That's the hour where everything feels worse than it is.",
+        "The knowing is the whole comfort. My brain stops running the numbers because it already has them.",
+        "She isn't ahead of anything. She's just informed. That was enough to change the nights."
+      ],
+      "beats": [
+        "no surprises means no 3am math",
+        "the knowing is the whole comfort",
+        "she isn't ahead, she's just informed"
+      ],
+      "caption": "no surprises, no 3am math.",
+      "published": true,
+      "date": "2026-07-18T00:17:09.453Z",
+      "ts": 1784333829453,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p02.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p02-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-09",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "avoidance-is-the-most-expensive-habit-i-ever-had",
+      "n": 75,
+      "hook": "avoidance is the most expensive habit i ever had",
+      "narration": [
+        "Avoidance is the most expensive habit I ever had.",
+        "Not looking never made anything smaller. It just meant I found out later, with less room to respond.",
+        "And it moved the worry into every hour instead of one. Ambient dread is a tax you pay all week.",
+        "Looking costs nothing. It's uncomfortable for about ninety seconds, and then it's over."
+      ],
+      "beats": [
+        "not looking never made it smaller",
+        "it just moved the worry into every hour",
+        "looking costs nothing"
+      ],
+      "caption": "looking costs nothing.",
+      "published": true,
+      "date": "2026-07-17T20:22:21.557Z",
+      "ts": 1784319741557,
+      "taxon": "feel-seen",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p06.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p06-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-08",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "its-sunday-evening-the-notebook-is-open-and-money",
+      "n": 76,
+      "hook": "it's sunday evening, the notebook is open, and money is just a list of small decisions again",
+      "narration": [
+        "It's Sunday evening. The notebook is open. And money is just a list of small decisions again.",
+        "Nothing on this page is a verdict. It's not scoring me. It's a page.",
+        "Each line is one small choice, sitting on its own, where I can actually see it.",
+        "It was never a monster. It was a pile. It went quiet the moment I sorted it."
+      ],
+      "beats": [
+        "nothing here is a verdict",
+        "each line is just one small choice",
+        "it was never a monster, only a pile"
+      ],
+      "caption": "it was never a monster.",
+      "published": true,
+      "date": "2026-07-17T17:50:15.099Z",
+      "ts": 1784310615099,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p00.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p00-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-07",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "i-dont-budget-harder-anymore-i-budget-quieter",
+      "n": 77,
+      "hook": "i don't budget harder anymore. i budget quieter",
+      "narration": [
+        "I don't budget harder anymore. I budget quieter.",
+        "Harder meant elaborate rules I could never keep for more than two weeks. Then the shame, then the quitting.",
+        "Quieter just means one small honest look, on a regular day, without a whole personality change attached.",
+        "Volume down, clarity up. It turns out I didn't need more discipline. I needed less noise."
+      ],
+      "beats": [
+        "harder meant rules i couldn't keep",
+        "quieter means one small honest look",
+        "volume down, clarity up"
+      ],
+      "caption": "volume down, clarity up.",
+      "published": true,
+      "date": "2026-07-17T15:11:51.879Z",
+      "ts": 1784301111879,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p05.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p05-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-06",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "money-stopped-being-scary-when-it-became-a-ten",
+      "n": 78,
+      "hook": "money stopped being scary when it became a ten minute tea date every sunday",
+      "narration": [
+        "Money stopped being scary when it became a ten minute tea date every Sunday.",
+        "It's an appointment now, not an ambush. It happens when I decide, not when panic decides.",
+        "And I make it pleasant on purpose. Tea, good light, no phone. The setting does half the work.",
+        "I stopped dreading it once it had a time on it. The dread was living in the not-knowing-when."
+      ],
+      "beats": [
+        "an appointment, not an ambush",
+        "i make it pleasant on purpose",
+        "you can't dread something you've already scheduled"
+      ],
+      "caption": "an appointment, not an ambush.",
+      "published": true,
+      "date": "2026-07-17T12:11:58.710Z",
+      "ts": 1784290318710,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p04.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p04-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-05",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "payday-order-bills-savings-then-im-allowed-to-want",
+      "n": 79,
+      "hook": "payday order: bills, savings, then i'm allowed to want things",
+      "narration": [
+        "My payday order. Bills, then savings, and then I'm allowed to want things.",
+        "Bills first, because they were never really a choice. Doing them first stops them from following me around.",
+        "Savings second, before the wanting starts. Not a big gesture. Just before, rather than after.",
+        "And then whatever is left is genuinely mine to enjoy. No guilt attached, because the order already answered for me."
+      ],
+      "beats": [
+        "bills first, because they aren't a choice",
+        "savings second, before the wanting starts",
+        "then whatever's left is genuinely mine"
+      ],
+      "caption": "same order every time.",
+      "published": true,
+      "date": "2026-07-17T03:19:35.968Z",
+      "ts": 1784258375968,
+      "taxon": "payday-order",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p03.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p03-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-04",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-version-of-me-that-opens-the-banking-app",
+      "n": 80,
+      "hook": "the version of me that opens the banking app calmly is a different person",
+      "narration": [
+        "The version of me that opens the banking app calmly is a different person.",
+        "Same numbers. Different nervous system. Nothing on the screen changed at all.",
+        "She isn't braver than I was. She just already knows roughly what she's about to see.",
+        "The calm came from the routine, not from the balance. It took me two years to notice that."
+      ],
+      "beats": [
+        "same numbers, different nervous system",
+        "she isn't braver, she's just informed",
+        "calm came from the routine, not the balance"
+      ],
+      "caption": "same numbers, different nervous system.",
+      "published": true,
+      "date": "2026-07-17T01:35:34.114Z",
+      "ts": 1784252134114,
+      "taxon": "identity-arrival",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p02.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p02-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-03",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "checking-your-balance-with-one-eye-closed-is-a",
+      "n": 81,
+      "hook": "checking your balance with one eye closed is a symptom, not a joke",
+      "narration": [
+        "Checking your balance with one eye closed is a symptom. Not a joke.",
+        "The flinch is telling you something. Not about the number, about the feeling you've attached to it.",
+        "The number was never really the scary part. Not knowing was. Uncertainty is what your body reacts to.",
+        "So I look on purpose, at a time I chose. It's gentler than being surprised by it at midnight."
+      ],
+      "beats": [
+        "the flinch is information about the feeling",
+        "the number was never the scary part",
+        "looking on purpose is gentler than being surprised"
+      ],
+      "caption": "gentler ways exist.",
+      "published": true,
+      "date": "2026-07-16T23:46:12.527Z",
+      "ts": 1784245572527,
+      "taxon": "feel-seen",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p01.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p01-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-02",
+      "permalink": null,
+      "platform": null
+    },
+    {
+      "publication": "softmoneyjournal",
+      "slug": "the-sunday-money-reset-ten-quiet-minutes-then-i",
+      "n": 82,
+      "hook": "the sunday money reset: ten quiet minutes, then i stop thinking about it all week",
+      "narration": [
+        "The Sunday money reset. Ten quiet minutes, and then I stop thinking about it all week.",
+        "Same chair, same tea, same ten minutes. The sameness is the point. There's nothing to decide about the ritual itself.",
+        "I look at what's coming, not at what's wrong. It's a list of small decisions, not a report card.",
+        "Then I close the notebook. And the rest of the week stays quiet, because the looking already happened."
+      ],
+      "beats": [
+        "same chair, same tea, same ten minutes",
+        "i look at what's coming, not what's wrong",
+        "then i close the notebook and the week is quiet"
+      ],
+      "caption": "sunday, tea, notebook. done.",
+      "published": true,
+      "date": "2026-07-16T21:39:17.901Z",
+      "ts": 1784237957901,
+      "taxon": "ritual",
+      "still": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p00.jpg",
+      "wide": "http://127.0.0.1:54321/storage/v1/object/public/publication/softmoneyjournal/plates/p00-w.jpg",
+      "gallery": [],
+      "clip_id": "sm-01",
+      "permalink": null,
+      "platform": null
+    }
+  ],
+  "unchanged_slugs": [
+    "i-let-the-cup-go-cold",
+    "i-pay-the-envelopes-in-order",
+    "i-count-it-into-envelopes",
+    "i-date-every-page",
+    "i-write-the-same-three-lines",
+    "one-drawer-holds-the-money",
+    "i-wipe-the-desk-down",
+    "the-notebook-stays-open-here",
+    "the-pen-goes-back-down",
+    "i-fill-the-page-before-payday",
+    "payday-starts-at-this-desk",
+    "the-ink-has-to-dry",
+    "i-sit-in-the-good-light",
+    "i-write-the-number-down",
+    "i-sit-down-before-i-decide",
+    "this-room-holds-my-reset",
+    "i-split-it-before-i-spend",
+    "i-open-the-curtain-first",
+    "the-planner-tells-me-the-order",
+    "the-tea-goes-down-first",
+    "i-leave-the-pen-on-friday",
+    "the-table-is-clear-now",
+    "i-clear-the-desk-first",
+    "i-keep-one-page-open",
+    "the-desk-stopped-meaning-dread",
+    "the-desk-is-set-before-i-sit",
+    "the-light-tells-me-its-time",
+    "i-give-the-week-a-page",
+    "i-count-it-out-loud",
+    "the-planner-opens-first",
+    "the-mug-is-the-timer",
+    "i-date-the-page-first",
+    "the-cup-buys-me-ten-minutes",
+    "the-pen-stays-on-the-page",
+    "the-page-hears-the-numbers-first",
+    "payday-in-three-small-moves",
+    "i-became-a-clear-desk-person",
+    "i-do-money-at-tea-temperature",
+    "i-sit-down-for-this-now",
+    "each-envelope-has-one-job",
+    "i-write-the-numbers-by-hand",
+    "i-do-the-numbers-at-first-light",
+    "i-budget-by-candlelight-now-seriously-it-changed-the",
+    "coffee-first-then-the-numbers",
+    "payday-order-of-operations-rent-then-the-savings-transfer",
+    "i-started-keeping-receipts-in-one-small-dish-instead",
+    "i-used-to-think-being-good-with-money-meant",
+    "the-money-moves-before-i-have-an-opinion-about",
+    "payday-has-an-order-and-i-dont-have-to",
+    "i-used-to-open-my-banking-app-braced-now",
+    "sunday-tea-notebook-numbers-the-week-can-come-now",
+    "money-got-lighter-the-day-it-got-a-routine",
+    "the-goal-was-never-more-the-goal-was-calm",
+    "quiet-money-isnt-rich-money-its-known-money",
+    "the-version-of-me-that-looks-at-the-number",
+    "you-dont-need-a-better-spreadsheet-you-need-a",
+    "i-romanticize-the-money-reset-the-way-people-romanticize",
+    "the-bills-paid-themselves-on-time-because-past-you",
+    "small-money-rituals-are-how-you-become-someone-money",
+    "the-notebook-doesnt-judge-thats-why-it-works",
+    "i-stopped-checking-my-account-at-midnight-we-talk",
+    "money-anxiety-shrinks-when-its-scheduled-it-grows-when",
+    "i-unsubscribed-from-every-store-email-and-started-hearing",
+    "ten-minutes-on-sunday-saves-me-five-small-panics",
+    "my-bank-balance-is-information-not-a-grade",
+    "its-payday-and-you-move-the-money-in-the",
+    "the-calmest-thing-i-own-is-a-notebook-that",
+    "wanting-things-is-fine-the-ritual-just-asks-me",
+    "i-write-down-what-i-spent-like-id-tell",
+    "a-money-ritual-isnt-about-the-math-its-about",
+    "the-version-of-me-that-knows-whats-coming-out",
+    "avoidance-is-the-most-expensive-habit-i-ever-had",
+    "its-sunday-evening-the-notebook-is-open-and-money",
+    "i-dont-budget-harder-anymore-i-budget-quieter",
+    "money-stopped-being-scary-when-it-became-a-ten",
+    "payday-order-bills-savings-then-im-allowed-to-want",
+    "the-version-of-me-that-opens-the-banking-app",
+    "checking-your-balance-with-one-eye-closed-is-a",
+    "the-sunday-money-reset-ten-quiet-minutes-then-i"
+  ],
+  "stale_slug": "the-pen-decides-before-i-do",
+  "stale_hook": "i moved one thing and closed the book",
+  "missing_slugs": [
+    "i-give-the-page-ten-minutes",
+    "i-pay-the-table-first"
+  ],
+  "withdrawn_slug": "the-envelope-i-stopped-using",
+  "cheat_slugs": [
+    "the-jar-on-the-shelf-nobody-counted"
+  ],
+  "owned_post_slugs": [
+    "a-money-ritual-isnt-about-the-math-its-about",
+    "avoidance-is-the-most-expensive-habit-i-ever-had",
+    "checking-your-balance-with-one-eye-closed-is-a",
+    "coffee-first-then-the-numbers",
+    "each-envelope-has-one-job",
+    "i-became-a-clear-desk-person",
+    "i-budget-by-candlelight-now-seriously-it-changed-the",
+    "i-clear-the-desk-first",
+    "i-close-the-notebook-calmly",
+    "i-count-each-note-slowly",
+    "i-count-it-into-envelopes",
+    "i-count-it-out-loud",
+    "i-date-every-page",
+    "i-date-the-page-first",
+    "i-do-money-at-tea-temperature",
+    "i-do-the-numbers-at-first-light",
+    "i-dont-budget-harder-anymore-i-budget-quieter",
+    "i-drink-it-warm-now",
+    "i-fill-the-page-before-payday",
+    "i-give-money-a-quiet-place",
+    "i-give-the-page-ten-minutes",
+    "i-give-the-week-a-page",
+    "i-keep-one-page-open",
+    "i-leave-the-margins-blank",
+    "i-leave-the-pen-on-friday",
+    "i-let-the-cup-go-cold",
+    "i-open-the-curtain-first",
+    "i-open-the-notebook-first",
+    "i-pay-the-envelopes-in-order",
+    "i-pay-the-table-first",
+    "i-romanticize-the-money-reset-the-way-people-romanticize",
+    "i-sit-down-before-i-decide",
+    "i-sit-down-for-this-now",
+    "i-sit-in-the-good-light",
+    "i-sort-the-cash-before-sunday",
+    "i-split-it-before-i-spend",
+    "i-started-keeping-receipts-in-one-small-dish-instead",
+    "i-steep-before-i-check",
+    "i-stopped-checking-my-account-at-midnight-we-talk",
+    "i-unsubscribed-from-every-store-email-and-started-hearing",
+    "i-used-to-open-my-banking-app-braced-now",
+    "i-used-to-think-being-good-with-money-meant",
+    "i-wipe-the-desk-down",
+    "i-write-down-what-i-spent-like-id-tell",
+    "i-write-the-number-down",
+    "i-write-the-numbers-by-hand",
+    "i-write-the-same-three-lines",
+    "its-payday-and-you-move-the-money-in-the",
+    "its-sunday-evening-the-notebook-is-open-and-money",
+    "money-anxiety-shrinks-when-its-scheduled-it-grows-when",
+    "money-got-lighter-the-day-it-got-a-routine",
+    "money-stopped-being-scary-when-it-became-a-ten",
+    "my-bank-balance-is-information-not-a-grade",
+    "one-drawer-holds-the-money",
+    "payday-has-an-order-and-i-dont-have-to",
+    "payday-in-three-small-moves",
+    "payday-order-bills-savings-then-im-allowed-to-want",
+    "payday-order-of-operations-rent-then-the-savings-transfer",
+    "payday-starts-at-this-desk",
+    "quiet-money-isnt-rich-money-its-known-money",
+    "small-money-rituals-are-how-you-become-someone-money",
+    "sunday-tea-notebook-numbers-the-week-can-come-now",
+    "ten-minutes-on-sunday-saves-me-five-small-panics",
+    "the-bills-paid-themselves-on-time-because-past-you",
+    "the-calmest-thing-i-own-is-a-notebook-that",
+    "the-cup-buys-me-ten-minutes",
+    "the-desk-is-set-before-i-sit",
+    "the-desk-stopped-meaning-dread",
+    "the-envelope-i-stopped-using",
+    "the-goal-was-never-more-the-goal-was-calm",
+    "the-ink-has-to-dry",
+    "the-jar-on-the-shelf-nobody-counted",
+    "the-light-tells-me-its-time",
+    "the-money-moves-before-i-have-an-opinion-about",
+    "the-mug-goes-down-first",
+    "the-mug-is-the-timer",
+    "the-notebook-doesnt-judge-thats-why-it-works",
+    "the-notebook-stays-open-here",
+    "the-page-hears-the-numbers-first",
+    "the-pen-decides-before-i-do",
+    "the-pen-goes-back-down",
+    "the-pen-stays-on-the-page",
+    "the-planner-opens-first",
+    "the-planner-tells-me-the-order",
+    "the-sunday-money-reset-ten-quiet-minutes-then-i",
+    "the-table-is-clear-now",
+    "the-tea-goes-down-first",
+    "the-version-of-me-that-knows-whats-coming-out",
+    "the-version-of-me-that-looks-at-the-number",
+    "the-version-of-me-that-opens-the-banking-app",
+    "this-room-holds-my-reset",
+    "wanting-things-is-fine-the-ritual-just-asks-me",
+    "you-dont-need-a-better-spreadsheet-you-need-a"
+  ],
+  "owned_addresses": [
+    "ines.brackwater@durnford-mill.example",
+    "marguerite.ashcombe@fenwick-ledger.example",
+    "nell.pryce-okonjo@saltmarsh-union.example",
+    "passer.by@fenwick-ledger.example",
+    "teodor.vasquez@harnham-counting.example",
+    "wynn.calderbank@thurloe-assay.example",
+    "you@example.com"
+  ],
+  "seeded_stamp": "2026-09-18T21:30:00+00:00",
+  "permalink_slugs": [
+    "i-pay-the-envelopes-in-order",
+    "i-write-the-same-three-lines",
+    "the-notebook-stays-open-here"
+  ],
+  "sibling_posts": [
+    {
+      "publication": "ledgerlight",
+      "slug": "the-column-i-file-on-fridays",
+      "hook": "the column i file on fridays"
+    },
+    {
+      "publication": "ledgerlight",
+      "slug": "two-figures-and-a-ruled-line",
+      "hook": "two figures and a ruled line"
+    },
+    {
+      "publication": "ledgerlight",
+      "slug": "the-drawer-with-the-receipts",
+      "hook": "the drawer with the receipts"
+    },
+    {
+      "publication": "themondaycolumn",
+      "slug": "monday-is-for-the-small-sums",
+      "hook": "monday is for the small sums"
+    },
+    {
+      "publication": "themondaycolumn",
+      "slug": "what-the-standing-order-does",
+      "hook": "what the standing order does"
+    }
+  ],
+  "owned_publications": [
+    "softmoneyjournal",
+    "ledgerlight",
+    "themondaycolumn"
+  ],
+  "neighbour_publications": [
+    "ledgerlight",
+    "themondaycolumn"
+  ],
+  "subscribers": [
+    {
+      "publication": "softmoneyjournal",
+      "email": "marguerite.ashcombe@fenwick-ledger.example",
+      "source": "letter-form",
+      "created_at": "2026-08-09T06:58:00+00:00",
+      "unsubscribed": false,
+      "unsub_token": "0000fd01-0000-4000-8000-00000000fd01"
+    },
+    {
+      "publication": "ledgerlight",
+      "email": "marguerite.ashcombe@fenwick-ledger.example",
+      "source": "letter-form",
+      "created_at": "2026-08-13T18:02:00+00:00",
+      "unsubscribed": false,
+      "unsub_token": "0000fd02-0000-4000-8000-00000000fd02"
+    },
+    {
+      "publication": "softmoneyjournal",
+      "email": "teodor.vasquez@harnham-counting.example",
+      "source": "letter-form",
+      "created_at": "2026-08-19T11:44:00+00:00",
+      "unsubscribed": false,
+      "unsub_token": "0000fd03-0000-4000-8000-00000000fd03"
+    },
+    {
+      "publication": "softmoneyjournal",
+      "email": "nell.pryce-okonjo@saltmarsh-union.example",
+      "source": "letter-form",
+      "created_at": "2026-07-31T20:16:00+00:00",
+      "unsubscribed": true,
+      "unsub_token": "0000fd04-0000-4000-8000-00000000fd04"
+    },
+    {
+      "publication": "themondaycolumn",
+      "email": "teodor.vasquez@harnham-counting.example",
+      "source": "letter-form",
+      "created_at": "2026-09-03T08:27:00+00:00",
+      "unsubscribed": false,
+      "unsub_token": "0000fd05-0000-4000-8000-00000000fd05"
+    },
+    {
+      "publication": "themondaycolumn",
+      "email": "ines.brackwater@durnford-mill.example",
+      "source": "letter-form",
+      "created_at": "2026-09-10T15:39:00+00:00",
+      "unsubscribed": false,
+      "unsub_token": "0000fd06-0000-4000-8000-00000000fd06"
+    }
+  ]
+}

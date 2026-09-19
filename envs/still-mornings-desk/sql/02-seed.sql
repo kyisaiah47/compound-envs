@@ -39,6 +39,12 @@
 -- slug is not in the site's adapter, so a correct sync deletes it; the two neighbours are how a
 -- sync that wrote the whole table instead of its own publication is caught.
 --
+-- ⛔ `softmoneyjournal` HAS ITS OWN ENVIRONMENT NOW, which it did not when this was written.
+-- These two rows are safe where they are: soft-money-journal-desk snapshots every row it does not
+-- own and restores it after its engine run, because that engine's prune is bounded by publication
+-- and nothing finer, so an HONEST run of it would otherwise delete these. A new environment must
+-- park its cross-publication rows on an INVENTED slug instead, the way the later ones do.
+--
 -- publication_letter_sends carries the two letters already delivered for the newest published
 -- entry, which is what makes the lane's one-letter-per-entry skip a real state and not an empty
 -- table.
