@@ -1,0 +1,13 @@
+# Fabricated fixture credentials. Every environment in this repo invents its own data, and an
+# API key is one of the things a fixture has to invent: parserail's key format is fixed at
+# `ksk_live_` + 40 hex by KEY_PREFIX in the product's lib/platform/keys.ts, and the auth path
+# rejects anything else, so a fixture key that did not look like a live key would be testing a
+# format the product does not have.
+#
+# The key below is `ksk_live_11aa22bb33cc44dd55ee66ff77008811992200aa`, which is a hand-typed
+# repeating pattern rather than 40 random hex, and the second finding is its SHA-256, which is
+# what the product actually stores. Checked against production 2026-09-19: zero rows in the live
+# key table carry that hash, so no real credential exists with this value and there is nothing to
+# rotate.
+aa6abbd2b25e6be3ac57f7a4ab40ee45141e3653:envs/parserail-desk/harness/rollout.mjs:generic-api-key:30
+aa6abbd2b25e6be3ac57f7a4ab40ee45141e3653:envs/parserail-desk/parserail_desk/taskset.py:generic-api-key:78
