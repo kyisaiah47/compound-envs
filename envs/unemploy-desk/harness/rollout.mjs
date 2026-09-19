@@ -21,6 +21,8 @@ const ROOT = path.dirname(HERE);
 const APP = process.env.DESK_APP_URL || "http://127.0.0.1:3773";
 const DB_CONTAINER = process.env.DESK_DB_CONTAINER || "supabase_db_stack";
 const FIXTURE = path.join(ROOT, "fixtures", "NY-benefit-charge-Q3.pdf");
+const RECORD = process.argv.includes("--record");
+let recorder = null;
 
 const session = JSON.parse(fs.readFileSync(path.join(HERE, "session.json"), "utf8"));
 
@@ -62,6 +64,14 @@ try {
   await page.goto(`${APP}/?view=ledger`, { waitUntil: "networkidle2", timeout: 60000 });
   step("ledger open");
 
+  /* ⛔ THE RECORDING DOES NOT SCROLL AND DOES NOT SELECT TEXT. The task is an upload and a
+   * button press, both already in frame on the ledger, so there is nothing to travel to. */
+  if (RECORD) {
+    fs.mkdirSync(path.join(ROOT, "demo"), { recursive: true });
+    recorder = await page.screencast({ path: path.join(ROOT, "demo", "rollout.webm") });
+    step("recording");
+  }
+
   const input = await page.waitForSelector("input[type=file]", { timeout: 20000 });
   const confirmed = page.waitForResponse(
     (r) => r.url().includes("/dashboard/api/upload/confirm"),
@@ -96,6 +106,8 @@ try {
   step(`audit/start -> ${auditRes.status()} ${JSON.stringify(auditBody).slice(0, 120)}`);
   if (!auditRes.ok()) ok = false;
 
+  /* A beat on the finished state so the last frame is not the click. */
+  await new Promise((r) => setTimeout(r, 1500));
   await page.screenshot({ path: path.join(HERE, "rollout-end.png"), fullPage: false });
 
   console.log("\nrows afterwards:");
@@ -114,6 +126,10 @@ try {
   /* Printed on success AND on failure. On a timeout this list is the whole diagnosis: it says
    * whether the app asked for an upload ticket at all, which separates "the file never reached
    * the handler" from "the handler ran and the server refused". */
+  if (recorder) {
+    await recorder.stop();
+    console.log(`\nrecording: ${path.join(ROOT, "demo", "rollout.webm")}`);
+  }
   console.log("\nrequests the app made:");
   if (!globalThis.__seen?.length) console.log("  (none)");
   for (const s of globalThis.__seen ?? []) console.log(`  ${String(s.status).padStart(3)}  ${s.path}`);

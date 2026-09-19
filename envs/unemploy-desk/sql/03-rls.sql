@@ -60,6 +60,13 @@ begin
     'cd_fact_requests', 'cd_facts', 'cd_hearings', 'cd_notices', 'cd_statements'
   ] loop
     execute format('alter table public.%I enable row level security', tbl);
+    -- Dropped first so the whole file is idempotent. `up.sh` re-applies it on every bring-up,
+    -- and a create that throws on the second run turns into a `|| true` in the caller, which is
+    -- how a failed re-apply becomes invisible.
+    execute format('drop policy if exists %I on public.%I', tbl || '_read', tbl);
+    execute format('drop policy if exists %I on public.%I', tbl || '_write', tbl);
+    execute format('drop policy if exists %I on public.%I', tbl || '_update', tbl);
+    execute format('drop policy if exists %I on public.%I', tbl || '_delete', tbl);
     execute format(
       'create policy %I on public.%I for select to authenticated using (tenant_id in (select cd_member_tenant_ids()))',
       tbl || '_read', tbl);
@@ -79,10 +86,12 @@ end $$;
 -- in production: a member row is written by the service role during bootstrap and never by the
 -- person signing in.
 alter table public.cd_tenants enable row level security;
+drop policy if exists cd_tenants_read on public.cd_tenants;
 create policy cd_tenants_read on public.cd_tenants
   for select to authenticated using (id in (select cd_member_tenant_ids()));
 
 alter table public.cd_users enable row level security;
+drop policy if exists cd_users_read on public.cd_users;
 create policy cd_users_read on public.cd_users
   for select to authenticated using (tenant_id in (select cd_member_tenant_ids()));
 

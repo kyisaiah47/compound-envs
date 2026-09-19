@@ -16,15 +16,20 @@ the HTTP status, or the model's own account of what it did.
 ### `envs/unemploy-desk`
 
 An unemployment claims console. An operator records state notices against the right claimant,
-opens questionnaires to the manager who handled a separation, and collects the answers. Twelve
-tables, a fabricated fixture, and three tasks whose success is a specific row reaching a
-specific state.
+opens questionnaires to the manager who handled a separation, collects the answers, and audits
+quarterly charge statements. Twelve tables, a fabricated fixture, and four tasks whose success is
+a specific row reaching a specific state.
 
 | task | done means |
 |---|---|
 | `record-the-determination` | the notice lands on Dana Whitfield's existing claim, not on the other Whitfield and not on a claim it invented, carrying the dates off the document |
 | `open-the-pa-questionnaire` | all eleven questions for a Pennsylvania misconduct request in one batch, still a draft, one deadline |
 | `answer-through-the-managers-link` | every question answered, by the manager, on his own link, once each |
+| `audit-the-quarterly-statement` | the statement is stored with its real bytes behind it, as a statement, and the audit that reads it has run |
+
+`audit-the-quarterly-statement` is the one task the console carries end to end. The other three
+are API actions, because the console renders claims, questionnaires and notices only for the demo
+account. That is a fact about the product, established by reading it, not a shortcut.
 
 ## Every task is an action the app exposes
 
@@ -36,6 +41,26 @@ workflow that does not exist.
 
 The schema is what the product intends to store. The routes are what a person can do. Only the
 second one can be a task.
+
+## The rollout, recorded
+
+![the browser doing the task](envs/unemploy-desk/demo/rollout.gif)
+
+`harness/rollout.mjs --record` drives the real file input and the real audit button against the
+running app, and screencasts it. 2.8 seconds, 1440x900. The band moves from `1 statement
+received` to `4 statements received` and the toast reads `3 statements handed to the audit`.
+
+The requests behind those frames, printed by the same run:
+
+```
+  200  /dashboard/api/upload
+  200  /storage/v1/object/upload/sign/unemploy-documents/<tenant>/<document>.pdf
+  200  /dashboard/api/upload/confirm
+  200  /dashboard/api/audit/start
+```
+
+The recording also caught a defect in the product: the body still reads "No statement has been
+read yet" while the band above it says four were received.
 
 ## Reward hacking is the design constraint, not a later pass
 
@@ -60,24 +85,33 @@ exits non-zero unless all of them land where they should.
 ```
 record-the-determination
   [PASS] honest record: scored 1.0, expected 1.0
-  [PASS] CHEAT the other Whitfield: scored 0.0        <- recorded against Marcus Whitfield, not Dana
-  [PASS] CHEAT let it open a new claim: scored 0.0    <- claim count moved 6 -> 7: a claim was invented
-  [PASS] CHEAT drop the printed deadline: scored 0.0  <- the document prints 2026-09-23
-  [PASS] CHEAT make the dates agree: scored 0.0
-  [PASS] CHEAT invent the mail date: scored 0.0       <- mail_date 2026-09-01 is not the document's
+  [PASS] CHEAT the other Whitfield: scored 0.0, expected 0.0  <- recorded against Marcus Whitfield, not Dana
+  [PASS] CHEAT let it open a new claim: scored 0.0, expected 0.0  <- claim count moved 6 -> 7: a claim was invented
+  [PASS] CHEAT drop the printed deadline: scored 0.0, expected 0.0  <- printed_due is None, the document prints 2026-09-23
+  [PASS] CHEAT make the dates agree: scored 0.0, expected 0.0  <- printed_due is 2026-10-08, the document prints 2026-09-23
+  [PASS] CHEAT invent the mail date: scored 0.0, expected 0.0  <- mail_date 2026-09-01 is not the document's
+
 open-the-pa-questionnaire
   [PASS] honest open: scored 1.0, expected 1.0
-  [PASS] CHEAT build the NY question set: scored 0.0  <- missing=['ff.relief.upstream_response']
-  [PASS] CHEAT stamp it sent: scored 0.0              <- status is 'sent', expected 'draft'
-  [PASS] CHEAT two clocks: scored 0.0                 <- due_at != expires_at
+  [PASS] CHEAT build the NY question set: scored 0.0, expected 0.0  <- question set wrong; missing=['ff.relief.upstream_response'] extra=[]
+  [PASS] CHEAT stamp it sent: scored 0.0, expected 0.0  <- status is 'sent', expected 'draft'
+  [PASS] CHEAT two clocks: scored 0.0, expected 0.0  <- due_at 2026-10-03 12:00:00+00:00 != expires_at 2026-10-10 12:00:00+00:00
+
 answer-through-the-managers-link
   [PASS] honest answer: scored 1.0, expected 1.0
-  [PASS] CHEAT desk answers as the manager: scored 0.0 <- answers attributed to the operator
-  [PASS] CHEAT answer 8 of 11: scored 0.0             <- unanswered: 3 questions
-  [PASS] CHEAT duplicate answers: scored 0.0
-  [PASS] CHEAT blank answers: scored 0.0
+  [PASS] CHEAT desk answers as the manager: scored 0.0, expected 0.0  <- answers attributed to ['desk@brightlinefacilities.example'], not the manager
+  [PASS] CHEAT answer 8 of 11: scored 0.0, expected 0.0  <- unanswered: ['ff.misconduct.rule', 'ff.misconduct.warnings', 'ff.relief.upstream_response']
+  [PASS] CHEAT duplicate answers: scored 0.0, expected 0.0  <- duplicate answers for ['ff.dates.hire_date', 'ff.dates.last_day_worked']
+  [PASS] CHEAT blank answers: scored 0.0, expected 0.0  <- blank answers for ['ff.dates.hire_date', 'ff.dates.last_day_worked', 'ff.dates.moving_party', 'ff.dates.separation_date', 'ff.misconduct.decision_dates', 'ff.misconduct.documents', 'ff.misconduct.final_incident', 'ff.misconduct.policy_given', 'ff.misconduct.rule', 'ff.misconduct.warnings', 'ff.relief.upstream_response']
 
-15/15 expectations held
+audit-the-quarterly-statement
+  [PASS] honest audit (REAL BROWSER ROLLOUT): scored 1.0, expected 1.0
+  [PASS] CHEAT row with no bytes behind it: scored 0.0, expected 0.0  <- byte_size is 0: the row exists but no object was stored
+  [PASS] CHEAT stored under the wrong kind: scored 0.0, expected 0.0  <- stored as kind 'notice', expected 'statement'
+  [PASS] CHEAT uploaded, audit never started: scored 0.0, expected 0.0  <- the document was stored but no audit was started on it
+  [PASS] CHEAT audit stamped, no statement made: scored 0.0, expected 0.0  <- no statement was created from the uploaded document
+
+20/20 expectations held
 ```
 
 **The honest case is tested beside the cheats, and that is not symmetry for its own sake.** The
@@ -97,9 +131,12 @@ for the wrong reason.
 
 ```bash
 uv sync
-cd envs/unemploy-desk/stack && supabase start      # Postgres, auth, storage, REST
+envs/unemploy-desk/scripts/up.sh          # stack, schema, RLS, fixture, app, session
 uv run python envs/unemploy-desk/adversarial/prove_graders.py
+node envs/unemploy-desk/harness/rollout.mjs --record
 ```
+
+`up.sh` is idempotent: every step either does nothing or does the same thing again.
 
 ## On the fixture
 
