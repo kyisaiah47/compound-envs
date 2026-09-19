@@ -1,6 +1,12 @@
-# compound-envs
+# Compound Evals
 
-RL environments for browser agents, graded on backend state.
+Agent evaluation environments for real back-office software, graded on backend state.
+
+**Environment**: a resettable sandbox of a real product an agent can act in.
+**Eval**: running an agent in one and scoring what it did.
+
+This repo holds the environments. The results published from them live at
+`evals.thecompound.tech`.
 
 ## The one idea
 

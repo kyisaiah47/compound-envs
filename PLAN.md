@@ -1,5 +1,8 @@
 # Plan: an eval environment per product, then publish
 
+Brand: **Compound Evals**. The umbrella is Evals, the things inside it are environments, and
+each product's is named for the product, for example the Unemploy Claims Desk Environment.
+
 Isaiah, 2026-09-19. Recorded here so it does not get lost between sessions.
 
 ## The shape
@@ -20,12 +23,13 @@ On the link: "adn then link also to the publci gh repos for each app's eval repo
 `compound-envs` is currently one repository holding `envs/unemploy-desk`. Point 3 wants a public
 repo per product, linkable from that product's own site. Two ways, and the choice is Isaiah's:
 
-- one repo per product (`compound-env-unemploy`, `compound-env-fetchdue`, ...), each linkable on
-  its own, or
-- this monorepo stays the build surface and each product's environment is published out to its
-  own public repo.
+Decided 2026-09-19: one repo, `compound-evals`, and one site at `evals.thecompound.tech` with
+`envs.thecompound.tech` pointed at the same place. Paths rather than domains, because links and
+citations accrue per domain and two thin sites split them:
 
-Nothing downstream is blocked by that decision yet.
+- `/environments` for how the resettable sandboxes work
+- `/evals` for task results, model comparisons and methodology
+- `/<product>` for that product's own environment and its numbers
 
 ## What generalises across products, and what does not
 
