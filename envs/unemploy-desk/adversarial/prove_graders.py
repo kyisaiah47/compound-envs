@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import asyncio
 import pathlib
+import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -30,6 +31,7 @@ from unemploy_desk.taskset import (  # noqa: E402
     REQUEST_LINDQVIST,
     TENANT,
     AnswerThroughTheManagersLink,
+    AuditTheQuarterlyStatement,
     DeskData,
     DeskTaskConfig,
     OpenThePaQuestionnaire,
@@ -202,6 +204,60 @@ def cheat_answer_blank():
     _answers(PA_MISCONDUCT_QUESTIONS, text="   ")
 
 
+# ------------------------------------------------------ audit-the-quarterly-statement
+#
+# ⛔ THE HONEST CASE HERE IS THE REAL BROWSER, NOT SQL. Every other honest case in this file
+# writes the outcome directly, which proves the grader accepts a correct end state. For the one
+# task the UI can carry, that is not enough: it would leave "a real rollout of this task scores
+# 1.0" untested, and a grader that only ever sees hand-written rows is a grader nobody has run.
+# So this one shells out to harness/rollout.mjs, which drives the actual file input and the
+# actual audit button against the running app.
+
+NEW_DOC = "11111111-2222-4333-8444-555555555555"
+
+
+def honest_audit():
+    subprocess.run(
+        ["node", str(ROOT / "harness" / "rollout.mjs"), "--keep"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+
+def _uploaded(byte_size=1057, kind="statement", audited=True, with_statement=True):
+    sql(
+        "insert into cd_documents (id, tenant_id, kind, storage_path, original_name, mime_type,"
+        " byte_size, sha256, audit_started_at) values (%s, %s, %s, 'x/y.pdf',"
+        " 'NY-benefit-charge-Q3.pdf', 'application/pdf', %s, 'deadbeef', %s)",
+        (NEW_DOC, TENANT, kind, byte_size, "2026-09-19T17:00:00Z" if audited else None),
+    )
+    if with_statement:
+        sql(
+            "insert into cd_statements (tenant_id, document_id, status) values (%s, %s, 'received')",
+            (TENANT, NEW_DOC),
+        )
+
+
+def cheat_audit_row_without_bytes():
+    """A document row with nothing behind it. confirm reads the size off the stored object, so
+    a fabricated row comes back as 0."""
+    _uploaded(byte_size=0)
+
+
+def cheat_audit_wrong_kind():
+    """Stored, but not as a charge statement, so the audit has nothing to read."""
+    _uploaded(kind="notice")
+
+
+def cheat_audit_never_started():
+    _uploaded(audited=False)
+
+
+def cheat_audit_no_statement_made():
+    _uploaded(with_statement=False)
+
+
 def main() -> int:
     r: list[bool] = []
     R, O, A = RecordTheDetermination, OpenThePaQuestionnaire, AnswerThroughTheManagersLink
@@ -228,6 +284,14 @@ def main() -> int:
     r.append(case("CHEAT answer 8 of 11", 0.0, A, aid, afn, cheat_answer_partially))
     r.append(case("CHEAT duplicate answers", 0.0, A, aid, afn, cheat_answer_with_duplicates))
     r.append(case("CHEAT blank answers", 0.0, A, aid, afn, cheat_answer_blank))
+
+    print("\naudit-the-quarterly-statement")
+    U, uid, ufn = AuditTheQuarterlyStatement, "audit-the-quarterly-statement", "statement_stored_and_audited"
+    r.append(case("honest audit (REAL BROWSER ROLLOUT)", 1.0, U, uid, ufn, honest_audit))
+    r.append(case("CHEAT row with no bytes behind it", 0.0, U, uid, ufn, cheat_audit_row_without_bytes))
+    r.append(case("CHEAT stored under the wrong kind", 0.0, U, uid, ufn, cheat_audit_wrong_kind))
+    r.append(case("CHEAT uploaded, audit never started", 0.0, U, uid, ufn, cheat_audit_never_started))
+    r.append(case("CHEAT audit stamped, no statement made", 0.0, U, uid, ufn, cheat_audit_no_statement_made))
 
     print(f"\n{sum(r)}/{len(r)} expectations held")
     return 0 if all(r) else 1

@@ -53,6 +53,19 @@ DOC_PRINTED_DUE = dt.date(2026, 9, 23)
 SEED_CLAIM_COUNT = 6
 SEED_NOTICE_COUNT = 3
 
+# The four documents the fixture ships. Anything outside this set was put there by the rollout,
+# which is how the upload task finds "the new one" without matching on a filename: the fixture
+# deliberately carries a document with the same name, so a name match would find the wrong row.
+SEEDED_DOCUMENT_IDS = [
+    "00000000-0000-4000-8000-000000003001",
+    "00000000-0000-4000-8000-000000003002",
+    "00000000-0000-4000-8000-000000003003",
+    "00000000-0000-4000-8000-000000003004",
+]
+FIXTURE_BYTES = 1057
+"""fixtures/NY-benefit-charge-Q3.pdf, measured on disk. /upload/confirm reads the size off the
+stored object rather than trusting the client, so this is proof the bytes actually landed."""
+
 # questionsFor("discharge_misconduct", "PA"), read out of the app's own package on 2026-09-19.
 # The NY set is these ten without ff.relief.upstream_response.
 PA_MISCONDUCT_QUESTIONS = sorted(
@@ -281,7 +294,67 @@ class AnswerThroughTheManagersLink(DeskTask):
         return 1.0
 
 
+class AuditTheQuarterlyStatement(DeskTask):
+    """The one task the product's own UI can carry end to end: put a charge statement on the
+    file input and start the audit. Everything else in this taskset is an API action, because
+    the console renders claims, questionnaires and notices only for the demo account."""
+
+    @vf.reward(weight=1.0)
+    async def statement_stored_and_audited(self, trace: vf.Trace) -> float:
+        new = self._rows(
+            "select id, kind, tenant_id, byte_size, audit_started_at, original_name"
+            " from cd_documents where id <> all(%s)",
+            (SEEDED_DOCUMENT_IDS,),
+        )
+        if not new:
+            return self._fail(trace, "no document row was created")
+        if len(new) > 1:
+            return self._fail(trace, f"{len(new)} documents uploaded, expected 1")
+
+        d = new[0]
+        if str(d["tenant_id"]) != TENANT:
+            return self._fail(trace, "document was written under another tenant")
+
+        # ⛔ GUARD 1, and it is the one that cannot be faked from the page. `byte_size` is not
+        # supplied by the client: /upload/confirm lists the storage object and reads the size off
+        # it. A row that claims a document without the bytes behind it comes back as 0.
+        if not d["byte_size"]:
+            return self._fail(trace, "byte_size is 0: the row exists but no object was stored")
+        if d["byte_size"] != FIXTURE_BYTES:
+            return self._fail(
+                trace, f"byte_size {d['byte_size']} is not the fixture's {FIXTURE_BYTES}"
+            )
+
+        # ⛔ GUARD 2. The audit reads charge statements. Sending the file under any other kind
+        # gets it stored and leaves the audit with nothing to read, which looks like an upload
+        # that worked.
+        if d["kind"] != "statement":
+            return self._fail(trace, f"stored as kind {d['kind']!r}, expected 'statement'")
+
+        if d["audit_started_at"] is None:
+            return self._fail(trace, "the document was stored but no audit was started on it")
+
+        # ⛔ GUARD 3. Starting the audit is what turns a stored document into a statement row.
+        # Stopping after the upload leaves a file nobody reads.
+        made = self._scalar(
+            "select count(*) from cd_statements where document_id = %s", (str(d["id"]),)
+        )
+        if not made:
+            return self._fail(trace, "no statement was created from the uploaded document")
+
+        trace.info["desk_document"] = d["original_name"]
+        trace.info["desk_bytes"] = d["byte_size"]
+        return 1.0
+
+
 TASKS: list[tuple[type[DeskTask], str, str]] = [
+    (
+        AuditTheQuarterlyStatement,
+        "audit-the-quarterly-statement",
+        "The Q3 New York charge statement for this employer account is on disk as "
+        "NY-benefit-charge-Q3.pdf. Send it in on the ledger and start the audit so its charge "
+        "lines get read.",
+    ),
     (
         RecordTheDetermination,
         "record-the-determination",
