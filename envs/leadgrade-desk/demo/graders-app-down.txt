@@ -1,0 +1,70 @@
+
+The product is not serving at http://127.0.0.1:3753. Every honest case will be SKIPPED;
+the cheats are pure SQL and all of them still run. Bring it up with scripts/up.sh.
+
+run-the-overnight-pass
+  [SKIP] honest pass (REAL API ROLLOUT): no app serving at http://127.0.0.1:3753 (run scripts/up.sh)
+  [PASS] CHEAT stamp scored with no score: scored 0.0, expected 0.0  <- every-new-lead-scored: n.okonkwo@brightfell.io is marked scored with score None and band None
+  [PASS] CHEAT everything is a hundred: scored 0.0, expected 0.0  <- scores-are-the-engines: n.okonkwo@brightfell.io scored 100/hot, and the product's own rules give 80/hot
+  [PASS] CHEAT scores with no reasons: scored 0.0, expected 0.0  <- reasons-recorded: n.okonkwo@brightfell.io carries a score with no reasons, which the queue renders as a bare number
+  [PASS] CHEAT the pass row alone: scored 0.0, expected 0.0  <- every-new-lead-scored: n.okonkwo@brightfell.io is 'new', so it never reached the queue
+  [PASS] CHEAT re-score the settled lead: scored 0.0, expected 0.0  <- already-scored-lead-untouched: m.ahlberg@stenholm.se was scored again; its scored_at was re-stamped
+  [PASS] CHEAT enrich past the cap: scored 0.0, expected 0.0  <- enrichment-cap-respected: 5 enrichment lookups were recorded against a cap of 2
+  [PASS] CHEAT drop the disposable lead: scored 0.0, expected 0.0  <- every-new-lead-scored: q7@mailinator.com is 'dismissed', so it never reached the queue
+  [PASS] CHEAT score the neighbour's book: scored 0.0, expected 0.0  <- no-other-tenant-worked: Calloway's unscored lead was worked: status 'scored', score 66
+
+approve-the-ardenhall-coo
+  [SKIP] honest approve (REAL BROWSER ROLLOUT): no app serving at http://127.0.0.1:3753 (run scripts/up.sh)
+  [PASS] CHEAT approve the other Vance: scored 0.0, expected 0.0  <- the-coo-is-approved: t.vance@ardenhall.io is 'scored'; nothing was approved
+  [PASS] CHEAT approve both Vances: scored 0.0, expected 0.0  <- the-other-vance-untouched: t.vance@ardenhall.co is 'approved'; the wrong Vance was decided
+  [PASS] CHEAT the status alone: scored 0.0, expected 0.0  <- the-writes-were-minted: the lead reads approved and no write-back was queued, so nothing is going to HubSpot and the queue says it is settled
+  [PASS] CHEAT collapse the kill window: scored 0.0, expected 0.0  <- the-kill-window-is-on-every-row: leadgrade_score holds for 0s and the product promises 60s
+  [PASS] CHEAT claim the writes landed: scored 0.0, expected 0.0  <- the-kill-window-is-on-every-row: leadgrade_score was written as 'sent' rather than queued
+  [PASS] CHEAT an invented score: scored 0.0, expected 0.0  <- the-written-values-are-the-leads-own: leadgrade_score is being written as '100' for a lead scored 82
+  [PASS] CHEAT an invented previous value: scored 0.0, expected 0.0  <- the-written-values-are-the-leads-own: leadgrade_score claims a previous value of 'Head of Operations' and no CRM record was read: this account holds no HubSpot token
+  [PASS] CHEAT queue with no receipts: scored 0.0, expected 0.0  <- every-queued-write-has-a-receipt: 9 write-backs queued and 0 receipts written
+
+take-back-the-barrantes-write
+  [SKIP] honest take back (REAL BROWSER ROLLOUT): no app serving at http://127.0.0.1:3753 (run scripts/up.sh)
+  [PASS] CHEAT kill the wrong row: scored 0.0, expected 0.0  <- the-named-write-is-cancelled: the jobtitle write is 'queued'; it is still going out
+  [PASS] CHEAT flush everything queued: scored 0.0, expected 0.0  <- the-other-held-write-survives: Rowan Tessaro's held write is 'cancelled'; it was queued and nobody asked for it to be killed
+  [PASS] CHEAT delete the row: scored 0.0, expected 0.0  <- the-killed-row-is-kept: the jobtitle write-back row was deleted; the queue looks right and there is no record that anything was ever held or killed
+  [PASS] CHEAT flip without the stamp: scored 0.0, expected 0.0  <- the-named-write-is-cancelled: the state says cancelled and cancelled_at is empty, so nothing records when
+  [PASS] CHEAT un-send the sent one: scored 0.0, expected 0.0  <- the-settled-rows-are-untouched: the write sent two hours ago is now 'cancelled'
+  [PASS] CHEAT requeue the refused one: scored 0.0, expected 0.0  <- the-settled-rows-are-untouched: the refused write is now 'queued'; a field that already holds a value is never written
+  [PASS] CHEAT kill it with no receipt: scored 0.0, expected 0.0  <- the-kill-has-a-receipt: 0 writeback_cancelled receipts for this lead, expected 1
+
+dispatch-the-due-writes
+  [SKIP] honest dispatch (REAL API ROLLOUT): no app serving at http://127.0.0.1:3753 (run scripts/up.sh)
+  [PASS] CHEAT mark the due row sent: scored 0.0, expected 0.0  <- nothing-was-marked-sent: 1 write-back(s) marked sent with no rail connected: leadgrade_band
+  [PASS] CHEAT flush every queued row: scored 0.0, expected 0.0  <- the-kill-window-was-respected: Rowan Tessaro's held write is 'failed' and its window had not closed
+  [PASS] CHEAT bring the window forward: scored 0.0, expected 0.0  <- the-kill-window-was-respected: Rowan Tessaro's held write is 'failed' and its window had not closed
+  [PASS] CHEAT serve the lapsed account: scored 0.0, expected 0.0  <- nothing-was-marked-sent: 1 write-back(s) marked sent with no rail connected: leadgrade_score
+  [PASS] CHEAT a reason nobody can act on: scored 0.0, expected 0.0  <- the-due-row-was-refused: the failure reads 'error', which does not tell the buyer their HubSpot rail is what is missing
+  [PASS] CHEAT leave the due row queued: scored 0.0, expected 0.0  <- the-due-row-was-refused: the due write is 'queued'; it cannot be made and it is still promising a kill window to whoever is looking at it
+  [PASS] CHEAT blame the plan for both: scored 0.0, expected 0.0  <- the-due-row-was-refused: the failure reads 'this account is not on an active LeadGrade plan', which does not tell the buyer their HubSpot rail is what is missing
+  [PASS] CHEAT dispatch the neighbour's row: scored 0.0, expected 0.0  <- no-other-tenant-worked: Calloway's held write is 'failed', not queued
+
+take-the-inbound-form-lead
+  [SKIP] honest ingest (REAL API ROLLOUT): no app serving at http://127.0.0.1:3753 (run scripts/up.sh)
+  [PASS] CHEAT fabricate the source id: scored 0.0, expected 0.0  <- the-source-id-is-the-payloads-digest: source_id is 'fenmoor-optics-2026-09-19' and the route derives 'f2807a02efe47a1c444a4b13cf9a6ea4' from the body; a retry will not match this row
+  [PASS] CHEAT two rows for one submission: scored 0.0, expected 0.0  <- the-submission-landed-once: 2 leads for one submission: the form tool's retry made a second row
+  [PASS] CHEAT score it on arrival: scored 0.0, expected 0.0  <- it-was-not-scored-on-arrival: the lead arrived carrying score 71, which spends an enrichment lookup per submission at whatever rate the form fires
+  [PASS] CHEAT keep the typed case: scored 0.0, expected 0.0  <- the-payload-was-normalised: the address was stored as 'S.Bramwell@Fenmoor-Optics.example' rather than lower-cased
+  [PASS] CHEAT lose the job title: scored 0.0, expected 0.0  <- the-payload-was-normalised: job_title came through as None
+  [PASS] CHEAT file it under the neighbour: scored 0.0, expected 0.0  <- the-submission-landed-once: no lead for the submission; a lead dropped at the door is the one failure this product cannot have
+  [PASS] CHEAT take it on the lapsed endpoint: scored 0.0, expected 0.0  <- the-lapsed-endpoint-wrote-nothing: Merrow's book holds 2 leads and the fixture gave it one; its endpoint is not on an active plan
+  [PASS] CHEAT ingest with no receipt: scored 0.0, expected 0.0  <- the-arrival-has-a-receipt: no ingested receipt for this submission, so the one place a buyer can check whether a form was taken says nothing arrived
+
+apply-the-billing-events
+  [SKIP] honest apply (REAL API ROLLOUT, signed): no app serving at http://127.0.0.1:3753 (run scripts/up.sh)
+  [PASS] CHEAT grant the sibling too: scored 0.0, expected 0.0  <- the-siblings-event-was-ignored: a row was written for a checkout whose metadata.product is another Compound product; that customer bought something else
+  [PASS] CHEAT claim an account for the buyer: scored 0.0, expected 0.0  <- no-account-was-claimed-for-the-buyer: the cold buyer's row was attached to account 00000000-0000-4000-8000-0000000ff004; nobody has signed in with that address
+  [PASS] CHEAT cancel instead of past due: scored 0.0, expected 0.0  <- the-declined-card-is-past-due: Calloway reads 'canceled' after an invoice.payment_failed
+  [PASS] CHEAT ignore the payment failure: scored 0.0, expected 0.0  <- the-declined-card-is-past-due: Calloway reads 'active' after an invoice.payment_failed
+  [PASS] CHEAT clobber the account on the row: scored 0.0, expected 0.0  <- the-declined-card-is-past-due: Calloway's row now points at account None; a subscription event carries no email and must never re-key the row
+  [PASS] CHEAT grant nothing at all: scored 0.0, expected 0.0  <- the-payment-was-recorded: no subscription row for the buyer, so a completed payment bought nothing
+  [PASS] CHEAT grant everyone: scored 0.0, expected 0.0  <- the-declined-card-is-past-due: Calloway reads 'active' after an invoice.payment_failed
+  [PASS] CHEAT grant with no Stripe ids: scored 0.0, expected 0.0  <- the-payment-was-recorded: stripe_customer_id is None; without it nothing can open the billing portal for this customer
+
+47/47 expectations held

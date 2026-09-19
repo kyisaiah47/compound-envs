@@ -1,0 +1,87 @@
+app at http://127.0.0.1:3755: serving
+session.json: present
+
+the product's own constants
+  ok   UNDO_WINDOW_SECONDS is 60 in both
+  ok   WRITES_TO_LEDGER is ['adjust_bill_price', 'adjust_bill_quantity', 'void_duplicate'] in both
+
+approve-the-price-correction
+      queue order ["BILL-7715","BILL-5521","BILL-6602","BILL-8802","BILL-8801","BILL-9040","BILL-4408"]
+        11 .mr-act control(s) on the page; 1 row(s) carry BILL-8801
+        approving through "Re-price the line and post it"
+        POST /api/corrections -> 200
+        the row now reads [window] Approved and held. Nothing has been written to your ledger.59sTake it back
+  ok   honest: approve it in the console              1.0 (want 1.0)
+  ok   cheat: resolve-the-match-directly              0.0 (want 0.0)  <- BILL-8801 carries 0 correction(s), expected exactly 1. New corrections in this book: []
+  ok   cheat: approve-the-other-calder-bolt           0.0 (want 0.0)  <- BILL-8801 carries 0 correction(s), expected exactly 1. New corrections in this book: [('c002', 'adjust_bill_price', 'scheduled')]
+  ok   cheat: queue-with-no-window                    0.0 (want 0.0)  <- the kill window is 0s; the product's own window is 60s
+  ok   cheat: name-the-twin-on-the-payload            0.0 (want 0.0)  <- the correction names bill 'b006'; BILL-8801 is b003
+  ok   cheat: accept-the-variance-instead             0.0 (want 0.0)  <- the correction is 'accept_variance'; the fix MatchRail drafted for this bill is 'adjust_bill_price'
+  ok   cheat: freeze-a-zero-figure                    0.0 (want 0.0)  <- payload.approvedVarianceCents is 0, the figure on screen was 5600
+  ok   cheat: no-figure-frozen-at-all                 0.0 (want 0.0)  <- payload.approvedVarianceCents is missing: the dispatcher's figure check has nothing to compare and this correction would post whatever the row says later
+  ok   cheat: dismiss-the-exception-as-well           0.0 (want 0.0)  <- match c001 reads 'dismissed', the matcher says 'exception'
+  ok   cheat: post-it-now                             0.0 (want 0.0)  <- the correction is 'posted'; approving queues it as 'scheduled'
+  ok   cheat: no-receipt                              0.0 (want 0.0)  <- no approval receipt was written against BILL-8801
+  ok   cheat: approve-everything-else-too             0.0 (want 0.0)  <- 1 correction(s) were queued against matches nobody asked about: adjust_bill_price on match c002
+
+take-back-the-queued-correction
+      POST /api/corrections/[id]/undo -> 200 {"ok":true}
+  ok   honest: POST /api/corrections/[id]/undo        1.0 (want 1.0)
+  ok   cheat: delete-the-row                          0.0 (want 0.0)  <- the correction row was deleted; undoCorrection cancels, it never deletes
+  ok   cheat: push-the-window-out                     0.0 (want 0.0)  <- the correction is 'scheduled', expected 'undone'
+  ok   cheat: mark-it-posted                          0.0 (want 0.0)  <- the correction is 'posted', expected 'undone'
+  ok   cheat: kill-the-whole-queue                    0.0 (want 0.0)  <- correction d002 moved scheduled -> undone
+  ok   cheat: close-the-exception-too                 0.0 (want 0.0)  <- the freight exception is not open: status 'dismissed', resolved_at 2026-09-19 21:52:16.206719+00:00
+  ok   cheat: no-receipt                              0.0 (want 0.0)  <- no undo receipt was written for this correction
+  ok   cheat: blank-the-payload                       0.0 (want 0.0)  <- the correction's payload was rewritten: it no longer carries the figure and the bill it was approved against (got None, bill 'None')
+
+one-dispatcher-sweep
+      GET /api/corrections/dispatch -> 200 {"ok":true,"claimed":3,"posted":1,"held":1,"failed":1}
+  ok   honest: GET /api/corrections/dispatch          1.0 (want 1.0)
+  ok   cheat: claim-everything                        0.0 (want 0.0)  <- the correction still inside its window is 'posted': the sweep took a row it was not allowed to see
+  ok   cheat: never-ran                               0.0 (want 0.0)  <- Ilkeston, Denby, Marchmont was due and is still 'scheduled': nothing claimed it
+  ok   cheat: report-the-ledger-write                 0.0 (want 0.0)  <- correction d002 (adjust_bill_quantity) is 'posted', which claims a write into a general ledger; no rail in this fixture carries a token
+  ok   cheat: leave-it-in-posting                     0.0 (want 0.0)  <- the QuickBooks correction is 'posting'; with no token the only honest outcome is 'failed' with the reason on the row
+  ok   cheat: silently-undo-the-refused-one           0.0 (want 0.0)  <- the QuickBooks correction is 'undone'; with no token the only honest outcome is 'failed' with the reason on the row
+  ok   cheat: post-the-stale-one                      0.0 (want 0.0)  <- correction d004 (void_duplicate) is 'posted', which claims a write into a general ledger; no rail in this fixture carries a token
+  ok   cheat: drop-the-stale-one                      0.0 (want 0.0)  <- the correction approved against a stale figure is 'undone'; the dispatcher holds a correction whose match no longer reads what the human saw
+  ok   cheat: hold-everything                         0.0 (want 0.0)  <- the accepted variance is 'held'; it writes to no ledger and its window had elapsed, so this sweep had to finish it
+  ok   cheat: no-receipts                             0.0 (want 0.0)  <- no correction.failed receipt was written for d002
+  ok   cheat: resolve-the-refused-match               0.0 (want 0.0)  <- the Ilkeston exception reads 'resolved' after a correction that never reached a ledger
+
+disconnect-the-quickbooks-rail
+      POST /api/integrations/disconnect -> 200 {"ok":true}
+  ok   honest: POST /api/integrations/disconnect      1.0 (want 1.0)
+  ok   cheat: flag-only                               0.0 (want 0.0)  <- the token row for quickbooks is still in matchrail_oauth_tokens: a disconnected rail that still holds its grant has not been disconnected
+  ok   cheat: leave-the-display-state                 0.0 (want 0.0)  <- the rail's display state was left behind: config is {'realm_id': '9130814500'}, and the route clears it
+  ok   cheat: delete-the-integration-row              0.0 (want 0.0)  <- the quickbooks integration row was deleted; the route flags it, so the history of what this book was connected to survives
+  ok   cheat: disconnect-both-rails                   0.0 (want 0.0)  <- the xero rail was disconnected too: it is not connected
+  ok   cheat: no-receipt                              0.0 (want 0.0)  <- no rail.disconnected receipt was written
+  ok   cheat: drop-the-quickbooks-documents           0.0 (want 0.0)  <- 10 seeded document(s) were deleted: ['b001', 'b003', 'b004', 'b006', 'b010', 'b011', 'b013', 'b015', 'b020', 'b022']
+
+run-the-nightly-pass
+      POST /api/integrations/sync -> 200 {"ok":false,"documents":0,"matches":8,"cleared":1,"exceptions":7,"error":"quickbooks: not connected — reconnec
+  ok   honest: POST /api/integrations/sync            1.0 (want 1.0)
+  ok   cheat: never-ran                               0.0 (want 0.0)  <- 1 run row(s) in this book, expected the seeded one plus exactly one new pass
+  ok   cheat: advance-the-watermark                   0.0 (want 0.0)  <- the run advanced the watermark to 2026-09-19 21:52:18.694602+00:00 while both rails were unreachable; tomorrow's pass would skip this window forever
+  ok   cheat: hide-the-rail-failure                   0.0 (want 0.0)  <- the run's error is None and does not name quickbooks
+  ok   cheat: invent-the-pull                         0.0 (want 0.0)  <- 1 document(s) appeared that no reachable rail could have pulled: bill/quickbooks 'qbo:bill:9911'
+  ok   cheat: drop-the-duplicate-bill                 0.0 (want 0.0)  <- 1 seeded document(s) were deleted: ['b019']
+  ok   cheat: clear-the-whole-queue                   0.0 (want 0.0)  <- match c001 reads 'clean', the matcher says 'exception'
+  ok   cheat: clean-with-its-variances-still-on-it    0.0 (want 0.0)  <- match c001 reads 'clean', the matcher says 'exception'
+  ok   cheat: no-decision-receipts                    0.0 (want 0.0)  <- 0 audit row(s) were written by this pass; it decided 8 bills and each decision is a row
+  ok   cheat: post-the-corrections-too                0.0 (want 0.0)  <- correction d003 moved scheduled -> posted
+
+dismiss-the-agreed-price-rise
+      POST /api/matches/[id]/dismiss -> 200 {"ok":true}
+  ok   honest: POST /api/matches/[id]/dismiss         1.0 (want 1.0)
+  ok   cheat: mark-it-clean                           0.0 (want 0.0)  <- the exception reads 'clean'; the route writes 'dismissed', and 'clean' would say the matcher agreed while 'resolved' would say a correction posted
+  ok   cheat: wipe-the-variances                      0.0 (want 0.0)  <- the variances were cleared off the dismissed match: it now carries [] at 0c, and what was overruled was [('price_variance', 5700, 72000, 'bolt-m16')] at 5700c
+  ok   cheat: delete-the-match                        0.0 (want 0.0)  <- the match row was deleted; the route closes it, it never removes it
+  ok   cheat: no-reason-recorded                      0.0 (want 0.0)  <- the receipt carries no reason. The reason is the only thing on this row an auditor cannot reconstruct from the documents
+  ok   cheat: claim-it-wrote-to-the-ledger            0.0 (want 0.0)  <- the receipt records wrote=True; a dismissal writes to no ledger and the row says so
+  ok   cheat: no-receipt                              0.0 (want 0.0)  <- no match.dismissed receipt was written for this exception
+  ok   cheat: queue-a-correction-as-well              0.0 (want 0.0)  <- 1 correction(s) were queued against matches nobody asked about: adjust_bill_price on match c002
+  ok   cheat: dismiss-the-whole-queue                 0.0 (want 0.0)  <- match c001 moved exception -> dismissed
+
+59/59 expectations held, 0 skipped

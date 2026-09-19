@@ -1,0 +1,10 @@
+{
+  "name": "leadgrade-desk-harness",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.116.0",
+    "puppeteer-core": "^25.10.0"
+  }
+}

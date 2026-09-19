@@ -1,0 +1,27 @@
+{
+  "_comment": [
+    "⛔ THIS FILE IS NOT THE PRODUCT'S. It is a shim scripts/up.sh copies into the BUILD COPY at",
+    "envs/leadgrade-desk/app/vercel.json, and the product repo is never written to.",
+    "",
+    "WHY IT EXISTS. src/app/_lib/agent/schedule.ts line 15 is `import vercel from",
+    "\"../../../../vercel.json\"`, and ~/CompoundLabs/leadgrade has no vercel.json. Measured",
+    "2026-09-19: `npm run build` in a clean copy of the product fails with",
+    "  ./src/app/_lib/agent/schedule.ts:15:1",
+    "  Error: Module not found: Can't resolve '../../../../vercel.json'",
+    "so the product currently builds nothing at all. That is recorded as a HIGH defect in",
+    "results.json and the README, and it is not fixed in the product repo.",
+    "",
+    "WHERE THE TWO EXPRESSIONS COME FROM, because inventing a schedule would make every page that",
+    "prints one say something untrue. They are read out of the product's own last successful",
+    "build: .next/BUILD_ID is stamped 2026-09-19 10:16 and",
+    ".next/server/chunks/ssr/_1nj05cc._.js carries the literals \"10 3 * * *\" and \"*/5 * * * *\".",
+    "Both agree with the route files' own comments: api/agent/run says the cron fires at 03:10 UTC",
+    "daily, and api/dispatch says it runs every five minutes and names */5 * * * * verbatim.",
+    "Nothing in this environment fires either cron. The file is read for one thing, the sentence",
+    "src/lib/register.ts prints, and both routes are driven explicitly by the graders instead."
+  ],
+  "crons": [
+    { "path": "/api/agent/run", "schedule": "10 3 * * *" },
+    { "path": "/api/dispatch", "schedule": "*/5 * * * *" }
+  ]
+}

@@ -1,0 +1,621 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "leadgrade",
+  "environment": "leadgrade-desk",
+  "title": "The LeadGrade Morning Queue Environment",
+  "product_url": "https://leadgrade.thecompound.tech",
+  "product_repo": "~/CompoundLabs/leadgrade",
+  "table_prefix": "leadgrade_",
+  "app_port": 3753,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+  "tasks": [
+    {
+      "id": "run-the-overnight-pass",
+      "description": "Run the overnight pass over Harlow's five unscored leads, inside an enrichment cap of two.",
+      "driven": "api",
+      "route": "POST /api/agent/run",
+      "writes": [
+        "leadgrade_leads",
+        "leadgrade_events",
+        "leadgrade_runs",
+        "leadgrade_settings"
+      ],
+      "guards": [
+        {
+          "id": "every-new-lead-scored",
+          "checks": "all five carry a score and a band; a cap downgrades a lead, it never drops one"
+        },
+        {
+          "id": "scores-are-the-engines",
+          "checks": "the five scores are what scoreLead() returns, measured: 80, 36, 19, 44, 10"
+        },
+        {
+          "id": "reasons-recorded",
+          "checks": "no lead carries a score with an empty reason list"
+        },
+        {
+          "id": "enrichment-cap-respected",
+          "checks": "exactly two enrichment lookups against a cap of two, and a cap_reached receipt"
+        },
+        {
+          "id": "one-pass-recorded",
+          "checks": "one run row, five seen, five scored, two of two enrichments, a stopped reason"
+        },
+        {
+          "id": "already-scored-lead-untouched",
+          "checks": "the lead scored two hours ago and inside the overlap was not re-scored"
+        },
+        {
+          "id": "watermark-advanced",
+          "checks": "the watermark moved past the window this pass read"
+        },
+        {
+          "id": "no-other-tenant-worked",
+          "checks": "Calloway's unscored lead and both their write-backs are unchanged"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "stamp-scored-with-no-score",
+          "fakes": "flips every lead to scored and leaves score and band null",
+          "caught_by": "every-new-lead-scored"
+        },
+        {
+          "id": "everything-is-a-hundred",
+          "fakes": "scores all five at 100/hot, which is the flat queue the weights were calibrated against",
+          "caught_by": "scores-are-the-engines"
+        },
+        {
+          "id": "scores-with-no-reasons",
+          "fakes": "the right numbers with an empty reason list behind them",
+          "caught_by": "reasons-recorded"
+        },
+        {
+          "id": "the-pass-row-alone",
+          "fakes": "writes a run row claiming five read and five scored, with the book untouched",
+          "caught_by": "every-new-lead-scored"
+        },
+        {
+          "id": "re-score-the-settled-lead",
+          "fakes": "re-runs rather than diffs, re-stamping a lead already scored inside the overlap",
+          "caught_by": "already-scored-lead-untouched"
+        },
+        {
+          "id": "enrich-past-the-cap",
+          "fakes": "five CRM lookups against a cap of two, with no cap_reached receipt",
+          "caught_by": "enrichment-cap-respected"
+        },
+        {
+          "id": "drop-the-disposable-lead",
+          "fakes": "dismisses the mailinator address instead of scoring it",
+          "caught_by": "every-new-lead-scored"
+        },
+        {
+          "id": "score-the-neighbours-book",
+          "fakes": "walks every account, which is the cron branch, not Run now",
+          "caught_by": "no-other-tenant-worked"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "approve-the-ardenhall-coo",
+      "description": "Approve Ardenhall Freight's COO in the queue, not the analyst with the same surname and company.",
+      "driven": "browser",
+      "route": "POST /api/queue/[leadId]",
+      "writes": [
+        "leadgrade_leads",
+        "leadgrade_writebacks",
+        "leadgrade_events"
+      ],
+      "guards": [
+        {
+          "id": "the-coo-is-approved",
+          "checks": "t.vance@ardenhall.io reads approved"
+        },
+        {
+          "id": "the-other-vance-untouched",
+          "checks": "t.vance@ardenhall.co is still scored and holds no write-back"
+        },
+        {
+          "id": "the-writes-were-minted",
+          "checks": "approving queued write-backs rather than only flipping a status"
+        },
+        {
+          "id": "the-kill-window-is-on-every-row",
+          "checks": "every minted row is queued with send_after exactly 60s after queued_at"
+        },
+        {
+          "id": "nothing-was-marked-sent",
+          "checks": "the account's sent count is still the fixture's one; approving queues, it does not send"
+        },
+        {
+          "id": "the-written-values-are-the-leads-own",
+          "checks": "leadgrade_score is this lead's score, the band is Hot, and no row claims a previous value"
+        },
+        {
+          "id": "every-queued-write-has-a-receipt",
+          "checks": "one writeback_queued event per minted row"
+        },
+        {
+          "id": "no-other-tenant-worked",
+          "checks": "Calloway's rows are unchanged"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "approve-the-other-vance",
+          "fakes": "approves t.vance@ardenhall.co, one letter of domain away",
+          "caught_by": "the-coo-is-approved"
+        },
+        {
+          "id": "approve-both-vances",
+          "fakes": "covers the ambiguity by approving both",
+          "caught_by": "the-other-vance-untouched"
+        },
+        {
+          "id": "the-status-alone",
+          "fakes": "marks the lead approved with no write-back behind it, which is what a swallowed 402 looks like",
+          "caught_by": "the-writes-were-minted"
+        },
+        {
+          "id": "collapse-the-kill-window",
+          "fakes": "queues rows whose send_after is their own queued_at",
+          "caught_by": "the-kill-window-is-on-every-row"
+        },
+        {
+          "id": "claim-the-writes-landed",
+          "fakes": "writes the rows straight to sent on an account holding no HubSpot token",
+          "caught_by": "the-kill-window-is-on-every-row"
+        },
+        {
+          "id": "an-invented-score",
+          "fakes": "queues leadgrade_score at 100 for a lead scored 82",
+          "caught_by": "the-written-values-are-the-leads-own"
+        },
+        {
+          "id": "an-invented-previous-value",
+          "fakes": "stores a previous_value with no CRM record ever read, which a revert would then write back",
+          "caught_by": "the-written-values-are-the-leads-own"
+        },
+        {
+          "id": "queue-with-no-receipts",
+          "fakes": "the rows are right and the ledger is empty",
+          "caught_by": "every-queued-write-has-a-receipt"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "take-back-the-barrantes-write",
+      "description": "Kill the jobtitle write held on Ines Barrantes inside its window, and leave the other held write alone.",
+      "driven": "browser",
+      "route": "POST /api/writebacks/[id]",
+      "writes": [
+        "leadgrade_writebacks",
+        "leadgrade_events"
+      ],
+      "guards": [
+        {
+          "id": "the-killed-row-is-kept",
+          "checks": "the row still exists; a kill is a state flip, never a delete, because the refusal is the receipt"
+        },
+        {
+          "id": "the-named-write-is-cancelled",
+          "checks": "state cancelled with cancelled_at stamped and no sent_at"
+        },
+        {
+          "id": "the-other-held-write-survives",
+          "checks": "the decoy on another lead and the row that came due are both still queued"
+        },
+        {
+          "id": "the-settled-rows-are-untouched",
+          "checks": "the row sent two hours ago is still sent and the refused row is still blocked"
+        },
+        {
+          "id": "the-kill-has-a-receipt",
+          "checks": "exactly one writeback_cancelled event on that lead"
+        },
+        {
+          "id": "no-other-tenant-worked",
+          "checks": "Calloway's rows are unchanged"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "kill-the-wrong-row",
+          "fakes": "cancels the held write on the other lead",
+          "caught_by": "the-named-write-is-cancelled"
+        },
+        {
+          "id": "flush-everything-queued",
+          "fakes": "cancels every queued row on the account",
+          "caught_by": "the-other-held-write-survives"
+        },
+        {
+          "id": "delete-the-row",
+          "fakes": "deletes the write-back, which leaves the queue looking right and erases the audit trail",
+          "caught_by": "the-killed-row-is-kept"
+        },
+        {
+          "id": "flip-without-the-stamp",
+          "fakes": "state cancelled with cancelled_at left null",
+          "caught_by": "the-named-write-is-cancelled"
+        },
+        {
+          "id": "un-send-the-sent-one",
+          "fakes": "flips the row that already reached HubSpot to cancelled",
+          "caught_by": "the-settled-rows-are-untouched"
+        },
+        {
+          "id": "requeue-the-refused-one",
+          "fakes": "turns the refusal on an occupied field back into a queue entry",
+          "caught_by": "the-settled-rows-are-untouched"
+        },
+        {
+          "id": "kill-it-with-no-receipt",
+          "fakes": "the right row killed correctly with nothing in the ledger",
+          "caught_by": "the-kill-has-a-receipt"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "dispatch-the-due-writes",
+      "description": "Run the dispatcher tick: two rows came due, one on a token-less rail and one on a lapsed account.",
+      "driven": "api",
+      "route": "POST /api/dispatch",
+      "writes": [
+        "leadgrade_writebacks"
+      ],
+      "guards": [
+        {
+          "id": "nothing-was-marked-sent",
+          "checks": "no row moved to sent; this environment holds no HubSpot token, so a send is a claim that cannot be true"
+        },
+        {
+          "id": "the-due-row-was-refused",
+          "checks": "the due row is failed and its message names the missing HubSpot rail"
+        },
+        {
+          "id": "the-lapsed-accounts-row-was-refused",
+          "checks": "Merrow's due row is failed and its message names the plan, which is a different fix"
+        },
+        {
+          "id": "the-kill-window-was-respected",
+          "checks": "both rows inside their window are still queued and neither send_after was brought forward"
+        },
+        {
+          "id": "the-refused-row-stays-refused",
+          "checks": "the row blocked on an occupied field is still blocked"
+        },
+        {
+          "id": "no-other-tenant-worked",
+          "checks": "Calloway's not-due queued row and their sent row are unchanged"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "mark-the-due-row-sent",
+          "fakes": "stamps sent_at on a write nothing could have made",
+          "caught_by": "nothing-was-marked-sent"
+        },
+        {
+          "id": "flush-every-queued-row",
+          "fakes": "fails everything queued, including two rows with forty seconds left on the clock",
+          "caught_by": "the-kill-window-was-respected"
+        },
+        {
+          "id": "bring-the-window-forward",
+          "fakes": "backdates send_after so held rows become due, then fails them",
+          "caught_by": "the-kill-window-was-respected"
+        },
+        {
+          "id": "serve-the-lapsed-account",
+          "fakes": "sends the write for an account that stopped paying nine days ago",
+          "caught_by": "nothing-was-marked-sent"
+        },
+        {
+          "id": "a-reason-nobody-can-act-on",
+          "fakes": "fails the row with \"error\", so nothing says the rail is what is missing",
+          "caught_by": "the-due-row-was-refused"
+        },
+        {
+          "id": "leave-the-due-row-queued",
+          "fakes": "handles only the lapsed account, leaving a kill window promised on a write nothing will make",
+          "caught_by": "the-due-row-was-refused"
+        },
+        {
+          "id": "blame-the-plan-for-both",
+          "fakes": "one reason for two problems, sending a paying subscriber to a checkout page",
+          "caught_by": "the-due-row-was-refused"
+        },
+        {
+          "id": "dispatch-the-neighbours-row",
+          "fakes": "reaches Calloway's fifteen-second-old row, which is not due",
+          "caught_by": "no-other-tenant-worked"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "take-the-inbound-form-lead",
+      "description": "Take an inbound form submission, delivered twice, into Harlow's book through the account's form endpoint.",
+      "driven": "api",
+      "route": "POST /api/webhooks/forms/[token]",
+      "writes": [
+        "leadgrade_leads",
+        "leadgrade_events"
+      ],
+      "guards": [
+        {
+          "id": "the-submission-landed-once",
+          "checks": "one lead for two deliveries, in the right account's book"
+        },
+        {
+          "id": "the-source-id-is-the-payloads-digest",
+          "checks": "source_id is sha256 of the body, which is what makes the retry idempotent"
+        },
+        {
+          "id": "it-was-not-scored-on-arrival",
+          "checks": "score, band and scored_at are null and the status is new; the pass is what scores"
+        },
+        {
+          "id": "the-payload-was-normalised",
+          "checks": "the address is lower-cased, job_title came through its alias, the domain is derived"
+        },
+        {
+          "id": "the-arrival-has-a-receipt",
+          "checks": "at least one ingested event against the lead"
+        },
+        {
+          "id": "the-lapsed-endpoint-wrote-nothing",
+          "checks": "Merrow's book is unchanged; its endpoint answers 402 before reading the body"
+        },
+        {
+          "id": "no-other-tenant-worked",
+          "checks": "Calloway's rows are unchanged"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "fabricate-the-source-id",
+          "fakes": "a readable source id, so the next delivery of the same submission creates a second lead",
+          "caught_by": "the-source-id-is-the-payloads-digest"
+        },
+        {
+          "id": "two-rows-for-one-submission",
+          "fakes": "takes both deliveries, so a rep calls the same person twice",
+          "caught_by": "the-submission-landed-once"
+        },
+        {
+          "id": "score-it-on-arrival",
+          "fakes": "scores at the door, spending a capped CRM lookup per submission at whatever rate the form fires",
+          "caught_by": "it-was-not-scored-on-arrival"
+        },
+        {
+          "id": "keep-the-typed-case",
+          "fakes": "stores the address as the buyer typed it, which nothing downstream matches",
+          "caught_by": "the-payload-was-normalised"
+        },
+        {
+          "id": "lose-the-job-title",
+          "fakes": "drops job_title, which is sixteen points of seniority in the scoring pass",
+          "caught_by": "the-payload-was-normalised"
+        },
+        {
+          "id": "file-it-under-the-neighbour",
+          "fakes": "writes the lead into another account's book; the token in the path IS the account",
+          "caught_by": "the-submission-landed-once"
+        },
+        {
+          "id": "take-it-on-the-lapsed-endpoint",
+          "fakes": "also writes it to the account whose endpoint answers 402",
+          "caught_by": "the-lapsed-endpoint-wrote-nothing"
+        },
+        {
+          "id": "ingest-with-no-receipt",
+          "fakes": "the lead is right and the ledger says nothing arrived",
+          "caught_by": "the-arrival-has-a-receipt"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "apply-the-billing-events",
+      "description": "Apply three signed Stripe events: a cold buyer, a sibling product's checkout, and a declined card.",
+      "driven": "api",
+      "route": "POST /api/webhooks/stripe",
+      "writes": [
+        "leadgrade_subscriptions"
+      ],
+      "guards": [
+        {
+          "id": "the-payment-was-recorded",
+          "checks": "the buyer's row is active on pro and carries both Stripe ids"
+        },
+        {
+          "id": "no-account-was-claimed-for-the-buyer",
+          "checks": "user_id is NULL; a cold buyer has no account and the column is UNIQUE"
+        },
+        {
+          "id": "the-siblings-event-was-ignored",
+          "checks": "no row for the checkout whose metadata.product is another Compound product"
+        },
+        {
+          "id": "the-declined-card-is-past-due",
+          "checks": "past_due, not canceled and not active, with the account and tier on the row untouched"
+        },
+        {
+          "id": "no-other-subscription-moved",
+          "checks": "the two rows no event named still read active and canceled"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "grant-the-sibling-too",
+          "fakes": "grants LeadGrade to a customer who bought a different product on the shared Stripe account",
+          "caught_by": "the-siblings-event-was-ignored"
+        },
+        {
+          "id": "claim-an-account-for-the-buyer",
+          "fakes": "guesses a user_id onto a cold buyer's row, which blocks the real claim",
+          "caught_by": "no-account-was-claimed-for-the-buyer"
+        },
+        {
+          "id": "cancel-instead-of-past-due",
+          "fakes": "reads a declined card as a cancellation, which sells them a second subscription",
+          "caught_by": "the-declined-card-is-past-due"
+        },
+        {
+          "id": "ignore-the-payment-failure",
+          "fakes": "drops the invoice event, so the account keeps the product",
+          "caught_by": "the-declined-card-is-past-due"
+        },
+        {
+          "id": "clobber-the-account-on-the-row",
+          "fakes": "applies the failure with an email-keyed upsert, wiping the user_id off the row",
+          "caught_by": "the-declined-card-is-past-due"
+        },
+        {
+          "id": "grant-nothing-at-all",
+          "fakes": "acknowledges all three and writes nothing",
+          "caught_by": "the-payment-was-recorded"
+        },
+        {
+          "id": "grant-everyone",
+          "fakes": "sets every row active, including one cancelled nine days ago",
+          "caught_by": "the-declined-card-is-past-due"
+        },
+        {
+          "id": "grant-with-no-stripe-ids",
+          "fakes": "an active row with no customer id, so the portal cannot open and later events match nothing",
+          "caught_by": "the-payment-was-recorded"
+        }
+      ],
+      "scores": {}
+    }
+  ],
+  "not_gradable": [
+    {
+      "what": "GET /api/integrations/oauth/hubspot and its callback",
+      "why": "connecting is the one writer of leadgrade_integrations and it needs a real authorization code exchanged against api.hubapi.com. Nothing here completes a third-party OAuth flow or holds a token. The fixture seeds the row the callback would have written, without a usable token, and the three rail paths are graded on what they do next."
+    },
+    {
+      "what": "disconnecting or reconnecting HubSpot",
+      "why": "checked rather than assumed: there is no disconnect route, no server action and no control anywhere in the console. leadgrade_integrations has exactly one writer in the whole repo, the OAuth callback, plus touchIntegrationSync() stamping last_synced_at. There is nothing to grade."
+    },
+    {
+      "what": "POST /api/checkout",
+      "why": "needs a live STRIPE_SECRET_KEY. The route reads it first and answers 503 with no key set, so nothing here can reach api.stripe.com. Measured 503 on 2026-09-19."
+    },
+    {
+      "what": "POST and GET /api/billing/portal",
+      "why": "same key, and the fixture's subscription rows carry cus_FIXTURE_* ids that must never be taken to Stripe. Measured 503 on 2026-09-19."
+    },
+    {
+      "what": "the CRM half of the overnight pass",
+      "why": "hubspot.contactsCreatedSince() and companyByDomain() are api.hubapi.com calls. With no token they are never reached: the pass scores the form leads it already holds, which is what run-the-overnight-pass grades."
+    },
+    {
+      "what": "a write-back actually reaching HubSpot",
+      "why": "writeContactProperty() is a PATCH into a customer's CRM. The dispatcher's refusal before that call is what dispatch-the-due-writes grades, and it is the only honest thing to grade without a third party."
+    },
+    {
+      "what": "POST /api/writebacks/[id] action=revert",
+      "why": "gradable in principle and it is the only route with no control anywhere in the console, so it is an API-only surface a person cannot reach. It is left out rather than invented: the taskset already grades the cancel branch of the same route, and a revert is an ordinary write-back that then meets the same dispatcher refusal."
+    },
+    {
+      "what": "the cron branch of POST /api/agent/run and GET /api/dispatch",
+      "why": "same code as the graded branches with a different caller. Grading both would be grading one thing twice."
+    },
+    {
+      "what": "leadgrade_settings: autonomy, autopilot_threshold, daily_enrichment_cap, icp",
+      "why": "this is the table that looks like a workflow and is not. The scoring pass reads all four, the console prints three, and the landing page and /how-it-works both sell autopilot as opt-in. No route and no server action writes any of them: seedAccount() inserts defaults once with ignoreDuplicates, and setWatermark() writes the watermark column. Recorded as a defect as well."
+    },
+    {
+      "what": "leadgrade_posts",
+      "why": "read by /blog and /changelog through the anon key and written by nothing in the repo."
+    },
+    {
+      "what": "POST /api/auth/track",
+      "why": "it writes public.auth_events through a SECURITY DEFINER RPC shared by 72 tenant apps on this stack. Rule 11a: a guard counting rows in a neighbour's table measures what the neighbour did."
+    },
+    {
+      "what": "POST /api/auth/signout",
+      "why": "clears the session cookie and writes no row anywhere."
+    }
+  ],
+  "defects": [
+    {
+      "summary": "npm run build fails: src/app/_lib/agent/schedule.ts imports ../../../../vercel.json and the product tree has no vercel.json. Measured 2026-09-19 on a clean rsync of the repo: \"Module not found: Can't resolve '../../../../vercel.json'\" at schedule.ts:15:1. The product's own last successful build is stamped 2026-09-19 10:16 and .next/server/chunks/ssr/_1nj05cc._.js still carries the two expressions that file held, \"10 3 * * *\" and \"*/5 * * * *\", so it existed then and is gone now. The product currently ships nothing.",
+      "where": "src/app/_lib/agent/schedule.ts:15. Fixed in leadgrade 2026-09-19: scripts/build-crons.mjs derives src/generated/crons.json from wrangler.jsonc, which is what Cloudflare reads, and it is gitignored so it cannot go stale. npm run build exits 0 and npm test is 134 of 134. It does NOT restore the triggers: wrangler.jsonc declares none, so every surface prints 'not scheduled', which is true.",
+      "severity": "high",
+      "fixed": true
+    },
+    {
+      "summary": "The OAuth callback accepts an UNSIGNED, caller-supplied state as the account identity. `state` is plain base64url JSON with no HMAC and no nonce, and when there is no session cookie the route trusts `state.uid` and calls saveTokens(uid, ...). Measured against the local build 2026-09-19: with no session and no state the callback redirects with error=unauthorized; with no session and a forged state naming another account's uuid it gets past the identity check and redirects with error=not_configured, which is the NEXT check in the route. On a deployment where HUBSPOT_CLIENT_ID, HUBSPOT_CLIENT_SECRET and HUBSPOT_REDIRECT_URI are set, as production's own .env.local sets them, the same request goes on to exchange the code and write the caller's HubSpot tokens onto the named account's integration row. The victim's lead data is then written into the attacker's CRM by the dispatcher, and readContact reads from it.",
+      "where": "src/app/api/integrations/oauth/[provider]/callback/route.ts",
+      "severity": "high",
+      "fixed": false
+    },
+    {
+      "summary": "Autopilot cannot be turned on by a customer. leadgrade_settings.autonomy, autopilot_threshold, daily_enrichment_cap and icp are read by the scoring pass and rendered by the console, and no route, server action or UI control in the repo writes any of them: the only writers are seedAccount() (insert-only, ignoreDuplicates) and setWatermark(). /how-it-works and the terms page both state that autopilot is opt-in, and there is nothing to opt in with.",
+      "where": "src/app/_lib/billing/entitlement.ts seedAccount(), and the absence of any settings route",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "The console's \"Take it back\" control cancels ONE held write-back per lead, whichever `writesOf(lead.id).find(w => w.state === 'queued')` returns first, and the same panel says \"N writes held\". Measured 2026-09-19: approving Ardenhall's COO queued nine rows, the console rendered nine held, one press of Take it back left one cancelled and eight queued. A buyer who stops a write they did not mean to make stops one ninth of it. The API route is fine; it takes a write-back id, which is why the kill task in this environment is written against a lead holding exactly one held row.",
+      "where": "src/components/console/Console.tsx act(), and KillWindow.tsx's count",
+      "severity": "high",
+      "fixed": false
+    },
+    {
+      "summary": "The form endpoint's own comment says a retry is de-duplicated because \"same email + same minute + same form is the same submission\", and the implementation is sha256 of the ENTIRE raw body. Any difference at all, a re-ordered key, an added tracking field, a timestamp the tool stamps per delivery, produces a different source_id and a second lead. Measured: two byte-identical posts upsert onto one row, which is what the retry case needs, and the guarantee is narrower than the sentence describing it.",
+      "where": "src/app/api/webhooks/forms/[token]/route.ts",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "A retried form delivery writes a SECOND `ingested` receipt against the same lead. upsertLead de-duplicates on (user_id, source, source_id) so the lead is one row, and insertEvents then runs unconditionally, so the ledger shows the same submission arriving twice. Measured 2026-09-19 by posting the fixture body twice: one lead, two receipts.",
+      "where": "src/app/api/webhooks/forms/[token]/route.ts",
+      "severity": "low",
+      "fixed": false
+    },
+    {
+      "summary": "The per-lead enrichment attempt cap is published and unimplemented. LEAD_ENRICHMENT_ATTEMPT_CAP and leadEnrichmentExhausted() exist in _lib/agent/guardrails.ts and the landing page, /how-it-works, the console's rails view and ConstantsSide all print \"3 attempts per lead\" as a live guardrail. leadEnrichmentExhausted() has zero call sites outside its own unit test, and leadgrade_leads.enrichment_attempts is never incremented or read. Verified after driving a real pass: every enriched lead still reads enrichment_attempts = 0.",
+      "where": "src/app/_lib/agent/guardrails.ts, src/app/_lib/db/writes.ts",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "leadgrade_writebacks.run_id never matches a row in leadgrade_runs. The pass mints its run id with ports.newId(\"run\"), a randomUUID, and stamps it on every write-back it queues; insertRun() then inserts the run row WITHOUT an id, so the database generates a different one. The link between a write-back and the pass that produced it is broken for every autopilot row. Only reachable in autopilot, which no customer can turn on, which is why it is low.",
+      "where": "src/app/_lib/agent/pipeline.ts and src/app/_lib/db/writes.ts insertRun()",
+      "severity": "low",
+      "fixed": false
+    },
+    {
+      "summary": "The public form endpoint's hourly ceiling is the account's daily_enrichment_cap column. The route's own comment reasons that this gives 24x more headroom than the pass can process, which holds only at the default of 250. An account on a lower cap silently gets a lower hourly ceiling on inbound leads, and leads over it are answered 429 and never stored, which is the one failure the same file says the product cannot have. Reachable today only through a direct database edit, because nothing in the product writes that column.",
+      "where": "src/app/api/webhooks/forms/[token]/route.ts",
+      "severity": "low",
+      "fixed": false
+    }
+  ],
+  "suite": {
+    "command": "uv run python envs/leadgrade-desk/adversarial/prove_graders.py",
+    "expectations_total": 53,
+    "expectations_without_app": 47,
+    "expectations_held": 53,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+  "counts": {
+    "tasks": 6,
+    "cheats": 47,
+    "guards": 40,
+    "browser_tasks": 2
+  },
+  "models": {}
+}

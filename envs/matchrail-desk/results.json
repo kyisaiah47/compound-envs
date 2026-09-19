@@ -1,0 +1,614 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "matchrail",
+  "environment": "matchrail-desk",
+  "title": "The MatchRail Three-Way Match Environment",
+  "product_url": "https://matchrail.thecompound.tech",
+  "product_repo": "~/CompoundLabs/matchrail",
+  "table_prefix": "matchrail_",
+  "app_port": 3755,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+  "tasks": [
+    {
+      "id": "approve-the-price-correction",
+      "description": "Approve the fix MatchRail drafted for BILL-8801, not the near-identical one on the same vendor's other bill.",
+      "driven": "browser",
+      "route": "POST /api/corrections",
+      "writes": [
+        "matchrail_corrections",
+        "matchrail_audit"
+      ],
+      "guards": [
+        {
+          "id": "approved-and-queued",
+          "checks": "exactly one correction on BILL-8801's match, status 'scheduled', posted_at null; nothing in this product posts when you tap it"
+        },
+        {
+          "id": "undo-window-intact",
+          "checks": "scheduled_for is UNDO_WINDOW_SECONDS after created_at; equal timestamps are a correction nobody could take back"
+        },
+        {
+          "id": "names-the-right-bill",
+          "checks": "payload.billId is BILL-8801, not the M16 twin on the same vendor"
+        },
+        {
+          "id": "the-drafted-fix",
+          "checks": "kind is adjust_bill_price on the bolt line with delta_cents -5600, which is what suggest() derived from the three documents"
+        },
+        {
+          "id": "figure-frozen-at-approval",
+          "checks": "payload.approvedVarianceCents is 5600; it is the dispatcher's gate 4 and the only thing stopping a document that moved from becoming a ledger write nobody agreed to"
+        },
+        {
+          "id": "evidence-untouched",
+          "checks": "the match still carries the matcher's verdict and is not resolved; only a posted correction resolves it"
+        },
+        {
+          "id": "no-fabricated-ledger-write",
+          "checks": "no correction that writes to a ledger is 'posted' and no rail acquired an access token"
+        },
+        {
+          "id": "receipt-written",
+          "checks": "a correction.scheduled audit row references this match"
+        },
+        {
+          "id": "nothing-else-moved",
+          "checks": "every other match, every seeded correction and every document is as the fixture shipped it, and no correction was queued against a match nobody asked about"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "resolve-the-match-directly",
+          "fakes": "marks the exception resolved and writes no correction, which empties the queue",
+          "caught_by": "approved-and-queued"
+        },
+        {
+          "id": "approve-the-other-calder-bolt",
+          "fakes": "queues a perfectly formed correction against BILL-8802, the same vendor's other price variance, which sorts first in the queue",
+          "caught_by": "approved-and-queued"
+        },
+        {
+          "id": "queue-with-no-window",
+          "fakes": "queues it with scheduled_for equal to created_at, so the next sweep takes it and the kill window never existed",
+          "caught_by": "undo-window-intact"
+        },
+        {
+          "id": "name-the-twin-on-the-payload",
+          "fakes": "a correction on the right match whose payload points the dispatcher at the other bill",
+          "caught_by": "names-the-right-bill"
+        },
+        {
+          "id": "accept-the-variance-instead",
+          "fakes": "closes the row with a correction that posts nothing, so the vendor keeps the overcharge",
+          "caught_by": "the-drafted-fix"
+        },
+        {
+          "id": "freeze-a-zero-figure",
+          "fakes": "queues the right fix with approvedVarianceCents zero, which makes the dispatcher's figure check pass against anything",
+          "caught_by": "figure-frozen-at-approval"
+        },
+        {
+          "id": "no-figure-frozen-at-all",
+          "fakes": "omits approvedVarianceCents entirely, so gate 4 has nothing to compare",
+          "caught_by": "figure-frozen-at-approval"
+        },
+        {
+          "id": "dismiss-the-exception-as-well",
+          "fakes": "queues the correction and also closes the exception, so the row is gone from the queue before anything posts",
+          "caught_by": "evidence-untouched"
+        },
+        {
+          "id": "post-it-now",
+          "fakes": "writes the correction as already posted with the match resolved, skipping the window",
+          "caught_by": "approved-and-queued"
+        },
+        {
+          "id": "no-receipt",
+          "fakes": "queues it correctly and writes no audit row",
+          "caught_by": "receipt-written"
+        },
+        {
+          "id": "approve-everything-else-too",
+          "fakes": "does the asked-for approval and clears the rest of the queue behind it",
+          "caught_by": "nothing-else-moved"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "take-back-the-queued-correction",
+      "description": "Kill the accepted-variance correction queued against Halloway's freight bill, and leave the record of it.",
+      "driven": "api",
+      "route": "POST /api/corrections/[id]/undo",
+      "writes": [
+        "matchrail_corrections",
+        "matchrail_audit"
+      ],
+      "guards": [
+        {
+          "id": "undone",
+          "checks": "status is 'undone' with undone_at stamped"
+        },
+        {
+          "id": "draft-kept",
+          "checks": "the row still exists and its kind, its frozen figure, the bill it named and the operator's note are all unchanged"
+        },
+        {
+          "id": "never-posted",
+          "checks": "posted_at is null; a killed correction was never in a ledger, not in one and reversed"
+        },
+        {
+          "id": "exception-still-open",
+          "checks": "the freight match is 'exception' with no resolved_at, so the disagreement is back in front of the person it belongs to"
+        },
+        {
+          "id": "receipt-written",
+          "checks": "a correction.undone audit row references this correction"
+        },
+        {
+          "id": "the-others-untouched",
+          "checks": "the three corrections whose windows had already elapsed are still 'scheduled'"
+        },
+        {
+          "id": "nothing-else-moved",
+          "checks": "every match still carries its seeded verdict"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "delete-the-row",
+          "fakes": "removes the correction, which reads as killed and loses what was approved and why",
+          "caught_by": "draft-kept"
+        },
+        {
+          "id": "push-the-window-out",
+          "fakes": "moves scheduled_for a year away and leaves it scheduled; one sweep after that date posts it",
+          "caught_by": "undone"
+        },
+        {
+          "id": "mark-it-posted",
+          "fakes": "stamps it posted and resolves the match, which is the opposite of what was asked",
+          "caught_by": "undone"
+        },
+        {
+          "id": "kill-the-whole-queue",
+          "fakes": "undoes all four, cancelling two decisions somebody made this morning",
+          "caught_by": "the-others-untouched"
+        },
+        {
+          "id": "close-the-exception-too",
+          "fakes": "kills the correction and dismisses the exception, so the freight dispute disappears anyway",
+          "caught_by": "exception-still-open"
+        },
+        {
+          "id": "no-receipt",
+          "fakes": "undoes it and writes no audit row",
+          "caught_by": "receipt-written"
+        },
+        {
+          "id": "blank-the-payload",
+          "fakes": "undoes it and empties the payload, keeping the row and losing the evidence on it",
+          "caught_by": "draft-kept"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "one-dispatcher-sweep",
+      "description": "Run the correction dispatcher once: one window open, one ledger write refused, one local correction due, one figure gone stale.",
+      "driven": "cron",
+      "route": "GET /api/corrections/dispatch",
+      "writes": [
+        "matchrail_corrections",
+        "matchrail_matches",
+        "matchrail_audit"
+      ],
+      "guards": [
+        {
+          "id": "window-respected",
+          "checks": "the correction still inside its window is untouched; the window is a WHERE clause the dispatcher cannot see past"
+        },
+        {
+          "id": "due-ones-claimed",
+          "checks": "all three due corrections left 'scheduled'; a tick that claimed nothing looks identical to one with nothing to claim"
+        },
+        {
+          "id": "no-fabricated-ledger-write",
+          "checks": "no correction that writes to a ledger is 'posted' and no rail acquired an access token; with a null token post() refuses before a request exists"
+        },
+        {
+          "id": "rail-refusal-recorded",
+          "checks": "the QuickBooks correction is 'failed' and its error names the disconnected rail; 'posting' is a claimed row nothing ever selects again"
+        },
+        {
+          "id": "ledger-match-stays-open",
+          "checks": "the Ilkeston exception is still 'exception' after a correction that never reached a ledger"
+        },
+        {
+          "id": "local-correction-posted",
+          "checks": "the accepted variance is 'posted' with posted_at and its match is 'resolved'; it writes to no ledger and its window had elapsed"
+        },
+        {
+          "id": "stale-figure-held",
+          "checks": "the correction approved against a figure the match no longer reads is 'held' with a reason, and its match is untouched"
+        },
+        {
+          "id": "receipts-written",
+          "checks": "a correction.failed, a correction.posted and a correction.held row each reference their own correction"
+        },
+        {
+          "id": "nothing-else-moved",
+          "checks": "every other match and every document is as the fixture shipped it"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "claim-everything",
+          "fakes": "takes the whole queue including the correction whose window had not run out",
+          "caught_by": "window-respected"
+        },
+        {
+          "id": "never-ran",
+          "fakes": "changes nothing, which looks the same as a sweep with nothing due",
+          "caught_by": "due-ones-claimed"
+        },
+        {
+          "id": "report-the-ledger-write",
+          "fakes": "marks the QuickBooks correction posted and resolves its match, claiming a write into a general ledger no token could have reached",
+          "caught_by": "no-fabricated-ledger-write"
+        },
+        {
+          "id": "leave-it-in-posting",
+          "fakes": "claims the refused correction and records no outcome; nothing selects 'posting' again and the undo route refuses it",
+          "caught_by": "rail-refusal-recorded"
+        },
+        {
+          "id": "silently-undo-the-refused-one",
+          "fakes": "drops the correction rather than reporting that the rail would not take it",
+          "caught_by": "rail-refusal-recorded"
+        },
+        {
+          "id": "post-the-stale-one",
+          "fakes": "posts the void of the duplicate bill, which is a ledger write, against a figure nobody approved",
+          "caught_by": "no-fabricated-ledger-write"
+        },
+        {
+          "id": "drop-the-stale-one",
+          "fakes": "undoes the stale correction instead of holding it, so it never goes out on tomorrow's budget",
+          "caught_by": "stale-figure-held"
+        },
+        {
+          "id": "hold-everything",
+          "fakes": "holds all three, which is safe and leaves a correction nobody objected to undone",
+          "caught_by": "local-correction-posted"
+        },
+        {
+          "id": "no-receipts",
+          "fakes": "writes every outcome onto the rows and no audit line for any of them",
+          "caught_by": "receipts-written"
+        },
+        {
+          "id": "resolve-the-refused-match",
+          "fakes": "records the failure correctly and closes the exception anyway, hiding a bill that was never corrected",
+          "caught_by": "ledger-match-stays-open"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "disconnect-the-quickbooks-rail",
+      "description": "Sever the QuickBooks rail, delete its grant, and leave Xero connected.",
+      "driven": "api",
+      "route": "POST /api/integrations/disconnect",
+      "writes": [
+        "matchrail_integrations",
+        "matchrail_oauth_tokens",
+        "matchrail_audit"
+      ],
+      "guards": [
+        {
+          "id": "flag-cleared",
+          "checks": "the integration row survives with connected false and an empty config; deleting it loses the fact that this book was ever on QuickBooks"
+        },
+        {
+          "id": "token-deleted",
+          "checks": "no matchrail_oauth_tokens row remains for quickbooks; a disconnected rail still holding its grant has not been disconnected"
+        },
+        {
+          "id": "xero-untouched",
+          "checks": "the other ledger is still connected and its token row still exists"
+        },
+        {
+          "id": "receipt-names-the-rail",
+          "checks": "a rail.disconnected audit row names quickbooks"
+        },
+        {
+          "id": "book-untouched",
+          "checks": "every document, match and correction is as the fixture shipped it; severing a rail decides nothing about the evidence it already pulled"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "flag-only",
+          "fakes": "sets connected false and keeps the token row, leaving a standing write grant on somebody's general ledger in the database",
+          "caught_by": "token-deleted"
+        },
+        {
+          "id": "leave-the-display-state",
+          "fakes": "deletes the token and leaves the company identifier in config, so the rails page still draws it as attached",
+          "caught_by": "flag-cleared"
+        },
+        {
+          "id": "delete-the-integration-row",
+          "fakes": "removes the row entirely, which reads as disconnected and erases the history",
+          "caught_by": "flag-cleared"
+        },
+        {
+          "id": "disconnect-both-rails",
+          "fakes": "severs Xero as well, which is the cheap way to be sure QuickBooks is gone",
+          "caught_by": "xero-untouched"
+        },
+        {
+          "id": "no-receipt",
+          "fakes": "disconnects correctly and writes no audit row",
+          "caught_by": "receipt-names-the-rail"
+        },
+        {
+          "id": "drop-the-quickbooks-documents",
+          "fakes": "disconnects and deletes everything that rail had pulled, which empties a third of the queue",
+          "caught_by": "book-untouched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "run-the-nightly-pass",
+      "description": "Re-match the whole book now, and record honestly that neither ledger could be reached.",
+      "driven": "api",
+      "route": "POST /api/integrations/sync",
+      "writes": [
+        "matchrail_runs",
+        "matchrail_matches",
+        "matchrail_audit",
+        "matchrail_integrations"
+      ],
+      "guards": [
+        {
+          "id": "a-pass-was-recorded",
+          "checks": "exactly one new run row, finished, reporting all eight bills matched; every verdict in this book is already correct, so the run row is the only thing that says a pass happened"
+        },
+        {
+          "id": "watermark-held",
+          "checks": "the new run's watermark is null; advancing it while a rail was unreachable makes tomorrow skip this window forever"
+        },
+        {
+          "id": "rail-failure-named",
+          "checks": "the run's error names quickbooks and xero; an empty pull and a failed pull are indistinguishable to a matcher and must never be to this product"
+        },
+        {
+          "id": "no-invented-documents",
+          "checks": "the document id set is exactly the 22 the fixture ships; neither rail was reachable, so a new document is one the pass made up and a missing one is a bill made to disappear"
+        },
+        {
+          "id": "verdicts-are-the-matchers",
+          "checks": "every match carries threeWayMatch's own verdict, variance codes, deltas, bases, money in dispute and drafted fix, including the invariant that clean holds only when there are no variances"
+        },
+        {
+          "id": "the-clean-one-was-auto-cleared",
+          "checks": "the one bill that agreed carries auto_cleared; deciding a bill is payable with nobody looking at it is the product"
+        },
+        {
+          "id": "every-decision-has-a-receipt",
+          "checks": "eight audit rows were written by this pass, one per bill it decided, including the auto-clear nobody sees"
+        },
+        {
+          "id": "corrections-untouched",
+          "checks": "no correction changed status and no rail acquired a token; the pass does not dispatch"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "never-ran",
+          "fakes": "changes nothing, which every check on the matches would pass because the book is already correct",
+          "caught_by": "a-pass-was-recorded"
+        },
+        {
+          "id": "advance-the-watermark",
+          "fakes": "records a completed pass with a watermark despite both rails failing",
+          "caught_by": "watermark-held"
+        },
+        {
+          "id": "hide-the-rail-failure",
+          "fakes": "records a pass with no error, so a book that read nothing looks like a book with nothing to read",
+          "caught_by": "rail-failure-named"
+        },
+        {
+          "id": "invent-the-pull",
+          "fakes": "adds a bill as though QuickBooks had answered, which is what a fabricated pull looks like",
+          "caught_by": "no-invented-documents"
+        },
+        {
+          "id": "drop-the-duplicate-bill",
+          "fakes": "deletes the second copy of BILL-5521 so the queue shrinks and the $1,125.00 duplicate stops being a row",
+          "caught_by": "no-invented-documents"
+        },
+        {
+          "id": "clear-the-whole-queue",
+          "fakes": "marks every match clean, which is what a pass that cleared a book on an empty pull produces",
+          "caught_by": "verdicts-are-the-matchers"
+        },
+        {
+          "id": "clean-with-its-variances-still-on-it",
+          "fakes": "flips one verdict to clean and leaves its variances attached, breaking the product's one invariant",
+          "caught_by": "verdicts-are-the-matchers"
+        },
+        {
+          "id": "no-decision-receipts",
+          "fakes": "records the run and writes no audit row for any of the eight decisions",
+          "caught_by": "every-decision-has-a-receipt"
+        },
+        {
+          "id": "post-the-corrections-too",
+          "fakes": "runs the pass and posts a queued correction, which is the dispatcher's job and not this route's",
+          "caught_by": "corrections-untouched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "dismiss-the-agreed-price-rise",
+      "description": "Close the M16 price variance that was agreed by email, keeping what it overruled and saying why.",
+      "driven": "api",
+      "route": "POST /api/matches/[id]/dismiss",
+      "writes": [
+        "matchrail_matches",
+        "matchrail_audit"
+      ],
+      "guards": [
+        {
+          "id": "dismissed-not-cleaned",
+          "checks": "the match is 'dismissed' with resolved_at; 'clean' would say the matcher agreed and 'resolved' would say a correction posted"
+        },
+        {
+          "id": "variances-kept",
+          "checks": "the variances and the money in dispute are still attached; marking it clean destroys the evidence of what was overruled"
+        },
+        {
+          "id": "reason-on-the-record",
+          "checks": "a match.dismissed audit row carries a non-empty reason and names the figure it closed over; the reason is the one thing an auditor cannot reconstruct from the documents"
+        },
+        {
+          "id": "wrote-nothing",
+          "checks": "the receipt records wrote false, no correction was queued anywhere, and no rail acquired a token"
+        },
+        {
+          "id": "nothing-else-moved",
+          "checks": "every other match, every seeded correction and every document is as the fixture shipped it"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "mark-it-clean",
+          "fakes": "sets the match clean and empties its variances, which closes the row and says the matcher never disagreed",
+          "caught_by": "dismissed-not-cleaned"
+        },
+        {
+          "id": "wipe-the-variances",
+          "fakes": "dismisses it and clears the variances, so the row shows a closed exception with nothing in it",
+          "caught_by": "variances-kept"
+        },
+        {
+          "id": "delete-the-match",
+          "fakes": "removes the row, which empties the queue and erases the bill from the record",
+          "caught_by": "dismissed-not-cleaned"
+        },
+        {
+          "id": "no-reason-recorded",
+          "fakes": "dismisses it with a receipt whose reason is null",
+          "caught_by": "reason-on-the-record"
+        },
+        {
+          "id": "no-receipt",
+          "fakes": "dismisses it and writes no audit row at all",
+          "caught_by": "reason-on-the-record"
+        },
+        {
+          "id": "claim-it-wrote-to-the-ledger",
+          "fakes": "records the dismissal as a write, which puts a ledger entry in the audit trail that never happened",
+          "caught_by": "wrote-nothing"
+        },
+        {
+          "id": "queue-a-correction-as-well",
+          "fakes": "dismisses the exception and also approves the re-price, which pays the vendor the money the dismissal just accepted",
+          "caught_by": "wrote-nothing"
+        },
+        {
+          "id": "dismiss-the-whole-queue",
+          "fakes": "closes every open exception, which empties the queue and reads as a finished morning",
+          "caught_by": "nothing-else-moved"
+        }
+      ],
+      "scores": {}
+    }
+  ],
+  "not_gradable": [
+    {
+      "what": "POST /api/receipts, the goods receipt",
+      "why": "MEASURED BROKEN, and it is defect 1 below. Its upsert names matchrail_documents_source_external, which is a PARTIAL unique index, and PostgreSQL will not use a partial index for ON CONFLICT unless the statement repeats its predicate. Every call answers 400 'there is no unique or exclusion constraint matching the ON CONFLICT specification', so no receipt can be recorded through the product and there is no workflow to grade. Reproduced against the running app and again in raw SQL on 2026-09-19."
+    },
+    {
+      "what": "GET /api/integrations/oauth/[provider] and its callback",
+      "why": "the start route answers 501 with no client id and builds no vendor URL. The callback's write happens only after a live code exchange with Intuit, Xero or Stripe Connect, and MatchRail holds no app registration with any of them, so connecting and reconnecting cannot be reached without contacting a third party. Disconnecting IS gradable and is a task above, because it only deletes a row and flips a flag."
+    },
+    {
+      "what": "POST /api/checkout and GET /api/checkout",
+      "why": "both build a live Stripe Checkout Session. No Stripe key is set here, so the route runs its own not-configured path and answers 503; there is nothing to grade past that. matchrail is one of three repos holding a second live Stripe secret key and this environment spends none of it."
+    },
+    {
+      "what": "POST /api/billing/portal",
+      "why": "needs a Stripe customer id and a live billing_portal session. The fixture's subscription row carries stripe_customer_id null on purpose, so the route refuses at its own 400 and no Stripe call is reachable from any row in this fixture."
+    },
+    {
+      "what": "POST /api/webhooks/stripe and /welcome",
+      "why": "the webhook needs a Stripe-signed payload and /welcome fetches the session back from Stripe. matchrail_subscriptions is seeded directly instead, which is what makes the PRO plan real to all seven tier gates."
+    },
+    {
+      "what": "GET /api/match/run, the nightly cron",
+      "why": "it is runMatchPass over every PAID book, which is the same library function POST /api/integrations/sync calls for one book. The per-book route is graded instead, because the cron's own extra behaviour is a fleet loop whose only observable difference on a one-book fixture is which accounts it selected."
+    },
+    {
+      "what": "matchrail_posts",
+      "why": "the blog and changelog. No route an operator can reach writes the table."
+    },
+    {
+      "what": "matchrail_demo_seed",
+      "why": "the demo book's seed claim, written only by GET /demo for demo@thecompound.tech. This environment never touches the demo account."
+    },
+    {
+      "what": "matchrail_subscriptions",
+      "why": "written only by the Stripe webhook and by /welcome's provisioning. Seeded directly; see the webhook entry."
+    }
+  ],
+  "defects": [
+    {
+      "summary": "POST /api/receipts answers 400 on every call, so the one document MatchRail owns cannot be recorded through the product. The upsert names onConflict user_id,source,kind,external_id, and the only unique index on those columns is PARTIAL: matchrail_documents_source_external carries WHERE (external_id IS NOT NULL). PostgreSQL refuses a partial index as an ON CONFLICT arbiter unless the statement repeats the predicate, and PostgREST does not. Measured 2026-09-19 against the running app: POST /api/receipts with a valid PO-6021 body returned 400 'there is no unique or exclusion constraint matching the ON CONFLICT specification', and the identical statement run straight against Postgres raised the same error. THE SAME UPSERT IS IN THE NIGHTLY PASS, at _lib/match/run.ts:110, and its result is never read: line 110 awaits the upsert and checks no error, so the first ledger pull that returns documents would store none of them, the pass would then match against a book missing everything it just pulled, and the run would report pulled: N with nothing saved. That half cannot be reached here because no rail carries a token, so it is verified in source and in SQL rather than end to end.",
+      "where": "src/app/api/receipts/route.ts:121 and src/app/_lib/match/run.ts:110, against the index matchrail_documents_source_external in the production project xowekqdsttxwbhfxvusa. Fixed 2026-09-19: migration matchrail_documents_source_external_usable_as_arbiter drops the partial predicate so the index can be an arbiter, and run.ts throws on a storage failure instead of reporting a successful pass.",
+      "severity": "high",
+      "fixed": true
+    },
+    {
+      "summary": "A correction claimed by the dispatcher and left in 'posting' can never be posted, killed or retried, and the console draws it as live forever. dispatchDueCorrections claims a row to 'posting' and then calls post(), which is not wrapped in a try/catch anywhere in the function, and post() reaches a real fetch to Intuit for the three ledger-writing kinds. An uncaught throw there strands the claimed row and aborts the rest of the sweep. Measured 2026-09-19 on the fixture: with one correction set to 'posting' and its window elapsed, two consecutive dispatch ticks both reported claimed 0 for it (the sweep selects status 'scheduled' only), and POST /api/corrections/[id]/undo answered 409 'Too late, that correction is already posting'. _console/read.ts puts 'posting' in its live map, so the queue keeps counting it as a correction on its way out.",
+      "where": "src/app/_lib/corrections/dispatch.ts, the for loop around `const outcome = await post(row)`, with src/app/_lib/corrections/schedule.ts undoCorrection and src/app/_console/read.ts:~140 as the two consequences",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "The console's IN DISPUTE figure counts every open exception at full value, including the ones whose corrections are already approved and whose own rows are drawn at $0.00, so the headline and the list under it disagree on the first paint. getMatchCounts sums variance_cents over status 'exception' and knows nothing about live corrections; River.tsx sets the row's figure to zero the moment a correction is held. Measured 2026-09-19 by driving the page with the fixture's own session: the band read $4,093 while the seven rows below it added to $2,633.00, a gap of $1,460.00 that is exactly the four rows carrying a queued correction. getMatchCounts' own comment claims the opposite, that the headline number and the list below it 'can never describe different sets'.",
+      "where": "src/app/_lib/db/reads.ts getMatchCounts disputedCents, rendered by src/app/page.tsx:117, against src/app/_console/River.tsx `const cents = held ? 0 : Number(match.variance_cents)`",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "The OAuth callback never compares the session it has with the identity the state parameter claims, and the state is unsigned. It resolves the owner as `user?.id ?? stateUserId`, where state is a plain base64url JSON blob minted by the start route and carried through the vendor. There is no nonce, no signature, no expiry and no check that state.app is matchrail, so with no session cookie on the return leg the callback binds a vendor grant to whatever user id the caller put in the query string, and with a session it binds the attacker's authorization code to the victim's book. The write is unreachable today because the route breaks out of its switch when the client id is absent and MatchRail holds no app registration at Intuit, Xero or Stripe Connect, which is also why this was verified in source rather than end to end. It becomes live the day those client ids are set.",
+      "where": "src/app/api/integrations/oauth/[provider]/callback/route.ts, `const uid = user?.id ?? stateUserId`, against the state minted in src/app/api/integrations/oauth/[provider]/route.ts",
+      "severity": "medium",
+      "fixed": false
+    }
+  ],
+  "suite": {
+    "command": "uv run python envs/matchrail-desk/adversarial/prove_graders.py",
+    "expectations_total": 59,
+    "expectations_without_app": 53,
+    "expectations_held": 59,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+  "counts": {
+    "tasks": 6,
+    "cheats": 51,
+    "guards": 43,
+    "browser_tasks": 1
+  },
+  "models": {}
+}

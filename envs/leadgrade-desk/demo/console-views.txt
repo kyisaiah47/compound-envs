@@ -1,0 +1,22 @@
+
+== queue  http://127.0.0.1:3753/
+   lead rows: 5, ledger rows: 0, pass rows: 0
+   this tenant's own names on the page: Ardenhall, Lowfield, Harlow Instruments, Stenholm
+   controls: TAKE IT BACK | APPROVE | KILL
+   text: LeadGrade THE QUEUE THE BOOK THE RECORD RAILS AND RULES HOW IT WORKS CHANGELOG YOUR TENANT Sign out not yet LAST PASS 0 LEADS READ 3 WRITES HELD 1 WRITES REFUSED 1 WRITES SENT 12 SCORING RULES LeadGrade, the inbound lead agent Scores every inbound lead overnight and ranks the queue highest-first. Last night's pass read every lead that arrived, scored each one, and ranked them. 8 are still waiting on you. Harlow Instruments CONNECTED COPILOT / 2 ENRICHMENT LOOKUPS A DAY / 60S KILL WINDOW HOT 70 AND UP WARM 45 TO 69 COOL 25 TO 44 COLD UNDER 25 BY BAND Every lead 10 Hot 2 Warm 2 Cool 1 Cold 0 BY WHAT HAPPENED Waitin
+
+== leads  http://127.0.0.1:3753/?view=leads
+   lead rows: 5, ledger rows: 0, pass rows: 0
+   this tenant's own names on the page: Ardenhall, Lowfield, Harlow Instruments, Stenholm
+   controls: APPROVE | KILL | TAKE IT BACK
+   text: LeadGrade THE QUEUE THE BOOK THE RECORD RAILS AND RULES HOW IT WORKS CHANGELOG YOUR TENANT Sign out not yet LAST PASS 0 LEADS READ 3 WRITES HELD 1 WRITES REFUSED 1 WRITES SENT 12 SCORING RULES LeadGrade, the inbound lead agent Scores every inbound lead overnight and ranks the queue highest-first. Last night's pass read every lead that arrived, scored each one, and ranked them. 8 are still waiting on you. Harlow Instruments CONNECTED COPILOT / 2 ENRICHMENT LOOKUPS A DAY / 60S KILL WINDOW HOT 70 AND UP WARM 45 TO 69 COOL 25 TO 44 COLD UNDER 25 BY BAND Every lead 10 Hot 2 Warm 2 Cool 1 Cold 0 BY WHAT HAPPENED Waitin
+
+== record  http://127.0.0.1:3753/?view=record
+   lead rows: 0, ledger rows: 2, pass rows: 0
+   this tenant's own names on the page: Lowfield, Harlow Instruments
+   text: LeadGrade THE QUEUE THE BOOK THE RECORD RAILS AND RULES HOW IT WORKS CHANGELOG YOUR TENANT Sign out not yet LAST PASS 0 LEADS READ 3 WRITES HELD 1 WRITES REFUSED 1 WRITES SENT 12 SCORING RULES LeadGrade, the inbound lead agent Scores every inbound lead overnight and ranks the queue highest-first. Last night's pass read every lead that arrived, scored each one, and ranked them. 8 are still waiting on you. Harlow Instruments CONNECTED COPILOT / 2 ENRICHMENT LOOKUPS A DAY / 60S KILL WINDOW HOT 70 AND UP WARM 45 TO 69 COOL 25 TO 44 COLD UNDER 25 BY WHAT IT RECORDED Every receipt 2 writeback sent 1 writeback blocked 1
+
+== rails  http://127.0.0.1:3753/?view=rails
+   lead rows: 0, ledger rows: 0, pass rows: 0
+   this tenant's own names on the page: Harlow Instruments
+   text: LeadGrade THE QUEUE THE BOOK THE RECORD RAILS AND RULES HOW IT WORKS CHANGELOG YOUR TENANT Sign out not yet LAST PASS 0 LEADS READ 3 WRITES HELD 1 WRITES REFUSED 1 WRITES SENT 12 SCORING RULES LeadGrade, the inbound lead agent Scores every inbound lead overnight and ranks the queue highest-first. Last night's pass read every lead that arrived, scored each one, and ranked them. 8 are still waiting on you. Harlow Instruments CONNECTED COPILOT / 2 ENRICHMENT LOOKUPS A DAY / 60S KILL WINDOW HOT 70 AND UP WARM 45 TO 69 COOL 25 TO 44 COLD UNDER 25 THE RAILS Harlow Instruments / connected 26d ago Reads contacts created 
