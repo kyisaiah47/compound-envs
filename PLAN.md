@@ -79,6 +79,48 @@ reviewed incident. The estate's gates already work that way.
 completes 3 of 11 tasks on this product" reads as a defect disclosure next to a pricing page and
 as a measurement on toolproof. Point 2 comes first for that reason.
 
+## One results format, decided 2026-09-19 and retrofitted the same day
+
+Every environment emits `envs/<slug>-desk/results.json` in one shape, `compound-evals/results@1`,
+documented in `RESULTS-SCHEMA.md` and enforced by `tools/validate_results.py`. It carries the
+product, each task with its id and one-line description, whether it is driven through the browser
+or the API, every guard each grader holds, every cheat and which guard catches it, what could not
+be graded and why, the defects found, the suite's own numbers, and an empty place for per-model
+scores to land.
+
+This was done before the remaining nineteen environments were built rather than after. The first
+five each printed their results however their builder chose; a site reading twenty formats is a
+retrofit nobody wants to do twice.
+
+The validator fails closed. It recomputes every count from the arrays rather than trusting the
+number written down, requires each `caught_by` to name a guard declared on the same task, and
+requires each task id to appear in that environment's `taskset.py`, so a results file cannot drift
+from the graders it claims to describe.
+
+## The estate, and what an environment is being built for
+
+Measured 2026-09-19: 24 products carry a real backend and 32 carry none at all. Every product
+means those 24.
+
+**Done.** unemploy, covercheck, clausewatch, cardchase, standup.
+
+**Zero OAuth, worth a real taskset.** outrip 3328, starreply 3752, parserail 3769, frontwire 3309,
+wirecall 3374.
+
+**Zero OAuth and thin**, one or two tables each, so a small taskset or an honest not-gradable
+verdict: stacktab 3318, popwire 3747, matchline 3300, breachprobe 3851, agentwire 3741,
+whyyourbraindoesthat 3779, usingitup 3778, still-mornings 3777, soft-money-journal 3317,
+thismuchweknow 3330.
+
+**Carrying OAuth**, so harder to run offline: leadgrade 3753 with 3 integrations, matchrail 3755
+with 5, triagedesk 3751 with 7, fetchdue 3757 with 14. fetchdue is the flagship and the hardest,
+31 tables and 52 routes, and it goes last, when the pattern is worn. Large parts of it are
+expected to be ungradeable offline, which is a fine outcome as long as the environment says so.
+
+A product where nothing turns out to be gradable is a legitimate result: `"verdict":
+"not-gradable"`, an empty task array, and one entry per thing that looked like a task and was not.
+Inventing a task to fill the slot is not.
+
 ## Status
 
 - `envs/unemploy-desk` is the first environment and it is done: schema, fixture, RLS and storage
