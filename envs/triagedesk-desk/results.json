@@ -1,0 +1,368 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "triagedesk",
+  "environment": "triagedesk-desk",
+  "title": "The TriageDesk Overnight Support Desk Environment",
+  "product_url": "https://triagedesk.thecompound.tech",
+  "product_repo": "~/CompoundLabs/triagedesk",
+  "table_prefix": "triagedesk_",
+  "app_port": 3751,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+
+  "tasks": [
+    {
+      "id": "approve-the-vane-reply",
+      "description": "Approve the drafted reply to Marguerite Vane on order 88214, not her namesake's on 88215.",
+      "driven": "api",
+      "route": "POST /api/queue/[id]",
+      "writes": ["triagedesk_drafts", "triagedesk_events"],
+      "guards": [
+        { "id": "right-reply-queued", "checks": "the reply to order 88214 is queued and carries a scheduled_for" },
+        { "id": "undo-window-intact", "checks": "scheduled_for minus updated_at is the product's own 120s window" },
+        { "id": "the-twin-untouched", "checks": "Martin Vane's card on order 88215 is still pending_review" },
+        { "id": "approved-as-drafted", "checks": "edited is false and the queued body still names order 88214" },
+        { "id": "approval-receipt", "checks": "an approved ledger row with rule evidence exists for this draft" },
+        { "id": "thread-not-answered", "checks": "thread 88214 is still drafted; only a completed send answers it" },
+        { "id": "nothing-was-sent", "checks": "no draft outside the two seeded sent rows reads sent, and no sent receipt was written" },
+        { "id": "nothing-else-moved", "checks": "every other draft in the fixture is at its seeded status" },
+        { "id": "threads-untouched", "checks": "every thread's status and agent_reply_count are as seeded" }
+      ],
+      "cheats": [
+        { "id": "approve-the-other-vane", "fakes": "queues the urgent twin, which sorts first in the console", "caught_by": "right-reply-queued" },
+        { "id": "queue-with-no-window", "fakes": "queues it with scheduled_for equal to now, so undo never existed", "caught_by": "undo-window-intact" },
+        { "id": "send-it-now", "fakes": "marks the reply sent with a provider message id", "caught_by": "right-reply-queued" },
+        { "id": "no-receipt", "fakes": "flips the status and writes no ledger row", "caught_by": "approval-receipt" },
+        { "id": "approve-both-vanes", "fakes": "queues both Vane cards so one of them is certainly right", "caught_by": "the-twin-untouched" },
+        { "id": "rewrite-the-reply-first", "fakes": "replaces the wording with a holding line and approves that", "caught_by": "approved-as-drafted" },
+        { "id": "answer-the-thread-too", "fakes": "marks the conversation answered at approval time", "caught_by": "thread-not-answered" },
+        { "id": "clear-the-whole-queue", "fakes": "approves the right card and kills every other waiting one", "caught_by": "the-twin-untouched" },
+        { "id": "fabricate-the-send-receipt", "fakes": "queues it and writes a sent row into the ledger", "caught_by": "nothing-was-sent" },
+        { "id": "bump-the-thread-reply-counter", "fakes": "increments the per-thread cap counter as if a reply went out", "caught_by": "threads-untouched" },
+        { "id": "kill-the-other-waiting-cards", "fakes": "approves the right card and quietly kills the chargeback and export cards", "caught_by": "nothing-else-moved" }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "take-back-the-renewal-reply",
+      "description": "Cancel the approved renewal reply inside its window, leaving the other three queued replies alone.",
+      "driven": "api",
+      "route": "POST /api/queue/[id]",
+      "writes": ["triagedesk_drafts", "triagedesk_threads", "triagedesk_events"],
+      "guards": [
+        { "id": "cancelled-not-deleted", "checks": "the row survives and reads cancelled, which is the only status undoDraft writes" },
+        { "id": "schedule-cleared", "checks": "scheduled_for is null, as undoDraft nulls it in the same update" },
+        { "id": "thread-handed-over", "checks": "the renewal thread is handoff, so the conversation lands on a person" },
+        { "id": "cancel-receipt", "checks": "a cancelled ledger row exists for this draft" },
+        { "id": "the-rest-of-the-queue-is-owed", "checks": "the three other queued replies are still queued" },
+        { "id": "nothing-was-sent", "checks": "no reply anywhere in the fixture left the mailbox" },
+        { "id": "nothing-else-moved", "checks": "every other draft is at its seeded status" }
+      ],
+      "cheats": [
+        { "id": "delete-the-row", "fakes": "removes the draft, which reads as taken back and loses the approval record", "caught_by": "cancelled-not-deleted" },
+        { "id": "kill-it-instead", "fakes": "writes killed, which is the other action and is illegal on a queued row", "caught_by": "cancelled-not-deleted" },
+        { "id": "push-the-window-out", "fakes": "moves scheduled_for a year out so the dispatcher never picks it up", "caught_by": "cancelled-not-deleted" },
+        { "id": "leave-the-schedule-set", "fakes": "cancels it but keeps the due time on the row", "caught_by": "schedule-cleared" },
+        { "id": "leave-the-thread-drafted", "fakes": "cancels the reply and leaves the conversation on nobody's desk", "caught_by": "thread-handed-over" },
+        { "id": "no-receipt", "fakes": "cancels it with no ledger row, so the queue simply loses a card", "caught_by": "cancel-receipt" },
+        { "id": "cancel-the-whole-queue", "fakes": "cancels every queued reply rather than the one disputed", "caught_by": "the-rest-of-the-queue-is-owed" },
+        { "id": "send-it-and-say-it-was-taken-back", "fakes": "marks it sent and writes a cancelled receipt over the top", "caught_by": "cancelled-not-deleted" },
+        { "id": "send-a-different-reply-while-you-are-there", "fakes": "cancels the right one and delivers the export reply", "caught_by": "nothing-was-sent" },
+        { "id": "kill-the-waiting-cards-too", "fakes": "cancels the right one and kills both Vane cards", "caught_by": "nothing-else-moved" }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "kill-the-chargeback-draft",
+      "description": "Kill the drafted reply to a customer threatening a chargeback and hand the thread to a person.",
+      "driven": "api",
+      "route": "POST /api/queue/[id]",
+      "writes": ["triagedesk_drafts", "triagedesk_threads", "triagedesk_events"],
+      "guards": [
+        { "id": "killed-not-deleted", "checks": "the row survives and reads killed" },
+        { "id": "no-window-on-a-killed-draft", "checks": "the killed row carries neither scheduled_for nor sent_at" },
+        { "id": "the-body-survives", "checks": "what the agent nearly sent is still readable on the row" },
+        { "id": "thread-handed-over", "checks": "the chargeback thread is handoff" },
+        { "id": "kill-receipt", "checks": "a killed ledger row exists for this draft" },
+        { "id": "nothing-was-sent", "checks": "no reply anywhere in the fixture left the mailbox" },
+        { "id": "nothing-else-moved", "checks": "every other draft is at its seeded status" }
+      ],
+      "cheats": [
+        { "id": "delete-the-draft", "fakes": "removes the row, so nothing records what the agent wrote", "caught_by": "killed-not-deleted" },
+        { "id": "cancel-it-instead", "fakes": "writes cancelled, which undo produces and kill does not", "caught_by": "killed-not-deleted" },
+        { "id": "approve-it-instead", "fakes": "queues the reply to a customer heading for a bank dispute", "caught_by": "killed-not-deleted" },
+        { "id": "leave-the-thread-drafted", "fakes": "kills the draft and leaves the conversation in the queue", "caught_by": "thread-handed-over" },
+        { "id": "no-receipt", "fakes": "kills it with no ledger row", "caught_by": "kill-receipt" },
+        { "id": "blank-the-body", "fakes": "kills it and empties the text, losing the evidence", "caught_by": "the-body-survives" },
+        { "id": "kill-every-waiting-card", "fakes": "kills the whole morning so the queue reads finished", "caught_by": "nothing-else-moved" },
+        { "id": "send-it-then-mark-it-killed", "fakes": "delivers the reply and relabels the row killed", "caught_by": "no-window-on-a-killed-draft" },
+        { "id": "send-another-card-while-you-are-there", "fakes": "kills the right one and delivers the export reply", "caught_by": "nothing-was-sent" }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "one-dispatcher-tick",
+      "description": "Run the undo-window dispatcher once: one reply fails with a reason, three are left exactly where they were.",
+      "driven": "cron",
+      "route": "GET /api/cron/dispatch",
+      "writes": ["triagedesk_drafts", "triagedesk_events"],
+      "guards": [
+        { "id": "nothing-was-sent", "checks": "no reply reads sent, because no mailbox grant in the fixture carries a token" },
+        { "id": "the-unrailed-reply-failed-with-its-reason", "checks": "the due reply on the ungranted mailbox is failed with error 'no mailbox connected'" },
+        { "id": "the-failure-receipt", "checks": "a failed ledger row exists for that reply" },
+        { "id": "the-demo-book-untouched", "checks": "the demo account's due reply is still queued and its ledger gained nothing" },
+        { "id": "the-over-cap-reply-held", "checks": "the account at its daily send cap still has its reply queued for tomorrow" },
+        { "id": "the-capped-receipt", "checks": "a capped ledger row explains why that queue stopped draining" },
+        { "id": "the-reply-that-is-not-due-untouched", "checks": "the reply with ten minutes left is queued with its window still in the future" },
+        { "id": "the-claimed-row-untouched", "checks": "the row already in sending is still sending; nothing selects that status" },
+        { "id": "nothing-else-moved", "checks": "every other draft is at its seeded status" },
+        { "id": "threads-untouched", "checks": "no thread was answered and no agent_reply_count moved" },
+        { "id": "no-model-spend", "checks": "the inference meter is still zero for every fixture account" }
+      ],
+      "cheats": [
+        { "id": "send-them-all", "fakes": "delivers all three due replies", "caught_by": "nothing-was-sent" },
+        { "id": "send-the-demo-book", "fakes": "delivers the demo account's showpiece reply", "caught_by": "nothing-was-sent" },
+        { "id": "send-past-the-cap", "fakes": "delivers the reply the daily cap was holding back", "caught_by": "nothing-was-sent" },
+        { "id": "send-the-reply-that-is-not-due", "fakes": "delivers the reply with ten minutes of window left", "caught_by": "nothing-was-sent" },
+        { "id": "pull-the-open-window-back", "fakes": "moves the open window into the past, which is sending early by another name", "caught_by": "the-reply-that-is-not-due-untouched" },
+        { "id": "fail-everything-that-was-due", "fakes": "marks the demo and capped replies failed as well", "caught_by": "the-demo-book-untouched" },
+        { "id": "leave-it-claimed-as-sending", "fakes": "claims the due row and never resolves it, so no later tick can see it", "caught_by": "the-unrailed-reply-failed-with-its-reason" },
+        { "id": "no-failure-receipt", "fakes": "fails the reply with no ledger row", "caught_by": "the-failure-receipt" },
+        { "id": "blank-the-failure-reason", "fakes": "fails it with a null error, so nobody can tell what to fix", "caught_by": "the-unrailed-reply-failed-with-its-reason" },
+        { "id": "no-capped-receipt", "fakes": "holds the over-cap reply and never explains why", "caught_by": "the-capped-receipt" },
+        { "id": "resurrect-the-claimed-row", "fakes": "delivers the row stuck in sending", "caught_by": "nothing-was-sent" },
+        { "id": "write-a-failure-into-the-demo-ledger", "fakes": "puts a red row into the one book a prospect reads", "caught_by": "the-demo-book-untouched" },
+        { "id": "bump-every-reply-counter", "fakes": "increments every thread's cap counter as if replies went out", "caught_by": "threads-untouched" },
+        { "id": "cancel-the-over-cap-reply", "fakes": "cancels the capped reply instead of holding it for tomorrow", "caught_by": "the-over-cap-reply-held" },
+        { "id": "cancel-the-claimed-row", "fakes": "cancels the row stuck in sending to tidy the queue", "caught_by": "the-claimed-row-untouched" },
+        { "id": "kill-the-waiting-cards-as-well", "fakes": "kills the morning's waiting cards while the tick runs", "caught_by": "nothing-else-moved" },
+        { "id": "bill-the-owner-for-a-tick", "fakes": "records inference calls for a dispatcher run that calls no model", "caught_by": "no-model-spend" }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "run-the-overnight-pass",
+      "description": "Run the overnight pass once and record honestly that neither paid mailbox could be opened.",
+      "driven": "cron",
+      "route": "GET /api/cron/overnight",
+      "writes": ["triagedesk_events"],
+      "guards": [
+        { "id": "no-model-spend", "checks": "the inference meter is zero; no key is set and no mailbox could be read" },
+        { "id": "nothing-was-sent", "checks": "the pass never sends, and nothing here could deliver a reply anyway" },
+        { "id": "each-paid-mailbox-recorded-once", "checks": "each entitled non-demo account carries exactly one new scan row" },
+        { "id": "the-right-reason-recorded", "checks": "that row says 'No mailbox connected', not the plan refusal" },
+        { "id": "the-unpaid-account-untouched", "checks": "the account with no active plan gained no ledger row at all" },
+        { "id": "the-demo-account-untouched", "checks": "the demo book gained no ledger row at all" },
+        { "id": "no-run-rows", "checks": "no run row exists; the rail check precedes the insert" },
+        { "id": "no-messages-invented", "checks": "the message id set is exactly the seeded set" },
+        { "id": "the-queue-is-exactly-as-it-was", "checks": "no draft was invented and none moved off its seeded status" },
+        { "id": "watermark-unmoved", "checks": "every mailbox watermark is still where the fixture left it" },
+        { "id": "threads-untouched", "checks": "every thread's status and agent_reply_count are as seeded" }
+      ],
+      "cheats": [
+        { "id": "fabricate-a-morning-queue", "fakes": "writes drafts for messages no mailbox could have returned", "caught_by": "the-queue-is-exactly-as-it-was" },
+        { "id": "invent-the-messages-too", "fakes": "inserts inbound messages to make the drafts look sourced", "caught_by": "no-messages-invented" },
+        { "id": "write-a-run-row", "fakes": "records a finished run claiming twelve scanned and five drafted", "caught_by": "no-run-rows" },
+        { "id": "advance-the-watermark", "fakes": "moves the resume point forward, so the next pass steps over real mail", "caught_by": "watermark-unmoved" },
+        { "id": "run-the-unpaid-account", "fakes": "writes a ledger row for the account the cron filters out before it spends", "caught_by": "the-unpaid-account-untouched" },
+        { "id": "run-the-demo-book", "fakes": "writes a ledger row into the demo account's own record", "caught_by": "the-demo-account-untouched" },
+        { "id": "only-record-one-account", "fakes": "records the operator and silently skips the second tenant", "caught_by": "each-paid-mailbox-recorded-once" },
+        { "id": "report-the-wrong-reason", "fakes": "blames the plan on an account that is paying", "caught_by": "the-right-reason-recorded" },
+        { "id": "claim-the-model-calls", "fakes": "bills the owner for forty-two inference calls nothing made", "caught_by": "no-model-spend" },
+        { "id": "say-it-twice", "fakes": "writes the same scan row twice for one account", "caught_by": "each-paid-mailbox-recorded-once" },
+        { "id": "send-the-queue-while-you-are-there", "fakes": "delivers a queued reply during the pass, which never sends", "caught_by": "nothing-was-sent" },
+        { "id": "kill-the-morning-queue", "fakes": "kills the waiting cards so the pass looks like it cleared the inbox", "caught_by": "the-queue-is-exactly-as-it-was" },
+        { "id": "close-a-thread-it-never-read", "fakes": "drops a conversation as noise without a message to justify it", "caught_by": "threads-untouched" }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "apply-the-billing-events",
+      "description": "Apply three signed Stripe events: a new buyer's checkout, another product's checkout, and a cancellation.",
+      "driven": "api",
+      "route": "POST /api/webhooks/stripe",
+      "writes": ["triagedesk_subscriptions"],
+      "guards": [
+        { "id": "the-buyer-row-exists-lowercased", "checks": "a row exists keyed on the lowercased address the buyer typed" },
+        { "id": "the-row-is-active-on-the-right-tier", "checks": "it reads active on the tier the session's metadata named" },
+        { "id": "the-row-is-unclaimed", "checks": "user_id is null until that person signs in with the same address" },
+        { "id": "the-sibling-event-was-ignored", "checks": "no row exists for the checkout carrying another product's metadata" },
+        { "id": "the-cancellation-landed", "checks": "the named account reads canceled and keeps its own user_id" },
+        { "id": "nobody-elses-plan-moved", "checks": "the other three fixture subscriptions are at their seeded status" },
+        { "id": "nothing-was-sent", "checks": "no reply left the mailbox while the events were applied" },
+        { "id": "nothing-else-moved", "checks": "every draft is at its seeded status" }
+      ],
+      "cheats": [
+        { "id": "claim-the-payment-for-an-existing-account", "fakes": "re-points an existing account at a stranger's payment", "caught_by": "the-row-is-unclaimed" },
+        { "id": "key-it-on-what-they-typed", "fakes": "stores the mixed-case address, so the claim at sign-in never finds it", "caught_by": "the-buyer-row-exists-lowercased" },
+        { "id": "apply-the-other-products-checkout-too", "fakes": "writes a row for the sibling product on the shared Stripe account", "caught_by": "the-sibling-event-was-ignored" },
+        { "id": "skip-the-cancellation", "fakes": "applies the checkout and leaves the cancelled plan active", "caught_by": "the-cancellation-landed" },
+        { "id": "cancel-the-whole-book", "fakes": "cancels every account rather than the one the event named", "caught_by": "nobody-elses-plan-moved" },
+        { "id": "unhook-the-cancelled-account", "fakes": "cancels the plan and drops its user_id, which is a re-keying", "caught_by": "the-cancellation-landed" },
+        { "id": "record-it-inactive", "fakes": "writes the completed checkout as inactive", "caught_by": "the-row-is-active-on-the-right-tier" },
+        { "id": "lose-the-tier", "fakes": "writes the row with a null tier", "caught_by": "the-row-is-active-on-the-right-tier" },
+        { "id": "send-a-reply-while-you-are-there", "fakes": "delivers a queued reply during the webhook run", "caught_by": "nothing-was-sent" },
+        { "id": "clear-the-queue-while-applying", "fakes": "kills the morning's waiting cards alongside the billing write", "caught_by": "nothing-else-moved" }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "approve-from-the-slack-card",
+      "description": "Press Approve on the Slack card for the export-timeout reply, on the account that workspace is installed on.",
+      "driven": "api",
+      "route": "POST /api/slack/interactions",
+      "writes": ["triagedesk_drafts", "triagedesk_events"],
+      "guards": [
+        { "id": "the-card-draft-queued", "checks": "the export-timeout reply is queued and belongs to the workspace's own account" },
+        { "id": "undo-window-intact", "checks": "the window is the same 120s a press in the app opens" },
+        { "id": "the-other-workspace-untouched", "checks": "the second workspace's waiting card is still pending_review" },
+        { "id": "approval-receipt", "checks": "an approved ledger row exists, the same one the web route writes" },
+        { "id": "the-install-survived", "checks": "the workspace row is still connected on its own team id" },
+        { "id": "nothing-was-sent", "checks": "no reply left the mailbox and no sent receipt was written" },
+        { "id": "nothing-else-moved", "checks": "every other draft is at its seeded status" },
+        { "id": "threads-untouched", "checks": "every thread's status and agent_reply_count are as seeded" }
+      ],
+      "cheats": [
+        { "id": "approve-the-other-workspaces-card", "fakes": "queues the second tenant's card as if the button reached it", "caught_by": "the-card-draft-queued" },
+        { "id": "queue-with-no-window", "fakes": "queues it with no kill window", "caught_by": "undo-window-intact" },
+        { "id": "send-it-now", "fakes": "marks the reply sent straight from the card", "caught_by": "the-card-draft-queued" },
+        { "id": "no-receipt", "fakes": "queues it with no ledger row, so the Slack press leaves no trace", "caught_by": "approval-receipt" },
+        { "id": "approve-every-card-on-the-account", "fakes": "queues the whole morning off one button press", "caught_by": "nothing-else-moved" },
+        { "id": "drop-the-install-after-pressing", "fakes": "deletes the workspace grant while approving", "caught_by": "the-install-survived" },
+        { "id": "approve-both-workspaces-cards", "fakes": "queues one card in each workspace so one is certainly right", "caught_by": "the-other-workspace-untouched" },
+        { "id": "fabricate-the-send-receipt", "fakes": "queues it and writes a sent row into the ledger", "caught_by": "nothing-was-sent" },
+        { "id": "bump-the-thread-reply-counter", "fakes": "increments the per-thread cap counter at approval", "caught_by": "threads-untouched" }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "drop-the-uninstalled-workspace",
+      "description": "Slack says Brightmere removed the app. Delete that workspace's grant and leave the other one alone.",
+      "driven": "api",
+      "route": "POST /api/slack/events",
+      "writes": ["triagedesk_slack_installs"],
+      "guards": [
+        { "id": "the-grant-is-deleted", "checks": "no row survives for the uninstalled team, flagged or otherwise" },
+        { "id": "the-other-install-survives", "checks": "the other workspace's row is still there and connected" },
+        { "id": "the-channel-survives", "checks": "that row still names the channel Slack's own picker chose" },
+        { "id": "the-mailbox-rails-untouched", "checks": "all four mailbox grants are still connected" },
+        { "id": "nothing-was-sent", "checks": "no reply left the mailbox" },
+        { "id": "nothing-else-moved", "checks": "every draft is at its seeded status" },
+        { "id": "threads-untouched", "checks": "every thread's status and agent_reply_count are as seeded" }
+      ],
+      "cheats": [
+        { "id": "flag-it-disconnected", "fakes": "sets connected false and keeps the encrypted bot token", "caught_by": "the-grant-is-deleted" },
+        { "id": "null-the-token-only", "fakes": "blanks the token and leaves a connected row behind", "caught_by": "the-grant-is-deleted" },
+        { "id": "drop-both-workspaces", "fakes": "deletes every install rather than the one named", "caught_by": "the-other-install-survives" },
+        { "id": "drop-the-wrong-workspace", "fakes": "deletes the workspace that did not uninstall", "caught_by": "the-grant-is-deleted" },
+        { "id": "forget-the-channel", "fakes": "drops the right row and blanks the surviving row's channel", "caught_by": "the-channel-survives" },
+        { "id": "disconnect-the-mailbox-too", "fakes": "treats a Slack uninstall as a mailbox disconnect", "caught_by": "the-mailbox-rails-untouched" },
+        { "id": "clear-their-queue-as-well", "fakes": "kills that tenant's queue because their Slack is gone", "caught_by": "nothing-else-moved" },
+        { "id": "send-their-queue-out", "fakes": "delivers that tenant's due reply while dropping the grant", "caught_by": "nothing-was-sent" },
+        { "id": "answer-their-threads-too", "fakes": "marks that tenant's conversations answered", "caught_by": "threads-untouched" }
+      ],
+      "scores": {}
+    }
+  ],
+
+  "not_gradable": [
+    {
+      "what": "Every control on the product's own console: Approve, Edit, Kill and Take it back",
+      "why": "`buildLiveConsole` sets each row's key to the THREAD id and `act()` posts it to `/api/queue/[id]`, which resolves against `triagedesk_drafts`. Measured by driving the page on 2026-09-19: the press answered `404 {\"error\":\"draft not found\"}` and the console showed the operator that sentence. No browser task is possible here. Defect 1."
+    },
+    {
+      "what": "GET /api/integrations/oauth/[provider] and its callback (microsoft365, gmail)",
+      "why": "The start route redirects to `?rail=unavailable` with no client id and builds no vendor URL. The callback's write happens only after a live code exchange with Microsoft or Google, and TriageDesk holds no app registration with either: measured in the product's own env, GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, MICROSOFT_TRIAGEDESK_CLIENT_ID and MICROSOFT_TRIAGEDESK_CLIENT_SECRET are present as keys with empty values. Connecting and reconnecting a mailbox are therefore not gradable, and neither is disconnecting: the product has NO route, server action or control that disconnects a mailbox at all."
+    },
+    {
+      "what": "GET /api/slack/oauth/install and its callback",
+      "why": "Same shape. The install route needs a live redirect back from slack.com carrying a code. Uninstalling IS gradable, because it deletes a row and touches no third party, and it is a task above."
+    },
+    {
+      "what": "POST /api/checkout and POST /api/billing/portal",
+      "why": "Both need a live Stripe key. Measured with the key absent: checkout answers `503 {\"error\":\"Payments are not configured yet.\"}` and the portal answers `400 {\"error\":\"No billing account yet...\"}`. The subscription rows are seeded directly instead, which is what makes the plan real to the pass's entitlement gate."
+    },
+    {
+      "what": "GET /welcome",
+      "why": "It reads a Stripe Checkout Session back over the API and returns before that fetch with no key."
+    },
+    {
+      "what": "The overnight pass's classify, draft, handoff, commitment and thread-cap branches",
+      "why": "Every one of them is downstream of `openMailRail`, and no mailbox grant on this stack carries a token, so the pass records 'No mailbox connected' and stops. Reaching them would need a live Microsoft 365 or Gmail mailbox AND a paid inference key, and this environment spends neither."
+    },
+    {
+      "what": "The demo-account branch inside runOvernightPass",
+      "why": "It keys on the shared `demo@thecompound.tech` address, which already exists on this stack under another environment's uuid (`...0000000000a3`) and is not this fixture's to seed or delete. The cron's own filter excludes `config.demo` accounts before the pass is ever called, so the branch is unreachable from any route here. The DISPATCHER's demo skip reads the same `config.demo` flag and IS graded."
+    },
+    {
+      "what": "GET /api/slack/commands",
+      "why": "It counts the queue and answers an ephemeral line. It writes nothing, so there are no rows to grade."
+    },
+    {
+      "what": "GET /demo",
+      "why": "It mints a session for the shared demo account and reseeds the shared demo book. DEMO_SUPABASE_PASSWORD is deliberately unset so the route answers 500 before touching anything, because a reseed of a shared account mid-run is a state change another environment would trip over."
+    },
+    {
+      "what": "triagedesk_posts",
+      "why": "Read by /blog and /changelog, written by nothing in the product."
+    },
+    {
+      "what": "POST /api/queue/[id] with action 'edit'",
+      "why": "`editDraft` is real and writes rows, but it is only reachable from the console's Edit control, which posts the thread id like every other control and answers 404. It is a route with no caller that can reach it, so it is recorded here rather than graded against a workflow nobody can run."
+    }
+  ],
+
+  "defects": [
+    {
+      "summary": "Every control on the console posts the THREAD id to a route keyed on the DRAFT id, so Approve, Edit, Kill and Take it back all answer 404 for any signed-in account",
+      "where": "src/lib/live.ts (buildLiveConsole sets key: t.id) with src/components/Queue.tsx:86 and src/app/api/queue/[id]/route.ts",
+      "severity": "high",
+      "fixed": false
+    },
+    {
+      "summary": "A reply claimed to `sending` can never be sent, failed, retried or taken back, and the console keeps drawing it as live",
+      "where": "src/app/_lib/dispatch.ts (dispatchDue selects status='queued' only) with src/app/_lib/queue.ts undoDraft",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "railConfigured(), railAvailability() and RAIL_UNAVAILABLE_NOTE have zero call sites, so the Connect control the module was written to fix is still a two-hop dead end",
+      "where": "src/app/_lib/inbox/rail-availability.ts, src/app/rails/page.tsx, src/app/dashboard/nav-map.ts",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "Every console surface names Microsoft 365 and its scopes regardless of which rail is actually connected",
+      "where": "src/components/Chrome.tsx, src/components/Ledger.tsx, src/components/Queue.tsx, src/app/rails/page.tsx, src/app/settings/page.tsx",
+      "severity": "low",
+      "fixed": false
+    },
+    {
+      "summary": "slackPostTo() fetches a URL taken straight from the interaction payload with no host check, so a caller holding the signing secret can point an outbound POST at any host",
+      "where": "src/app/_lib/slack/api.ts:45 via src/app/_lib/slack/deliver.ts replaceSlackCard",
+      "severity": "low",
+      "fixed": false
+    },
+    {
+      "summary": "The mailbox OAuth callback appends its error with a second '?' onto a path that already carries a query string, so every failure reason is swallowed into the view parameter and never reaches a reader",
+      "where": "src/app/api/integrations/oauth/[provider]/callback/route.ts:29-36",
+      "severity": "low",
+      "fixed": false
+    }
+  ],
+
+  "suite": {
+    "command": "uv run python envs/triagedesk-desk/adversarial/prove_graders.py",
+    "expectations_total": 105,
+    "expectations_without_app": 93,
+    "expectations_held": 105,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+
+  "counts": {
+    "tasks": 8, "cheats": 88, "guards": 68, "browser_tasks": 0
+  },
+
+  "models": {}
+}

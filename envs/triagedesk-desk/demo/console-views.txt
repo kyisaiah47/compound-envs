@@ -1,0 +1,36 @@
+
+queue  http://127.0.0.1:3751/
+  queue cards: 9
+  controls: ["Approve, held 120 s","Edit the wording","Kill, the thread is yours","Approve, held 120 s","Edit the wording","Kill, the thread is yours"]
+  this fixture's own rows on the page: ["Marguerite Vane","Martin Vane","Pernilla Okonjo","Delphine Mazzocchi","Harrowgate Tools"]
+  the demo book's mailbox on the page: false
+  TriageDesk THE QUEUE The queue Threads The record Voice and caps How it works LAST PASS JUST NOW support@harrowgate-tools.example last pass just now, 0 min 0 read of 60 a pass 120 s kill window 11 receipts support@harrowgate-tools.example · MICROSOFT 365 · SYNCED 6H AGO · WATERMARK 6H AGO TriageDesk, the overnight triage agent for a shared inbox. Reads support@ overnight and drafts every reply for you to approve. SEN
+
+threads  http://127.0.0.1:3751/threads
+  queue cards: 0
+  this fixture's own rows on the page: ["Marguerite Vane","Martin Vane","Pernilla Okonjo","Delphine Mazzocchi"]
+  the demo book's mailbox on the page: false
+  TriageDesk THE QUEUE The queue Threads The record Voice and caps How it works LAST PASS JUST NOW support@harrowgate-tools.example last pass just now, 0 min 0 read of 60 a pass 120 s kill window 11 receipts support@harrowgate-tools.example · 9 CONVERSATIONS · LAST PASS JUST NOW Every conversation the pass read, and what happened to it. Replies go out from this mailbox and thread inside the conversation the customer st
+
+record  http://127.0.0.1:3751/record
+  queue cards: 0
+  this fixture's own rows on the page: ["Marguerite Vane","Martin Vane","Pernilla Okonjo","Delphine Mazzocchi"]
+  the demo book's mailbox on the page: false
+  TriageDesk THE QUEUE The queue Threads The record Voice and caps How it works LAST PASS JUST NOW support@harrowgate-tools.example last pass just now, 0 min 0 read of 60 a pass 120 s kill window 11 receipts support@harrowgate-tools.example · THE LEDGER · 11 RECEIPTS · LAST PASS JUST NOW Every action, with the evidence it acted on. Quotes are verbatim spans of the customer's own message, so a receipt is something you c
+
+rails  http://127.0.0.1:3751/rails
+  queue cards: 0
+  this fixture's own rows on the page: []
+  the demo book's mailbox on the page: false
+  TriageDesk THE QUEUE The queue Threads The record Voice and caps How it works LAST PASS JUST NOW support@harrowgate-tools.example last pass just now, 0 min 0 read of 60 a pass 120 s kill window 11 receipts support@harrowgate-tools.example · MICROSOFT 365 · OAUTH · SYNCED 6H AGO The mailbox your team already lives in. Replies go out from your own address, land in your own Sent folder, and thread inside the conversatio
+
+settings  http://127.0.0.1:3751/settings
+  queue cards: 0
+  this fixture's own rows on the page: ["Harrowgate Tools"]
+  the demo book's mailbox on the page: false
+  TriageDesk THE QUEUE The queue Threads The record Voice and caps How it works LAST PASS JUST NOW support@harrowgate-tools.example last pass just now, 0 min 0 read of 60 a pass 120 s kill window 11 receipts support@harrowgate-tools.example · MICROSOFT 365 · SYNCED 6H AGO What the drafter may draw on, and what may leave. A reply is written from the thread and the answers below, and from nothing else. Where the answer i
+
+the Approve control, pressed on {"head":"Third month billed for a seat we removed","who":"Delphine Mazzocchi · d.mazzocchi@rowanbridge-dental.example"}
+  clicked: true
+  POST /api/queue/00000000-0000-4000-8000-00000002c009 -> 404 {"error":"draft not found"}
+  what the console told the operator: "draft not found"
