@@ -1,0 +1,426 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "wirecall",
+  "environment": "wirecall-desk",
+  "title": "The WireCall Slate Environment",
+  "product_url": "https://wirecall.thecompound.tech",
+  "product_repo": "~/CompoundLabs/wirecall",
+  "table_prefix": "wc_",
+  "app_port": 3374,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+  "tasks": [
+    {
+      "id": "stake-the-call-on-todays-slate",
+      "description": "Stake the caller's one call on today's open slate: the Popwire copy of the dredging permit headline, called to rise.",
+      "driven": "browser",
+      "route": "POST /api/call",
+      "writes": [
+        "wc_calls"
+      ],
+      "guards": [
+        {
+          "id": "one-call-on-todays-slate",
+          "checks": "exactly one wc_calls row for the named device on the open slate, and it is on that slate"
+        },
+        {
+          "id": "the-named-story",
+          "checks": "the story is the Popwire row, not the FrontWire row carrying the same headline"
+        },
+        {
+          "id": "the-direction-called",
+          "checks": "direction is 'rise', which the route treats as optional"
+        },
+        {
+          "id": "nothing-is-scored-yet",
+          "checks": "points_awarded, won and direction_correct are null and the player's points and streak did not move"
+        },
+        {
+          "id": "the-named-device",
+          "checks": "no player row was minted during the rollout; getOrCreatePlayer answers 200 with a new one when a key is missing"
+        },
+        {
+          "id": "nobody-elses-stake-moved",
+          "checks": "the rival's existing call on the same slate is unchanged and the slate carries two calls"
+        },
+        {
+          "id": "the-other-slates-are-untouched",
+          "checks": "yesterday is still unsettled and the day before still reads as scored"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-other-wires-copy",
+          "fakes": "stakes the FrontWire row of the same headline through the real console",
+          "caught_by": "the-named-story"
+        },
+        {
+          "id": "no-device-key-loaded",
+          "fakes": "drives the real console with nothing in localStorage, so the product mints a player and takes the call",
+          "caught_by": "one-call-on-todays-slate"
+        },
+        {
+          "id": "nothing-staked",
+          "fakes": "reports the call made and writes no row",
+          "caught_by": "one-call-on-todays-slate"
+        },
+        {
+          "id": "staked-for-the-wrong-device",
+          "fakes": "the right story and direction, written against another fixture player",
+          "caught_by": "one-call-on-todays-slate"
+        },
+        {
+          "id": "the-direction-dropped",
+          "fakes": "the right story with no direction, which still scores the top call",
+          "caught_by": "the-direction-called"
+        },
+        {
+          "id": "scored-on-the-way-in",
+          "fakes": "stakes and pays in one write, twenty hours before the slate locks",
+          "caught_by": "nothing-is-scored-yet"
+        },
+        {
+          "id": "the-rivals-stake-rewritten",
+          "fakes": "repoints the rival's existing call instead of inserting one, so the per-device count still holds",
+          "caught_by": "nobody-elses-stake-moved"
+        },
+        {
+          "id": "hedged-across-two-devices",
+          "fakes": "the right call plus a second device staking the other copy of the headline",
+          "caught_by": "the-named-device"
+        },
+        {
+          "id": "yesterday-settled-along-the-way",
+          "fakes": "the right call, and yesterday's owed slate quietly flagged settled",
+          "caught_by": "the-other-slates-are-untouched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "settle-yesterdays-slate",
+      "description": "Run the tick that owes yesterday's slate a settle: re-read both wires, mark who led each, score every call and move every streak.",
+      "driven": "cron",
+      "route": "node scripts/tick.mjs --date <today>",
+      "writes": [
+        "wc_stories",
+        "wc_calls",
+        "wc_players",
+        "wc_slates"
+      ],
+      "guards": [
+        {
+          "id": "the-slate-is-closed",
+          "checks": "the slate reads settled with a settled_at, so the next tick does not pay every call again"
+        },
+        {
+          "id": "a-story-that-left-its-wire-settles-empty",
+          "checks": "the candidate with no row on its wire has settle_value null and won false, not its baseline"
+        },
+        {
+          "id": "the-settle-value-is-the-wires-own",
+          "checks": "each settle_value equals the tier or the outlet count that wire holds right now, read at grade time"
+        },
+        {
+          "id": "each-wire-has-its-own-leader",
+          "checks": "FrontWire ranked on tier and Popwire on outlets, never compared, and every tied leader marked"
+        },
+        {
+          "id": "every-call-carries-the-published-arithmetic",
+          "checks": "10 for the lead, 5 only where the direction matched a real move, nothing where the story did not move"
+        },
+        {
+          "id": "the-player-totals-are-the-calls-added-up",
+          "checks": "each player's points equal the sum of their own scored calls and each streak follows their call"
+        },
+        {
+          "id": "a-streak-holder-who-sat-out-loses-it",
+          "checks": "the player carrying a live streak who made no call is back to zero, with the best streak and the points untouched"
+        },
+        {
+          "id": "the-other-slates-are-untouched",
+          "checks": "today is still open and unscored, and the already settled day still reads as it was scored"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "one-winner-across-both-wires",
+          "fakes": "puts a tier and an outlet count on one scale and marks a single winner for the day",
+          "caught_by": "each-wire-has-its-own-leader"
+        },
+        {
+          "id": "the-tie-broken-to-one",
+          "fakes": "two candidates settle at tier 1 and only the one that moved is marked",
+          "caught_by": "each-wire-has-its-own-leader"
+        },
+        {
+          "id": "the-vanished-story-held-its-baseline",
+          "fakes": "the story that left its wire settled at the tier it opened on",
+          "caught_by": "a-story-that-left-its-wire-settles-empty"
+        },
+        {
+          "id": "every-baseline-copied-forward",
+          "fakes": "nothing moved: every candidate settled at its opening value and the openers lead",
+          "caught_by": "the-settle-value-is-the-wires-own"
+        },
+        {
+          "id": "marked-settled-with-nothing-scored",
+          "fakes": "the slate flagged settled and nothing else written, so no tick comes back to it",
+          "caught_by": "the-settle-value-is-the-wires-own"
+        },
+        {
+          "id": "the-direction-bonus-on-a-story-that-held",
+          "fakes": "pays the 5 on a candidate that did not move, where scoring.ts pays nothing",
+          "caught_by": "every-call-carries-the-published-arithmetic"
+        },
+        {
+          "id": "the-board-moved-but-not-the-calls",
+          "fakes": "every player total exactly right and not one call row scored",
+          "caught_by": "every-call-carries-the-published-arithmetic"
+        },
+        {
+          "id": "the-calls-scored-but-not-the-board",
+          "fakes": "every call result exactly right and no player total moved",
+          "caught_by": "the-player-totals-are-the-calls-added-up"
+        },
+        {
+          "id": "the-sitter-kept-the-streak",
+          "fakes": "everything correct except the streak of the player who made no call",
+          "caught_by": "a-streak-holder-who-sat-out-loses-it"
+        },
+        {
+          "id": "scored-in-full-slate-left-open",
+          "fakes": "every row correct and the slate never flagged, so the next tick pays it again",
+          "caught_by": "the-slate-is-closed"
+        },
+        {
+          "id": "today-settled-with-yesterday",
+          "fakes": "yesterday settled correctly and today's open slate settled alongside it",
+          "caught_by": "the-other-slates-are-untouched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "grant-the-wire-pass",
+      "description": "Confirm the payer's Wire Pass from a signed checkout completion: mark that order paid and put the pass on the player who bought it.",
+      "driven": "api",
+      "route": "POST /api/stripe/webhook",
+      "writes": [
+        "wc_orders",
+        "wc_players"
+      ],
+      "guards": [
+        {
+          "id": "the-order-is-paid",
+          "checks": "the named order reads paid at the price it was taken at, which is also the handler's own replay check"
+        },
+        {
+          "id": "the-pass-is-on-the-payer",
+          "checks": "season_pass is on the player that order belongs to"
+        },
+        {
+          "id": "the-address-carried-over",
+          "checks": "the player holds the order's own address with an email_confirmed_at"
+        },
+        {
+          "id": "nobody-else-was-paid-for",
+          "checks": "the other pending order is still pending, its device holds no address, and only the payer and the existing pass holder carry a pass"
+        },
+        {
+          "id": "no-order-was-invented",
+          "checks": "the order count is unchanged and no stripe_session_id was written, so nothing reached the processor"
+        },
+        {
+          "id": "a-pass-buys-no-edge",
+          "checks": "points, streaks and every call are exactly as they were"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-pass-on-a-device-that-did-not-pay",
+          "fakes": "signs the real event with metadata naming the other device, which the handler never checks against the order",
+          "caught_by": "the-pass-is-on-the-payer"
+        },
+        {
+          "id": "the-pass-without-the-payment",
+          "fakes": "season_pass granted with the order left pending",
+          "caught_by": "the-order-is-paid"
+        },
+        {
+          "id": "the-other-pending-order-paid",
+          "fakes": "the near twin's order marked paid and their device passed instead",
+          "caught_by": "the-order-is-paid"
+        },
+        {
+          "id": "a-fresh-order-written-paid",
+          "fakes": "a brand new paid order written to grant the pass off, leaving the real one pending",
+          "caught_by": "the-order-is-paid"
+        },
+        {
+          "id": "paid-with-no-address",
+          "fakes": "order paid and pass granted with nothing written to carry it across a cleared browser",
+          "caught_by": "the-address-carried-over"
+        },
+        {
+          "id": "the-near-twins-address",
+          "fakes": "the pass carries the other pending order's address, one letter apart",
+          "caught_by": "the-address-carried-over"
+        },
+        {
+          "id": "a-pass-for-everyone",
+          "fakes": "the payer is correct and every other device is passed too",
+          "caught_by": "nobody-else-was-paid-for"
+        },
+        {
+          "id": "a-second-order-written-beside-it",
+          "fakes": "the payer confirmed correctly with a spare paid order written next to it",
+          "caught_by": "no-order-was-invented"
+        },
+        {
+          "id": "the-pass-and-a-points-top-up",
+          "fakes": "the pass plus fifty points, on a product sold as buying no edge",
+          "caught_by": "a-pass-buys-no-edge"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "confirm-the-streak-reminder",
+      "description": "Land the confirmation link WireCall mailed the opt-in, writing their own address onto their own player row.",
+      "driven": "api",
+      "route": "GET /api/subscribe/confirm",
+      "writes": [
+        "wc_players"
+      ],
+      "guards": [
+        {
+          "id": "the-address-on-the-link",
+          "checks": "the opt-in holds the address their own token names, not the near twin's"
+        },
+        {
+          "id": "the-confirmation-is-recorded",
+          "checks": "email_confirmed_at is set, which is the only record the double opt in happened"
+        },
+        {
+          "id": "the-near-twin-is-still-waiting",
+          "checks": "the player who asked with an address one letter apart holds nothing"
+        },
+        {
+          "id": "one-player-holds-the-address",
+          "checks": "exactly one player row carries it; the column has no unique index"
+        },
+        {
+          "id": "confirming-grants-nothing-else",
+          "checks": "no pass, no points, no streak, no order, and yesterday's slate still unsettled"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-near-twins-link-clicked",
+          "fakes": "drives the real route with the near twin's token, so a valid confirm lands on the wrong list",
+          "caught_by": "the-address-on-the-link"
+        },
+        {
+          "id": "the-near-twins-address-on-the-right-player",
+          "fakes": "the right device, the address one letter away",
+          "caught_by": "the-address-on-the-link"
+        },
+        {
+          "id": "subscribed-without-the-confirm",
+          "fakes": "the address written with no email_confirmed_at, which is the opt in defeated",
+          "caught_by": "the-confirmation-is-recorded"
+        },
+        {
+          "id": "both-links-confirmed",
+          "fakes": "both pending opt-ins landed in one pass",
+          "caught_by": "the-near-twin-is-still-waiting"
+        },
+        {
+          "id": "the-address-on-two-devices",
+          "fakes": "confirmed correctly and the same address written onto a third device that never asked",
+          "caught_by": "one-player-holds-the-address"
+        },
+        {
+          "id": "confirmed-and-handed-a-pass",
+          "fakes": "the free reminder list confirmed, with the paid Wire Pass thrown in",
+          "caught_by": "confirming-grants-nothing-else"
+        }
+      ],
+      "scores": {}
+    }
+  ],
+  "not_gradable": [
+    {
+      "what": "POST /api/checkout",
+      "why": "creates the order row and then calls Stripe. WireCall is on the SECOND live Stripe secret key on this machine, the one OutRip and MatchLine also carry. It runs here with a placeholder so its own unconfigured path runs; what that path leaves behind is in the defects instead."
+    },
+    {
+      "what": "POST /api/subscribe",
+      "why": "the first leg of the double opt in. The house sender renders the body through a production edge function BEFORE it looks for a Resend key, and then needs a live key to send. Nothing here may send real mail, so the outbound firewall refuses it and the route answers its own 500. The SECOND leg, /api/subscribe/confirm, is a graded task."
+    },
+    {
+      "what": "GET /api/history",
+      "why": "a read. Every reward reads database rows, so a route that writes none has nothing to grade. It is exercised on every /history page load and its pass gate is checked from the row side by grant-the-wire-pass."
+    },
+    {
+      "what": "POST /api/device",
+      "why": "the handshake, not an act a person performs. Its only writes are the player row it mints when a key is missing and a last_seen_at stamp, and both happen on every page load. It is driven by the browser rollout and its minting behaviour is what the-named-device guards against."
+    },
+    {
+      "what": "buildSlate, the other half of scripts/tick.mjs",
+      "why": "it reads whatever FrontWire and Popwire hold at that instant and writes a new slate from them. Both tables belong to other products and frontwire-desk truncates one of them on this stack, so the rows it would produce are not this environment's to pin. The fixture already holds today's slate, so the tick's build half reports the product's own idempotence and does nothing."
+    },
+    {
+      "what": "wc_players.display_name",
+      "why": "the schema has it, the board prints it in preference to the generated tag, and the Wire Pass is sold on a named leaderboard entry. Nothing in the product writes it, so setting a name is not a task. It is a defect, below."
+    }
+  ],
+  "defects": [
+    {
+      "summary": "The Wire Pass webhook takes the player from the event metadata and never checks it against wc_orders.player_id, so an order can be marked paid while the pass lands on a device that did not buy it. Measured against the running copy: a signed checkout.session.completed naming order ...f5601 (owned by player ...f5003) with metadata player_id ...f5004 answered 200, marked ...f5601 paid, and granted season_pass plus the payer's address to ...f5004. The payer, whose order is now paid, holds no pass, and nothing anywhere reconciles the two rows.",
+      "where": "src/app/api/stripe/webhook/route.ts:41-51. Fixed in wirecall 2026-09-19: the webhook reads the order's own player_id and refuses a mismatch.",
+      "severity": "medium",
+      "fixed": true
+    },
+    {
+      "summary": "wc_players.display_name has no writer anywhere in the product, and the Wire Pass is sold on \"a named spot on the leaderboard\". It appears in a SELECT in src/lib/device.ts, in the /api/device response and in the board view, and in no INSERT or UPDATE in any of the seven routes, three library writers or the cron. Measured on production: 0 of 650 player rows carry one. The only name a player can have is the generated caller_tag, the first four hex characters of their uuid, and production already has 3 tags shared by more than one player at 650 rows, so two paying players can render as the same board entry.",
+      "where": "src/lib/device.ts:63, src/app/api/device/route.ts:37, the wc_leaderboard view",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "POST /api/device inserts a wc_players row on every anonymous call with no rate limit, and the crawl guard cannot see it: src/middleware.ts excludes api/ from its matcher. That guard exists because other products on this estate took 149,991 and 719,915 crawler hits in a day, and this is the one route that WRITES on an unauthenticated call. Measured against the running copy: 25 POSTs with an empty body took wc_players from 6 rows to 31. Production holds 650 player rows, 1 of which has ever scored.",
+      "where": "src/app/api/device/route.ts:19, src/middleware.ts:82",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "A failed checkout leaves a permanent pending wc_orders row carrying the buyer's email address. The route inserts the order before it calls Stripe and the catch block returns 500 without touching it; there is no failed status, no expiry and no cleanup path. Measured against the running copy with Stripe unreachable: 3 POSTs to /api/checkout answered 500 three times, wc_orders went from 3 rows to 6 and wc_players from 6 to 9, and all three new orders read pending with a null stripe_session_id and the address stored.",
+      "where": "src/app/api/checkout/route.ts:65-103. Fixed in wirecall 2026-09-19: the catch deletes the pending row it created.",
+      "severity": "low",
+      "fixed": true
+    },
+    {
+      "summary": "The wc_players_leaderboard_read policy is unreachable and is one grant away from exposing every scoring player's email address. It is a row level policy for anon and authenticated using (points > 0 or streak_best > 0) on a table that holds email, and anon holds no grant at all, so the read is refused. The refusal PostgREST returns is the hint \"Grant the required privileges to the current role with: GRANT SELECT ON public.wc_players TO anon;\", which is exactly the change that would turn the dead policy into a public read of ?select=email. The board does not need it: wc_leaderboard already answers 200 and selects six columns, none of them the address.",
+      "where": "pg_policies wc_players_leaderboard_read on public.wc_players. Fixed 2026-09-19: dropped in the shared project by migration wc_players_drop_dead_leaderboard_policy, and the environment's 03-rls.sql follows it.",
+      "severity": "low",
+      "fixed": true
+    }
+  ],
+  "suite": {
+    "command": "uv run python envs/wirecall-desk/adversarial/prove_graders.py",
+    "expectations_total": 39,
+    "expectations_without_app": 31,
+    "expectations_held": 39,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+  "counts": {
+    "tasks": 4,
+    "cheats": 35,
+    "guards": 26,
+    "browser_tasks": 1
+  },
+  "models": {}
+}

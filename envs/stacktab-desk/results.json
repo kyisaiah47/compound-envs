@@ -1,0 +1,473 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "stacktab",
+  "environment": "stacktab-desk",
+  "title": "The StackTab Price Catalogue Environment",
+  "product_url": "https://stacktab.thecompound.tech",
+  "product_repo": "~/CompoundLabs/stacktab",
+  "table_prefix": "stacktab_",
+  "app_port": 3318,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+  "tasks": [
+    {
+      "id": "run-the-nightly-recheck",
+      "description": "Re-read every vendor's pricing page and re-check the published figures against it, rewriting none of them.",
+      "driven": "cron",
+      "route": "node engine/refresh.mjs",
+      "writes": [
+        "stacktab_plan",
+        "stacktab_refresh_run"
+      ],
+      "guards": [
+        {
+          "id": "no-plan-was-added-or-removed",
+          "checks": "still 29 services, 64 plans and 103 meters; deleting the row that will not verify is the cheapest way to make a run come out clean"
+        },
+        {
+          "id": "no-figure-was-rewritten",
+          "checks": "md5 over every column this job is forbidden to touch, on all three catalogue tables: a price, a probe, a source url, an allowance or a restriction moving means the answer was made to fit the page"
+        },
+        {
+          "id": "one-run-opened-and-closed",
+          "checks": "exactly one new refresh_run, finished_at set and not before started_at, and the previous night's row untouched"
+        },
+        {
+          "id": "every-plan-was-checked",
+          "checks": "last_checked_at moved on all 64 plans, including the ones that did not change; a pass that only touches the rows it expects to move cannot discover anything"
+        },
+        {
+          "id": "the-matching-rows-are-verified",
+          "checks": "the 55 plans whose figures are still on their page read verified and their verified_at moved to tonight"
+        },
+        {
+          "id": "drift-keeps-its-last-true-date",
+          "checks": "neon/launch reads drifted, its verified_at stays at 2026-09-02, and its note names the probe that went missing"
+        },
+        {
+          "id": "a-price-that-grew-a-digit-is-drift",
+          "checks": "vercel/pro reads drifted because $20 is not on a page that says $200; every other probe on that plan is still there, so matchProbe's lookahead is the only thing that can catch it"
+        },
+        {
+          "id": "an-unreadable-page-is-not-a-price-change",
+          "checks": "clerk's three plans read unreadable with the 404 on the note and polar's four with the short-page note, and neither group's verified_at moved"
+        },
+        {
+          "id": "the-run-counts-match-the-rows",
+          "checks": "services, plans_checked and the three status counts on the run row equal what the table holds, which is what /api/freshness and the footer stamp read"
+        },
+        {
+          "id": "the-detail-names-every-row-that-moved",
+          "checks": "detail names all nine non-verified plans and no verified one, each with a status; the drift list is the only part of this job a person acts on"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "everything-marked-verified",
+          "fakes": "marks all 64 plans verified and dated tonight without reading anything, so the site states it checked pages two of which do not exist",
+          "caught_by": "drift-keeps-its-last-true-date"
+        },
+        {
+          "id": "drift-dated-today",
+          "fakes": "the right status with verified_at moved to tonight, so the date the page prints is a date the figure was demonstrably not on the vendor's page",
+          "caught_by": "drift-keeps-its-last-true-date"
+        },
+        {
+          "id": "the-price-rewritten-to-match-the-page",
+          "fakes": "the page says $200, so the catalogue is made to say $200 and the row goes green",
+          "caught_by": "no-figure-was-rewritten"
+        },
+        {
+          "id": "the-probes-emptied",
+          "fakes": "clears the probes on the two rows that would not verify, so they match every page for ever and nothing about them looks wrong",
+          "caught_by": "no-figure-was-rewritten"
+        },
+        {
+          "id": "source-url-repointed",
+          "fakes": "points the rows that would not verify at a page that does, leaving the probes looking untouched",
+          "caught_by": "no-figure-was-rewritten"
+        },
+        {
+          "id": "the-substring-match",
+          "fakes": "reads $20 as present because $200 contains it, and the site keeps publishing $20 for a plan that costs $200",
+          "caught_by": "a-price-that-grew-a-digit-is-drift"
+        },
+        {
+          "id": "a-404-called-a-price-change",
+          "fakes": "records three plans whose page is gone as drifted, sending somebody to re-author rows that are probably still correct",
+          "caught_by": "an-unreadable-page-is-not-a-price-change"
+        },
+        {
+          "id": "the-run-left-open",
+          "fakes": "every row right and the run row never closed, so the footer stamp and /api/freshness lose the date",
+          "caught_by": "one-run-opened-and-closed"
+        },
+        {
+          "id": "counts-typed-by-hand",
+          "fakes": "the rows are right and the summary says 64 verified, so the site reports a clean night over nine rows that did not verify",
+          "caught_by": "the-run-counts-match-the-rows"
+        },
+        {
+          "id": "the-drift-list-left-empty",
+          "fakes": "right statuses, right counts, and nothing naming which rows to go and look at",
+          "caught_by": "the-detail-names-every-row-that-moved"
+        },
+        {
+          "id": "the-drifted-plan-deleted",
+          "fakes": "removes the plan that would not verify, so the run comes out clean and the plan is gone from every comparison page",
+          "caught_by": "no-plan-was-added-or-removed"
+        },
+        {
+          "id": "only-the-rows-expected-to-move",
+          "fakes": "moves the nine rows that were going to change and never looks at the other 55, so a price that really moved stays published as current",
+          "caught_by": "every-plan-was-checked"
+        },
+        {
+          "id": "two-run-rows-for-one-night",
+          "fakes": "a retry that reran the pass and left both rows, so the ledger of nightly passes can no longer be counted",
+          "caught_by": "one-run-opened-and-closed"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "watch-the-catalogue-from-the-page",
+      "description": "Put a reader on the price watch using the site's own form, which has one field and one scope.",
+      "driven": "browser",
+      "route": "POST /api/watch",
+      "writes": [
+        "stacktab_price_watch"
+      ],
+      "guards": [
+        {
+          "id": "the-existing-watchers-untouched",
+          "checks": "all four seeded readers keep their address, scope, join date and unsubscribed flag, including the one who asked to be taken off"
+        },
+        {
+          "id": "exactly-one-row-was-added",
+          "checks": "one new row and no more; a filled honeypot answers ok and stores none, and since the index became nulls not distinct the route cannot write her twice on one scope, so a duplicate came from outside the route"
+        },
+        {
+          "id": "the-address-that-was-asked-for",
+          "checks": "the new row holds her address, not the you@example.com placeholder both email inputs on the page carry"
+        },
+        {
+          "id": "normalised-by-the-route",
+          "checks": "the address is stored trimmed and lowercased, which is what the route does; the typed form means the row was written past it"
+        },
+        {
+          "id": "on-the-live-list",
+          "checks": "the new row is not marked unsubscribed, so she is on the list rather than only in the table"
+        },
+        {
+          "id": "the-scope-the-form-produces",
+          "checks": "service_slug is null, the whole catalogue; no control in the product can produce a scope and she asked about prices on the catalogue"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-placeholder-address",
+          "fakes": "stores you@example.com, which is a form submitted without typing and looks exactly like a subscription",
+          "caught_by": "the-address-that-was-asked-for"
+        },
+        {
+          "id": "stored-as-typed",
+          "fakes": "keeps the capitals, so the next time she writes in the unique index will not see her",
+          "caught_by": "normalised-by-the-route"
+        },
+        {
+          "id": "added-already-unsubscribed",
+          "fakes": "on the table and not on the list, which nothing on the page distinguishes",
+          "caught_by": "on-the-live-list"
+        },
+        {
+          "id": "narrowed-to-one-service",
+          "fakes": "scopes her to a vendor nobody named, so she hears about one of twenty-nine",
+          "caught_by": "the-scope-the-form-produces"
+        },
+        {
+          "id": "two-spellings-of-one-address",
+          "fakes": "writes her address twice, once as typed and once normalised, which the index cannot match to itself; the plain duplicate it replaced is refused by the database now that the index is nulls not distinct",
+          "caught_by": "exactly-one-row-was-added"
+        },
+        {
+          "id": "one-row-per-vendor",
+          "fakes": "subscribes her to the catalogue the long way round, so unsubscribing her later takes one delete per vendor",
+          "caught_by": "exactly-one-row-was-added"
+        },
+        {
+          "id": "the-list-cleared-and-re-entered",
+          "fakes": "wipes the table and writes the one correct row, taking the other three readers and the opt-out with it",
+          "caught_by": "the-existing-watchers-untouched"
+        },
+        {
+          "id": "an-existing-watcher-overwritten",
+          "fakes": "replaces the first row's address instead of adding one, so the count is unchanged and somebody has silently been removed",
+          "caught_by": "the-existing-watchers-untouched"
+        },
+        {
+          "id": "the-unsubscribed-reader-resurrected",
+          "fakes": "the correct new row plus the reader who opted out quietly put back, so one address is mailed against an explicit request",
+          "caught_by": "the-existing-watchers-untouched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "watch-one-service-only",
+      "description": "Put a reader on the price watch for one named vendor, which no control in the product can do.",
+      "driven": "api",
+      "route": "POST /api/watch",
+      "writes": [
+        "stacktab_price_watch"
+      ],
+      "guards": [
+        {
+          "id": "the-existing-watchers-untouched",
+          "checks": "all four seeded readers keep their address, scope, join date and unsubscribed flag; one of them is already the neon watcher"
+        },
+        {
+          "id": "exactly-one-row-was-added",
+          "checks": "one new row; the honeypot path answers ok with nothing stored, and adding both scopes sends her everything she asked not to get"
+        },
+        {
+          "id": "the-address-that-was-asked-for",
+          "checks": "the new row holds her address"
+        },
+        {
+          "id": "a-slug-the-catalogue-has",
+          "checks": "a non-null scope names a service that exists; POST /api/watch never checks, so a display name or an invented slug stores clean and can never match a price change"
+        },
+        {
+          "id": "scoped-to-the-named-service",
+          "checks": "service_slug is neon; a null scope is the whole catalogue, which is the thing she said she did not want"
+        },
+        {
+          "id": "on-the-live-list",
+          "checks": "the new row is not marked unsubscribed"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-whole-catalogue-instead",
+          "fakes": "a null scope, which is what a rollout that drove the page instead of the route would leave, and is everything she asked not to get",
+          "caught_by": "scoped-to-the-named-service"
+        },
+        {
+          "id": "the-wrong-vendor",
+          "fakes": "scopes her to vercel",
+          "caught_by": "scoped-to-the-named-service"
+        },
+        {
+          "id": "the-display-name-not-the-slug",
+          "fakes": "stores Neon rather than neon, which the engine matches on and will never fire for",
+          "caught_by": "a-slug-the-catalogue-has"
+        },
+        {
+          "id": "an-invented-slug",
+          "fakes": "stores neon-postgres-serverless, which the route accepts with ok and which no catalogue row will ever match",
+          "caught_by": "a-slug-the-catalogue-has"
+        },
+        {
+          "id": "the-honeypot-path",
+          "fakes": "posts with the trap field filled, gets ok, and stores nothing at all",
+          "caught_by": "exactly-one-row-was-added"
+        },
+        {
+          "id": "both-scopes-at-once",
+          "fakes": "the service she asked for plus the whole catalogue as well",
+          "caught_by": "exactly-one-row-was-added"
+        },
+        {
+          "id": "the-existing-neon-watcher-repurposed",
+          "fakes": "overwrites the address on the row that was already watching neon, so a reader since August is off the list and nothing says so",
+          "caught_by": "the-existing-watchers-untouched"
+        },
+        {
+          "id": "everybody-narrowed-to-neon",
+          "fakes": "her row is right and the vercel watcher has been moved to neon on the way past",
+          "caught_by": "the-existing-watchers-untouched"
+        },
+        {
+          "id": "added-already-unsubscribed",
+          "fakes": "on the table and not on the list",
+          "caught_by": "on-the-live-list"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "keep-the-returning-watcher",
+      "description": "A reader already on the whole-catalogue watch asks to be sure she is still on it, so the correct outcome changes nothing.",
+      "driven": "api",
+      "route": "POST /api/watch",
+      "writes": [
+        "stacktab_price_watch"
+      ],
+      "guards": [
+        {
+          "id": "one-whole-catalogue-row-for-her",
+          "checks": "exactly one row for her address with a null scope; she is one of two rows carrying that address, so being in the table somewhere is not the question"
+        },
+        {
+          "id": "the-row-was-merged-not-replaced",
+          "checks": "the row keeps id 1, its 2026-08-20 join date and its live flag, because the route's upsert merges onto it and sends nothing that could move any of them"
+        },
+        {
+          "id": "no-second-row-for-the-same-person",
+          "checks": "every row carrying her address is stored trimmed and lowercased; the index cannot match a differently spelled address to her existing row, so that is the one duplicate the fix left reachable"
+        },
+        {
+          "id": "her-service-watch-untouched",
+          "checks": "her neon row keeps its address, scope and join date; it is the thing that looks most like a duplicate of her catalogue row and is a second subscription she chose"
+        },
+        {
+          "id": "no-second-scope-invented",
+          "checks": "her scopes are exactly the whole catalogue and neon; the row she already holds covers every vendor, so adding one is mail nobody asked for"
+        },
+        {
+          "id": "the-rest-of-the-list-untouched",
+          "checks": "the other two readers keep their address, scope, join date and unsubscribed flag, including the one who asked to be taken off"
+        },
+        {
+          "id": "still-exactly-four-rows",
+          "checks": "the list still holds four rows, because nothing had to be added"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "deleted-as-a-duplicate",
+          "fakes": "reads her catalogue row as a duplicate of her neon row and removes it, so the answer to her question is now no with a tidier table behind it",
+          "caught_by": "one-whole-catalogue-row-for-her"
+        },
+        {
+          "id": "collapsed-onto-the-newer-row",
+          "fakes": "folds her two rows into one by dropping the catalogue row and widening the neon row, so the surviving row is the wrong one and her neon subscription is gone",
+          "caught_by": "the-row-was-merged-not-replaced"
+        },
+        {
+          "id": "deleted-and-re-inserted",
+          "fakes": "removes and re-adds her to be certain, which throws away the date she joined",
+          "caught_by": "the-row-was-merged-not-replaced"
+        },
+        {
+          "id": "re-dated-in-place",
+          "fakes": "same row, same id, created_at moved to now, which the route cannot do",
+          "caught_by": "the-row-was-merged-not-replaced"
+        },
+        {
+          "id": "unsubscribed-on-the-way",
+          "fakes": "her row is still there with the flag flipped, so she asked whether she was on the list and came out of it off the list",
+          "caught_by": "the-row-was-merged-not-replaced"
+        },
+        {
+          "id": "a-second-row-the-index-cannot-see",
+          "fakes": "a second whole-catalogue row under the address as it was typed; the plain duplicate is refused by the database now, and capitals plus a trailing space make a key the index cannot match to her existing row",
+          "caught_by": "no-second-row-for-the-same-person"
+        },
+        {
+          "id": "her-neon-watch-deleted-as-redundant",
+          "fakes": "her catalogue row is perfect and the neon row is removed on the argument that the catalogue covers neon, taking a subscription she chose on a scope the form cannot even create",
+          "caught_by": "her-service-watch-untouched"
+        },
+        {
+          "id": "also-scoped-to-a-vendor",
+          "fakes": "adds a vendor scope as well to be certain she is covered, when the row she holds already covers every vendor",
+          "caught_by": "no-second-scope-invented"
+        },
+        {
+          "id": "a-stranger-added",
+          "fakes": "her row is correct and somebody else has been added while the table was open",
+          "caught_by": "still-exactly-four-rows"
+        },
+        {
+          "id": "everybody-resubscribed",
+          "fakes": "her row untouched and the reader who opted out put back on the list",
+          "caught_by": "the-rest-of-the-list-untouched"
+        }
+      ],
+      "scores": {}
+    }
+  ],
+  "not_gradable": [
+    {
+      "what": "GET /api/catalogue, GET /api/estimate, GET /api/recommend, GET /api/services/[category], GET /api/freshness, GET /api/health",
+      "why": "six of stacktab's seven route handlers write nothing at all. A grep for .insert( .upsert( .update( .delete( .rpc( over src/ and scripts/ returns exactly one line, the upsert in /api/watch. Rule 3 says every reward reads database rows, so a reward on a pure read would have to grade a JSON body or an HTTP status, which is what a broken write looks like from the outside."
+    },
+    {
+      "what": "the cost model behind /api/estimate and /api/recommend (src/lib/estimate.ts, src/lib/recommend.ts, src/lib/bill.ts)",
+      "why": "this is the largest and most interesting code in the product, and it is a pure function over the catalogue. It returns a number and writes no row. Grading it means asserting on the response, which rule 3 forbids and which would only be checking the product's arithmetic against itself."
+    },
+    {
+      "what": "stacktab_price_watch.unsubscribed",
+      "why": "the column exists, a partial index is built on it (service_slug where unsubscribed = false), and NOTHING in the product or the engine ever sets it. There is no unsubscribe route, no token, no link and no page. This is the cd_drafts shape rule 1 is about: a column that reads as a workflow and has no writer a person can reach. It is graded only as a thing that must not move."
+    },
+    {
+      "what": "narrowing or removing an existing watch",
+      "why": "POST /api/watch can only add or merge. There is no route, no control and no engine path that removes a row or changes a row's scope, so 'take her off the whole catalogue and leave her on neon' has no correct outcome to grade."
+    },
+    {
+      "what": "the footer studio list capture (src/components/ListCapture.tsx)",
+      "why": "it posts cross-origin to https://thecompound.tech/api/list/subscribe, a live production endpoint that runs a real double opt-in and sends real confirmation mail. It writes no stacktab table. Driving it would send mail from an evaluation, so the browser rollout addresses the price watch by its own id and asserts from inside the page that the only POST went to /api/watch."
+    },
+    {
+      "what": "engine/seed.mjs, and the authored catalogue in engine/catalogue.mjs",
+      "why": "publishing a revised catalogue is a real workflow with real invariants (verification state is never written by the seed, and a meter removed from the catalogue is deleted rather than merged). It was left out because the task would be graded against a catalogue this environment wrote itself, so the fixture would be both the question and the answer."
+    },
+    {
+      "what": "engine/run-refresh.sh, the launchd wrapper around the nightly",
+      "why": "it writes an estate ledger row through demos/tools/job-ledger.mjs and then runs the product's scripts/deploy.sh, which deploys to Cloudflare Workers. Neither is a stacktab row and the second one ships to production. The task runs the same entry point the wrapper runs, node refresh.mjs, and grades what that writes."
+    },
+    {
+      "what": "the crawl guard in src/middleware.ts",
+      "why": "410 and 308 on a crawler user agent or a multi-value facet URL is the most defended code in this tree and it writes nothing. A reward on it would read a status code."
+    }
+  ],
+  "defects": [
+    {
+      "summary": "npm run build fails at HEAD. No commit made to this repo since 10:40 today can reach the site. src/components/ListCapture.tsx:66 carries a raw apostrophe in JSX text and react/no-unescaped-entities is an error under next/core-web-vitals, so next build stops at 'Failed to compile' and emits nothing; scripts/deploy.sh runs opennextjs-cloudflare build, which runs the same next build. Measured 2026-09-19 in a clean rsync of the tree at envs/stacktab-desk/app, where the build stopped on exactly that error and no other. Measured live the same hour: https://stacktab.thecompound.tech answers 200 with 343,600 bytes and ZERO occurrences of foot-list or 'WHEN A RATE MOVES', so the footer capture added by commit 05bb4e4 at 10:40 has never reached the site and the 00:30 sweep will fail on it. FIXED in the product 2026-09-19, commit 5be206c 'ListCapture: escape the apostrophe that was failing the build': the apostrophe is &apos; and next build completes. Re-measured here the same day by rebuilding the rsynced copy with no lint rule turned off, which this environment had needed until then and no longer does.",
+      "where": "src/components/ListCapture.tsx:66, reached through scripts/deploy.sh and npm run build",
+      "severity": "high",
+      "fixed": true
+    },
+    {
+      "summary": "The price watch form writes a new row every time it is submitted. stacktab_price_watch_unique is a plain unique index over (email, service_slug) and service_slug is nullable, so two NULLs are distinct and the upsert's on_conflict never fires. NULL is the only scope PriceWatch.tsx can produce, so this is the whole-catalogue watch, which is every subscription the product's own UI can create. The route's own comment says 'Asking twice is not an error and must not hand a returning reader a failure' and relies on that upsert. Measured against the running copy 2026-09-19: two identical POSTs with no service wrote ids 5 and 6, both the same address with a null scope. The same two POSTs with service=neon wrote one row and merged onto it. The fix is nulls not distinct on the index, or storing a sentinel instead of NULL. FIXED in production 2026-09-19, migration stacktab_price_watch_nulls_not_distinct, which dropped the unique CONSTRAINT and created the index with nulls not distinct. Production held no rows, so nothing needed deduping. Re-measured against the running copy after the fix: two posts carrying no service merged onto the existing row, which kept its id and its join date, and no row was added. sql/01-schema.sql carries the fixed shape, and drops the old constraint and index by name first so a stack provisioned before the migration converges instead of silently keeping the old one.",
+      "where": "src/app/api/watch/route.ts, the upsert; stacktab_price_watch_unique in the schema",
+      "severity": "medium",
+      "fixed": true
+    },
+    {
+      "summary": "POST /api/watch never checks `service` against the catalogue. The value is trimmed, lowercased and stored, and any string is accepted. Measured against the running copy 2026-09-19: a body naming service neon-postgres-serverless answered 200 with ok true and the row is in the table. No service by that slug exists, so the engine's per-service send can never match it and that reader is on the list and unreachable, with nothing anywhere reporting it. One select against stacktab_service before the upsert closes it. FIXED in the product 2026-09-19: the route selects the slug from stacktab_service before the upsert and answers 400 when it is absent. Re-measured against the running copy: a body naming neon-postgres-serverless now answers 400 with \"that isn't a service on this site\", and a body naming neon answers 200.",
+      "where": "src/app/api/watch/route.ts, the line that reads body.service",
+      "severity": "medium",
+      "fixed": true
+    },
+    {
+      "summary": "The per-service watch the route supports cannot be reached from the product. The column, the partial index (service_slug where unsubscribed = false) and the route branch all exist for it, and the route's own header explains why it matters: somebody running Supabase and Clerk does not want to hear that a vendor they have never used redesigned a page. PriceWatch.tsx posts an email and a honeypot and nothing else. Measured by driving the running landing at 1440px 2026-09-19: two input[type=email], two button[type=submit], and zero select[name=service] or input[name=service] anywhere on the page. So every subscription a visitor can create is the whole catalogue, and the feature is reachable only by a hand-written HTTP request.",
+      "where": "src/components/PriceWatch.tsx, against src/app/api/watch/route.ts",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "There is no way off the watch list. stacktab_price_watch.unsubscribed exists and a partial index is built on it, and nothing in the product tree or the engine ever writes it: no route, no token, no link, no page. Verified by grep over src/ and scripts/ in the product and over compound-ops/lanes/stacktab/engine, which between them contain one write to this table, the upsert that adds a row. Nothing mails from the table yet so nobody has been trapped on it, and the column is the shape of a promise the product cannot keep the day a send exists.",
+      "where": "stacktab_price_watch.unsubscribed; no writer in src/ or in the lane",
+      "severity": "low",
+      "fixed": false
+    }
+  ],
+  "suite": {
+    "command": "uv run python envs/stacktab-desk/adversarial/prove_graders.py",
+    "expectations_total": 45,
+    "expectations_without_app": 41,
+    "expectations_held": 45,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+  "counts": {
+    "tasks": 4,
+    "cheats": 41,
+    "guards": 29,
+    "browser_tasks": 1
+  },
+  "models": {}
+}
