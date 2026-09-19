@@ -1,0 +1,8 @@
+{
+  "name": "thismuchweknow-desk-harness",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "puppeteer": "^24.10.2"
+  }
+}

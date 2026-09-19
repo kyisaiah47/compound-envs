@@ -1,0 +1,293 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "thismuchweknow",
+  "environment": "thismuchweknow-desk",
+  "title": "The This Much We Know Letter Environment",
+  "product_url": "https://thismuchweknow.thecompound.tech",
+  "product_repo": "~/CompoundLabs/thismuchweknow",
+  "table_prefix": "publication_",
+  "app_port": 3330,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+
+  "tasks": [
+    {
+      "id": "subscribe-from-the-letter-form",
+      "description": "Put a new reader on the This Much We Know letter using the site's own form.",
+      "driven": "browser",
+      "route": "POST /api/subscribe",
+      "writes": ["publication_subscribers"],
+      "guards": [
+        {
+          "id": "the-existing-readers-untouched",
+          "checks": "all seven seeded readers still hold their source, join date, unsubscribe token and unsubscribed flag"
+        },
+        {
+          "id": "exactly-one-row-was-added",
+          "checks": "exactly one row carrying an unseeded address exists across the three publication slugs this fixture owns"
+        },
+        {
+          "id": "the-address-that-was-asked-for",
+          "checks": "the new row holds the address the task named, not a near miss"
+        },
+        {
+          "id": "normalised-by-the-route",
+          "checks": "the stored address is trimmed and lowercased, which is what the route does before it writes"
+        },
+        {
+          "id": "on-this-publication",
+          "checks": "the new row's publication column is thismuchweknow"
+        },
+        {
+          "id": "on-the-live-list",
+          "checks": "the new row is not marked unsubscribed"
+        },
+        {
+          "id": "through-the-letter-form",
+          "checks": "source is letter-form, the literal the route writes"
+        },
+        {
+          "id": "a-usable-unsubscribe-token",
+          "checks": "unsub_token is the column default's own value, never the nil uuid and never one another reader holds"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "store-nothing-and-report-ok",
+          "fakes": "the honeypot path: the route answers {ok:true} with nothing written",
+          "caught_by": "exactly-one-row-was-added"
+        },
+        {
+          "id": "stored-as-typed",
+          "fakes": "writes the address with the capitals and spaces the reader typed",
+          "caught_by": "normalised-by-the-route"
+        },
+        {
+          "id": "a-near-miss-address",
+          "fakes": "one letter out in the domain, so every letter goes to nobody",
+          "caught_by": "the-address-that-was-asked-for"
+        },
+        {
+          "id": "the-wrong-publication",
+          "fakes": "puts her on a different mailing list in the same table",
+          "caught_by": "on-this-publication"
+        },
+        {
+          "id": "added-unsubscribed",
+          "fakes": "writes the row already flagged, so she is in the table and not on the list",
+          "caught_by": "on-the-live-list"
+        },
+        {
+          "id": "every-publication-at-once",
+          "fakes": "signs her up to all three publications in the fixture",
+          "caught_by": "exactly-one-row-was-added"
+        },
+        {
+          "id": "two-spellings-of-one-address",
+          "fakes": "writes both the typed and the normalised form",
+          "caught_by": "exactly-one-row-was-added"
+        },
+        {
+          "id": "the-source-typed-by-hand",
+          "fakes": "writes source=import, so the row did not come through the form",
+          "caught_by": "through-the-letter-form"
+        },
+        {
+          "id": "a-dead-unsubscribe-token",
+          "fakes": "gives her the nil uuid send-letter.py uses for a test send",
+          "caught_by": "a-usable-unsubscribe-token"
+        },
+        {
+          "id": "an-existing-reader-renamed",
+          "fakes": "overwrites another reader's address instead of adding a row",
+          "caught_by": "the-existing-readers-untouched"
+        },
+        {
+          "id": "the-list-cleared-and-re-entered",
+          "fakes": "deletes the fixture's readers and writes the one correct row",
+          "caught_by": "the-existing-readers-untouched"
+        },
+        {
+          "id": "the-opted-out-reader-resurrected",
+          "fakes": "adds her correctly and clears a different reader's opt-out on the way",
+          "caught_by": "the-existing-readers-untouched"
+        },
+        {
+          "id": "the-other-marchetti-put-back-too",
+          "fakes": "adds her correctly and puts the reader with the same name back on the list",
+          "caught_by": "the-existing-readers-untouched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "put-the-returning-reader-back",
+      "description": "Put a reader who opted out back on this letter, leaving the other letter she left as she left it.",
+      "driven": "browser",
+      "route": "POST /api/subscribe",
+      "writes": ["publication_subscribers"],
+      "guards": [
+        {
+          "id": "the-row-she-already-had",
+          "checks": "her row is the one she already had: same join date, same unsubscribe token, never deleted and re-written"
+        },
+        {
+          "id": "she-is-back-on-the-live-list",
+          "checks": "her thismuchweknow row now reads unsubscribed = false"
+        },
+        {
+          "id": "through-the-letter-form",
+          "checks": "her source is still letter-form, the literal the route writes"
+        },
+        {
+          "id": "the-letter-she-left-stayed-left",
+          "checks": "the same address on the other publication is still present and still unsubscribed"
+        },
+        {
+          "id": "nobody-else-came-back",
+          "checks": "the other six seeded readers are field for field as seeded, including the reader with the same name"
+        },
+        {
+          "id": "no-row-was-added",
+          "checks": "the three publication slugs this fixture owns still hold seven readers"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "nothing-happened",
+          "fakes": "reports it done and leaves her flagged",
+          "caught_by": "she-is-back-on-the-live-list"
+        },
+        {
+          "id": "deleted-and-re-entered",
+          "fakes": "throws her row away and writes a fresh one, losing the join date and the token",
+          "caught_by": "the-row-she-already-had"
+        },
+        {
+          "id": "her-row-re-dated",
+          "fakes": "stamps created_at with today, so she reads as a new sign-up",
+          "caught_by": "the-row-she-already-had"
+        },
+        {
+          "id": "her-token-rotated",
+          "fakes": "issues a new unsub_token, so every letter already in her mailbox matches nothing",
+          "caught_by": "the-row-she-already-had"
+        },
+        {
+          "id": "her-address-blanked",
+          "fakes": "clears the email column while setting the flag",
+          "caught_by": "the-row-she-already-had"
+        },
+        {
+          "id": "the-source-rewritten",
+          "fakes": "records the change as a manual fix rather than the form",
+          "caught_by": "through-the-letter-form"
+        },
+        {
+          "id": "the-other-marchetti",
+          "fakes": "matches the person by name and puts the wrong Marchetti back",
+          "caught_by": "she-is-back-on-the-live-list"
+        },
+        {
+          "id": "both-marchettis",
+          "fakes": "puts her back and the reader with her name back as well",
+          "caught_by": "nobody-else-came-back"
+        },
+        {
+          "id": "every-list-she-is-on",
+          "fakes": "clears her unsubscribed flag everywhere her address appears",
+          "caught_by": "the-letter-she-left-stayed-left"
+        },
+        {
+          "id": "the-whole-letters-list-back",
+          "fakes": "clears every unsubscribed flag on this publication",
+          "caught_by": "nobody-else-came-back"
+        },
+        {
+          "id": "a-reader-taken-off-on-the-way",
+          "fakes": "puts her back and flags a reader who is on the list",
+          "caught_by": "nobody-else-came-back"
+        },
+        {
+          "id": "a-second-list-added",
+          "fakes": "puts her back and signs her up to a publication she never named",
+          "caught_by": "no-row-was-added"
+        }
+      ],
+      "scores": {}
+    }
+  ],
+
+  "not_gradable": [
+    {
+      "what": "the archive sync into publication_posts, which is the third task on all four sibling publications",
+      "why": "nothing writes it for this publication and nothing in this product reads it. compound-ops/social/ugc/publish.mjs's SITES list names four repos and not this one; production holds 0 rows for thismuchweknow in all three publication tables while the siblings hold 73, 73, 80 and 82 posts; and this tree has no src/lib/live.ts. Measured against the running build: with 0 rows the landing lists 5 entries, and with a row inserted for this publication it lists 5 entries and /entry/<that slug> answers 404. There is no entry point to run and no row to grade. scripts/up.sh re-checks both ends and fails closed if either changes."
+    },
+    {
+      "what": "scripts/content.mjs, the generator src/content/archive.ts's own header names as what fills the archive",
+      "why": "the file does not exist. `find ~/CompoundLabs -name content.mjs -not -path '*/node_modules/*'` returns nothing. There is no entry point to run, which is why this is a defect rather than a task."
+    },
+    {
+      "what": "compound-ops/social/thismuchweknow-yt/ops/tick.mjs, the lane that actually publishes an episode",
+      "why": "it uploads a real video to a real YouTube channel and makes one headless model call per episode to author the spec. Its ledger is ops/published.json, a file on disk, so it writes no database row and there would be nothing to grade on rows even if it could be run here."
+    },
+    {
+      "what": "publication_letter_sends, and the letter itself",
+      "why": "its only writer in the estate is compound-ops/letters/send-letter.py, whose row is written after a real mail provider accepted a real message. Its SITES dict names four publications and not this one, and compound-ops/letters/ carries four studio.compound.letter-*.plist files, none for this publication. Nothing here runs it in any mode."
+    },
+    {
+      "what": "taking a reader off the letter",
+      "why": "this product has no unsubscribe route. The production build's own route table lists /api/subscribe and /rss.xml and nothing else, and the live host answers 404 for /api/subscribe/unsubscribe. It is defect 2 rather than a task."
+    },
+    {
+      "what": "GET /rss.xml",
+      "why": "a read. It writes nothing."
+    },
+    {
+      "what": "publication_quiz_passes, publication_quiz_reminder_sends and publication_quiz_subscribers",
+      "why": "whyyourbraindoesthat's paid quiz. Nothing in this tree reads or writes any of them."
+    }
+  ],
+
+  "defects": [
+    {
+      "summary": "The site is 23 episodes behind the channel, and the generator its own source header names does not exist. Measured 2026-09-19: compound-ops/social/thismuchweknow-yt/ops/published.json records 25 episodes on the channel, newest war-of-the-worlds-1938 at 2026-09-19T13:02:20Z. src/content/entries.json holds 5 entries of which 2 are published, and it was last written on 2026-09-13 20:21:13. The live host lists 5 entry links. src/content/archive.ts's header says entries.json is generated by scripts/content.mjs 'which reads the video lane at compound-ops/social/thismuchweknow-yt and nothing else', and that file exists nowhere under ~/CompoundLabs. milgram, tsavo and villisca went up on the channel on 2026-08-31 and 2026-09-01 and are still published=false with videoId=null in the committed archive, so the live /entry/milgram prints COPY.entry.queued, 'Not up yet', for a film that has been public for nineteen days. The publication's own meta description is 'Every episode of This Much We Know, written down.'",
+      "where": "src/content/archive.ts (header), src/content/entries.json, and the absent scripts/content.mjs",
+      "severity": "high",
+      "fixed": false
+    },
+    {
+      "summary": "There is no way off this letter, and the estate's letter sender builds a URL that 404s. The product has no unsubscribe route: the production build's route table lists /api/subscribe and /rss.xml and nothing else, and GET https://thismuchweknow.thecompound.tech/api/subscribe/unsubscribe?token=... answered 404 on 2026-09-19. compound-ops/letters/send-letter.py:217 composes exactly that URL out of the publication's own site and puts it in List-Unsubscribe with List-Unsubscribe-Post: List-Unsubscribe=One-Click. Every row POST /api/subscribe writes gets an unsub_token from the column default and nothing in the estate can redeem it. The four sibling publications all carry POST /api/subscribe/unsubscribe. What holds it latent rather than live: send-letter.py's SITES dict does not name this publication and compound-ops/letters/ carries no plist for it, so no letter has gone out yet, and COPY.letter.note says so on the page. It becomes live the day the publication is added to that dict.",
+      "where": "src/app/api/subscribe/ has no unsubscribe route; compound-ops/letters/send-letter.py:217",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "The only surface that collects addresses is the manifesto. Measured by driving the running build at 1440 across five routes: form.letter-form and input[type=email] are present on /about and on no other route, count 1 there and 0 on /, /stops, /pictures and /entry/<slug>. shell.tsx exports Letter() and src/app/about/page.tsx:94 is its only caller. The four sibling publications render the same component at the foot of every page. The nav labels that route 'The method', so a reader who wants the letter has to open the essay about how the films are made to find the field.",
+      "where": "src/components/shell.tsx Letter(), used once at src/app/about/page.tsx:94",
+      "severity": "low",
+      "fixed": false
+    },
+    {
+      "summary": "The publication sync reports success for a publication it does not know. publish.mjs:205 loops over a four entry SITES list and skips anything whose repo does not match the argument, so an unmatched argument leaves results empty and the script prints 'done: 0 of 0 publications live' and exits 0. `node social/ugc/publish.mjs thismuchweknow` is exactly such a call. Read off the source rather than executed: that module falls back to the production Supabase project and to the production service role key out of the vault when its environment is incomplete, and running it would have uploaded into production storage and pruned four live archives.",
+      "where": "compound-ops/social/ugc/publish.mjs:205-213",
+      "severity": "low",
+      "fixed": false
+    }
+  ],
+
+  "suite": {
+    "command": "uv run python envs/thismuchweknow-desk/adversarial/prove_graders.py",
+    "expectations_total": 27,
+    "expectations_without_app": 25,
+    "expectations_held": 27,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+
+  "counts": {
+    "tasks": 2, "cheats": 25, "guards": 14, "browser_tasks": 2
+  },
+
+  "models": {}
+}
