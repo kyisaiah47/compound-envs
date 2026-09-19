@@ -5,3 +5,4 @@ envs/*/stack/supabase/.temp/
 envs/*/harness/node_modules/
 envs/*/harness/session.json
 envs/*/harness/*.png
+envs/*/app/
