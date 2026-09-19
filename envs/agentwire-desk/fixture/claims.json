@@ -1,0 +1,98 @@
+{
+  "awdesk-forge/relaypost": [
+    {
+      "account": "agentwire-bluesky",
+      "platform": "bluesky",
+      "url": "https://github.com/awdesk-forge/relaypost",
+      "at": "2026-09-16T13:58:02.104Z",
+      "item": {
+        "repo": "awdesk-forge/relaypost",
+        "title": "awdesk-forge/relaypost - A relay that keeps an agent run going across a process restart, replaying only the tool calls it can prove were never answered.",
+        "text": "A relay that keeps an agent run going across a process restart, replaying only the tool calls it can prove were never answered.",
+        "author": "awdesk-forge",
+        "stars": 1840,
+        "language": "TypeScript",
+        "signals": ["stars", "topic"],
+        "lists": ["awdesk-list/awesome-agent-runtimes"],
+        "hnScore": null,
+        "hnUrl": null,
+        "traction": 4,
+        "metrics": "1,840 stars, 1 list, TypeScript",
+        "postedAt": "2026-09-15T22:10:00Z"
+      },
+      "postedAt": "2026-09-16T14:02:11.000Z",
+      "permalink": "https://bsky.app/profile/agentwire.thecompound.tech/post/awdeskrelay16"
+    },
+    {
+      "account": "agentwire-threads",
+      "platform": "threads",
+      "url": "https://github.com/awdesk-forge/relaypost",
+      "at": "2026-09-17T09:36:40.771Z",
+      "item": {
+        "repo": "awdesk-forge/relaypost",
+        "title": "awdesk-forge/relaypost - A relay that keeps an agent run going across a process restart, replaying only the tool calls it can prove were never answered.",
+        "text": "A relay that keeps an agent run going across a process restart, replaying only the tool calls it can prove were never answered.",
+        "author": "awdesk-forge",
+        "stars": 1867,
+        "language": "TypeScript",
+        "signals": ["stars", "topic"],
+        "lists": ["awdesk-list/awesome-agent-runtimes"],
+        "hnScore": null,
+        "hnUrl": null,
+        "traction": 4,
+        "metrics": "1,867 stars, 1 list, TypeScript",
+        "postedAt": "2026-09-15T22:10:00Z"
+      },
+      "postedAt": "2026-09-17T09:41:03.000Z",
+      "permalink": "https://www.threads.com/@agentwirehq/post/AWDESKrelay17"
+    }
+  ],
+  "awdesk-harbour/quaymark": [
+    {
+      "account": "agentwire-bluesky",
+      "platform": "bluesky",
+      "url": "https://github.com/awdesk-harbour/quaymark",
+      "at": "2026-09-18T15:16:09.552Z",
+      "item": {
+        "repo": "awdesk-harbour/quaymark",
+        "title": "awdesk-harbour/quaymark - Marks every file an agent touched during a run and prints the diff it would have to defend.",
+        "text": "Marks every file an agent touched during a run and prints the diff it would have to defend.",
+        "author": "awdesk-harbour",
+        "stars": 934,
+        "language": "Rust",
+        "signals": ["stars", "hn"],
+        "lists": [],
+        "hnScore": 214,
+        "hnUrl": "https://news.ycombinator.com/item?id=awdesk0002",
+        "traction": 5,
+        "metrics": "934 stars, HN 214, Rust",
+        "postedAt": "2026-09-18T06:44:00Z"
+      },
+      "postedAt": "2026-09-18T15:20:44.000Z",
+      "permalink": "https://bsky.app/profile/agentwire.thecompound.tech/post/awdeskquay18"
+    }
+  ],
+  "awdesk-lantern/tidecheck": [
+    {
+      "account": "agentwire-threads",
+      "platform": "threads",
+      "url": "https://github.com/awdesk-lantern/tidecheck",
+      "at": "2026-09-18T20:02:55.900Z",
+      "item": {
+        "repo": "awdesk-lantern/tidecheck",
+        "title": "awdesk-lantern/tidecheck - Replays a recorded agent session against a new model and reports where the two disagree.",
+        "text": "Replays a recorded agent session against a new model and reports where the two disagree.",
+        "author": "awdesk-lantern",
+        "stars": 1122,
+        "language": "Python",
+        "signals": ["stars", "topic"],
+        "lists": ["awdesk-list/awesome-agent-runtimes"],
+        "hnScore": null,
+        "hnUrl": null,
+        "traction": 4,
+        "metrics": "1,122 stars, 1 list, Python",
+        "postedAt": "2026-09-18T11:05:00Z"
+      }
+    }
+  ]
+}

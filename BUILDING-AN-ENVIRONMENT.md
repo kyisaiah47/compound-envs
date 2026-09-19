@@ -143,6 +143,21 @@ curl -s -o /dev/null -w '%{http_code}\n' "$API_URL/auth/v1/admin/users" \
      -H "apikey: $SERVICE" -H "Authorization: Bearer $SERVICE"     # must be 200
 ```
 
+**11a. NEVER TRUNCATE A TABLE YOU SHARE, and several are shared.** One stack serves every
+environment, so a table whose name is not your product's prefix probably belongs to somebody else
+as well. `publication_*` is shared by three of these; `frontwire_posts` is shared by two. A bare
+`truncate` in your seed empties a neighbour's fixture while their suite is running, and it does it
+silently. Measured 2026-09-19: one environment's reader count went 6, then 0, then 5 inside two
+minutes with nothing of its own running, and a later run died on a `DeadlockDetected`.
+
+- Delete only rows you own: scope by your own slug, your own id block, or your own fixture
+  addresses. Never `restart identity` on a shared table, which renumbers rows that are not yours.
+- Scope every GUARD the same way. A guard that counts rows in the table rather than counting YOUR
+  rows is green or red depending on what a neighbour did, which means it measures the wrong thing.
+- Put cross-tenant fixture rows on a tenant no other environment owns.
+- Let your reset tolerate a lock conflict and retry rather than raise.
+- Then prove it: your suite must pass with another environment's rows sitting in the same table.
+
 **11. Your fixture's operator uuid is namespaced, or it collides.** `auth.users` is genuinely
 shared. unemploy-desk holds `...00000000000a` and clausewatch-desk holds `...0000000c0001`. Pick a
 uuid nothing else on the stack can have and put it in your README, or the second environment to run

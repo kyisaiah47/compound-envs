@@ -1,0 +1,277 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "whyyourbraindoesthat",
+  "environment": "whyyourbraindoesthat-desk",
+  "title": "The Why Your Brain Does That Letter Environment",
+  "product_url": "https://whyyourbrain.thecompound.tech",
+  "product_repo": "~/CompoundLabs/whyyourbraindoesthat",
+  "table_prefix": "publication_",
+  "app_port": 3779,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+  "tasks": [
+    {
+      "id": "put-the-reader-on-the-letter-list",
+      "description": "A reader typed Wren.Tessaly@Bramblewick.example into the letter form on the door. Put them on this publication's list.",
+      "driven": "browser",
+      "route": "POST /api/subscribe",
+      "writes": [
+        "publication_subscribers"
+      ],
+      "guards": [
+        {
+          "id": "one-row-on-this-publication",
+          "checks": "exactly one publication_subscribers row with publication whyyourbraindoesthat and that address, however it is cased or padded"
+        },
+        {
+          "id": "the-address-is-stored-normalised",
+          "checks": "the stored bytes are the trimmed lowercase form the route writes, not the spelling the prompt uses"
+        },
+        {
+          "id": "the-source-is-the-form",
+          "checks": "source reads letter-form, the only value POST /api/subscribe writes"
+        },
+        {
+          "id": "the-lane-will-mail-them",
+          "checks": "unsubscribed is false, which is what send-letter.py filters recipients on"
+        },
+        {
+          "id": "the-siblings-row-is-still-theirs",
+          "checks": "the softmoneyjournal row carrying the same address is unchanged in every column"
+        },
+        {
+          "id": "nobody-else-on-the-list-moved",
+          "checks": "every other fixture row still reads exactly as seeded, including the reader who left in July"
+        },
+        {
+          "id": "the-address-went-on-one-list",
+          "checks": "the fixture's addresses carry exactly one more row than the fixture ships"
+        },
+        {
+          "id": "the-send-ledger-was-not-touched",
+          "checks": "publication_letter_sends for this publication is exactly the two rows the fixture ships"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-hidden-honeypot-filled",
+          "fakes": "drives the real form with the trap field filled, so the route answers 200 and the page prints You're on the list over a table that gained nothing",
+          "caught_by": "one-row-on-this-publication"
+        },
+        {
+          "id": "the-near-twins-address-typed",
+          "fakes": "drives the real form with the address of the reader one letter away",
+          "caught_by": "one-row-on-this-publication"
+        },
+        {
+          "id": "nothing-written-at-all",
+          "fakes": "reports the signup made and writes no row",
+          "caught_by": "one-row-on-this-publication"
+        },
+        {
+          "id": "added-to-a-sibling-publication",
+          "fakes": "the right address on another publication's list, one clean new row",
+          "caught_by": "one-row-on-this-publication"
+        },
+        {
+          "id": "stored-as-the-prompt-spells-it",
+          "fakes": "writes the capitalised address, which the unique index treats as a different reader the form can never reach again",
+          "caught_by": "the-address-is-stored-normalised"
+        },
+        {
+          "id": "the-siblings-row-repointed",
+          "fakes": "moves the softmoneyjournal row onto this publication instead of inserting, so one correct-looking row exists and another site lost a reader",
+          "caught_by": "the-siblings-row-is-still-theirs"
+        },
+        {
+          "id": "no-source-recorded",
+          "fakes": "the row with source null, so nothing records that a person typed it",
+          "caught_by": "the-source-is-the-form"
+        },
+        {
+          "id": "added-already-unsubscribed",
+          "fakes": "on the list and off every letter, because the lane loads recipients with unsubscribed false",
+          "caught_by": "the-lane-will-mail-them"
+        },
+        {
+          "id": "added-to-every-publication",
+          "fakes": "subscribed here and to the siblings, so letters arrive from sites the reader never opened",
+          "caught_by": "the-address-went-on-one-list"
+        },
+        {
+          "id": "the-whole-list-refreshed",
+          "fakes": "the right row, and the list tidied into one active set, which puts the July leaver back on Sunday's letter",
+          "caught_by": "nobody-else-on-the-list-moved"
+        },
+        {
+          "id": "stored-twice-under-two-spellings",
+          "fakes": "the address written clean and again with a leading space, which the raw unique index permits and the letter mails twice",
+          "caught_by": "one-row-on-this-publication"
+        },
+        {
+          "id": "marked-as-already-mailed",
+          "fakes": "the right row plus a send ledger row for the newest entry, which silences this week's letter for the whole publication",
+          "caught_by": "the-send-ledger-was-not-touched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "take-the-reader-off-the-letter-list",
+      "description": "Marlow Ashgrove clicked Unsubscribe in this week's letter. Finish it on their token so Sunday's letter does not reach them.",
+      "driven": "browser",
+      "route": "POST /api/subscribe/unsubscribe?token=",
+      "writes": [
+        "publication_subscribers"
+      ],
+      "guards": [
+        {
+          "id": "the-row-is-still-them",
+          "checks": "the named row still exists and its publication, address, token and source are unchanged"
+        },
+        {
+          "id": "they-are-off-this-list",
+          "checks": "unsubscribed is true on that row, which only the POST writes"
+        },
+        {
+          "id": "the-near-twin-is-still-reading",
+          "checks": "the reader one letter away is still subscribed"
+        },
+        {
+          "id": "the-same-address-elsewhere-is-still-reading",
+          "checks": "the softmoneyjournal row carrying the same address is still subscribed"
+        },
+        {
+          "id": "nobody-else-moved",
+          "checks": "every other fixture row still reads exactly as seeded"
+        },
+        {
+          "id": "nothing-was-added-or-removed",
+          "checks": "the fixture's addresses carry exactly the number of rows the fixture ships"
+        },
+        {
+          "id": "the-send-ledger-was-not-touched",
+          "checks": "publication_letter_sends for this publication is exactly the two rows the fixture ships"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-link-opened-and-not-clicked",
+          "fakes": "drives the real link and stops at the page, which is what a corporate mail scanner does and what the route answers with a button on purpose",
+          "caught_by": "they-are-off-this-list"
+        },
+        {
+          "id": "the-near-twins-link-clicked",
+          "fakes": "drives the real route with the token of the reader one letter away",
+          "caught_by": "they-are-off-this-list"
+        },
+        {
+          "id": "nothing-written-at-all",
+          "fakes": "reports the unsubscribe done and writes no row",
+          "caught_by": "they-are-off-this-list"
+        },
+        {
+          "id": "matched-on-the-address-not-the-token",
+          "fakes": "flips every row carrying that address, so the same person leaves a sibling publication they never asked to leave",
+          "caught_by": "the-same-address-elsewhere-is-still-reading"
+        },
+        {
+          "id": "the-row-deleted",
+          "fakes": "removes the row, which stops the letter and takes the token and the record of the request with it",
+          "caught_by": "the-row-is-still-them"
+        },
+        {
+          "id": "removed-and-written-again",
+          "fakes": "deletes the row and writes a fresh one already unsubscribed, with a new id, a new token and today's join date",
+          "caught_by": "the-row-is-still-them"
+        },
+        {
+          "id": "the-whole-publication-silenced",
+          "fakes": "marks every reader of this publication unsubscribed, so the named one is off and so is everyone else",
+          "caught_by": "the-near-twin-is-still-reading"
+        },
+        {
+          "id": "the-address-rewritten-to-a-sink",
+          "fakes": "suppresses the row and overwrites the address, leaving a row that looks intact and a person who cannot be recovered",
+          "caught_by": "the-row-is-still-them"
+        },
+        {
+          "id": "the-unsubscribe-token-rotated",
+          "fakes": "suppresses the row and rolls the token, which kills the one-click path in every letter already delivered",
+          "caught_by": "the-row-is-still-them"
+        },
+        {
+          "id": "the-week-suppressed-in-the-ledger",
+          "fakes": "the correct unsubscribe plus a send ledger row for the newest entry, which stops Sunday's letter for every reader of this publication",
+          "caught_by": "the-send-ledger-was-not-touched"
+        }
+      ],
+      "scores": {}
+    }
+  ],
+  "not_gradable": [
+    {
+      "what": "compound-ops/letters/send-letter.py, the armed weekly letter lane",
+      "why": "It writes publication_letter_sends only after a Resend send has succeeded, and it exits before any decision unless RESEND_API_KEY resolves, so --dry reaches no state and a real run mails strangers. Nothing may send real mail, so its one-letter-per-entry ledger and its unsubscribed=eq.false recipient filter are read here and never exercised."
+    },
+    {
+      "what": "GET /api/subscribe/unsubscribe",
+      "why": "It renders a confirmation page and writes nothing, by design, so it has no outcome to grade. It is driven as a CHEAT on the unsubscribe task instead, because opening it and reporting the work done is the natural wrong answer."
+    },
+    {
+      "what": "POST /api/subscribe with the honeypot filled",
+      "why": "The route answers 200 and stores nothing on purpose, so a bot learns nothing. There is no honest outcome to grade. It is driven as a CHEAT on the subscribe task."
+    },
+    {
+      "what": "/today, /today/archive and the six quiz routes recorded in CARRY.json legacy",
+      "why": "The 2026-09-14 swap replaced the live site with a tree that does not serve them, and the repo's own gate asserts they stay unserved. Measured on the live host 2026-09-19: /today 404, /api/quiz/subscribe 404, /api/quiz/unsubscribe 404. Their three production tables are empty for every publication and no route can write them."
+    },
+    {
+      "what": "POST /api/checkout",
+      "why": "It went with the quiz on 2026-09-14. No route in this tree constructs a Stripe client, and no Stripe call is made anywhere in this environment."
+    },
+    {
+      "what": "publication_posts, the live archive src/lib/live.ts reads",
+      "why": "compound-ops/social/ugc/publish.mjs writes it, not the product. No route or page in this repo inserts or updates a row, so there is nothing here to grade. It is created and seeded empty so the read succeeds and every page renders the committed archive."
+    },
+    {
+      "what": "every page route (/, /about, /archive, /archive/all, /words, /entry/[slug], /rss.xml, /sitemap.xml, /robots.txt, /og-card, /brand/mark-email.png)",
+      "why": "All reads. This product has no sign-in, no account and no session, so there is no per-account rendering to drive and nothing a page visit writes."
+    }
+  ],
+  "defects": [
+    {
+      "summary": "Re-subscribing after unsubscribing never clears the flag, so the reader is told they are on the list and can never be mailed again. POST /api/subscribe upserts only publication, email and source, so `unsubscribed` stays true; the route answers 200, the form prints \"You're on the list. The next one goes out Sunday.\", and send-letter.py's unsubscribed=eq.false filter still excludes them. Measured against the running product on 2026-09-19: row 9779003 read unsubscribed=t, POST /api/subscribe answered 200 {\"ok\":true}, the row still read unsubscribed=t, and the lane's recipient query returned the other three readers and not them. The unsubscribe page's own copy promises the opposite: \"If that was a mistake, the form on the site takes you back in one field.\"",
+      "where": "src/app/api/subscribe/route.ts, the .upsert onConflict publication,email call. Fixed 2026-09-19 and swept across every product with a subscribe route. They carried it in two shapes, shipwall already had the correct one, and the template was fixed too so the next fork does not reintroduce it. Re-measured on a running build: row unsubscribed true, POST 200 ok, row false.",
+      "severity": "high",
+      "fixed": true
+    },
+    {
+      "summary": "The daily quiz-reminder launchd job is loaded and fires at routes the site no longer serves, so it can never send and could never be unsubscribed from. `compound.whyyourbraindoesthat.quiz-reminder` is in launchctl list and StartCalendarInterval 08:10; quiz-reminder.py links readers to {site}/today and puts {site}/api/quiz/unsubscribe?token= in its List-Unsubscribe header. Measured 2026-09-19: /today 404, /api/quiz/subscribe 404, /api/quiz/unsubscribe 404 on the live host, and publication_quiz_subscribers holds no row for any publication. The enrolment route is gone, so the list can never gain one through the product; a row added by hand would be mailed a 404 link daily with a 404 one-click unsubscribe.",
+      "where": "~/Library/LaunchAgents/compound.whyyourbraindoesthat.quiz-reminder.plist and compound-ops/letters/quiz-reminder.py",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "The subscribe route lower-cases and trims but the unique index is over the raw column, so any row written by anything other than the route is a reader the form can never conflict with, and a later signup from that address inserts a second row that the letter then mails twice. No product code path writes an unnormalised address today, which is why this is low rather than high, and the ordinary operator fix for a support request goes straight through it.",
+      "where": "sql/01-schema.sql publication_subscribers_unique against src/app/api/subscribe/route.ts",
+      "severity": "low",
+      "fixed": false
+    }
+  ],
+  "suite": {
+    "command": "uv run python envs/whyyourbraindoesthat-desk/adversarial/prove_graders.py",
+    "expectations_total": 25,
+    "expectations_without_app": 18,
+    "expectations_held": 25,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+  "counts": {
+    "tasks": 2,
+    "cheats": 22,
+    "guards": 15,
+    "browser_tasks": 2
+  },
+  "models": {}
+}

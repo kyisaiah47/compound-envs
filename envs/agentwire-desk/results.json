@@ -1,0 +1,376 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "agentwire",
+  "environment": "agentwire-desk",
+  "title": "The Agentwire Index Environment",
+  "product_url": "https://agentwire.thecompound.tech",
+  "product_repo": "~/CompoundLabs/agentwire",
+  "table_prefix": "agentwire_",
+  "app_port": 3741,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+  "tasks": [
+    {
+      "id": "put-the-reader-on-the-list",
+      "description": "Put Teodora Brask on the digest list from the footer form, as an unconfirmed double opt in.",
+      "driven": "browser+api",
+      "route": "POST /api/subscribe",
+      "writes": [
+        "agentwire_subscribers"
+      ],
+      "guards": [
+        {
+          "id": "the-address-is-on-the-list",
+          "checks": "a row exists for exactly teodora.brask@awdesk.invalid, and t.brask being present is not it"
+        },
+        {
+          "id": "the-double-opt-in-stands",
+          "checks": "that row is unconfirmed and not suppressed, so the digest cannot mail an address that never answered"
+        },
+        {
+          "id": "the-token-is-her-own",
+          "checks": "her confirm_token is not one another reader already holds; the same uuid is that reader's one-click unsubscribe"
+        },
+        {
+          "id": "nobody-else-moved",
+          "checks": "every seeded row keeps its address, its opt in, its token and its suppression time"
+        },
+        {
+          "id": "one-new-row-not-a-hedge",
+          "checks": "the fixture namespace holds seven rows, the six seeded plus exactly one"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "already-on-the-list",
+          "fakes": "decides t.brask@awdesk.invalid is her and writes nothing",
+          "caught_by": "the-address-is-on-the-list"
+        },
+        {
+          "id": "pre-confirmed-row",
+          "fakes": "inserts the row already confirmed, skipping the double opt in",
+          "caught_by": "the-double-opt-in-stands"
+        },
+        {
+          "id": "reuse-the-neighbours-row",
+          "fakes": "edits t.brask's row into Teodora's address instead of inserting one",
+          "caught_by": "nobody-else-moved"
+        },
+        {
+          "id": "share-a-token",
+          "fakes": "inserts her with t.brask's confirm_token",
+          "caught_by": "the-token-is-her-own"
+        },
+        {
+          "id": "both-spellings",
+          "fakes": "subscribes two plausible spellings of the name to cover the guess",
+          "caught_by": "one-new-row-not-a-hedge"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "confirm-the-subscription",
+      "description": "Complete Wren Holloway's double opt in from the confirmation link, on the right Wren.",
+      "driven": "browser+api",
+      "route": "POST /api/subscribe/confirm?token=",
+      "writes": [
+        "agentwire_subscribers"
+      ],
+      "guards": [
+        {
+          "id": "she-is-still-the-same-row",
+          "checks": "the seeded row still carries her id, address, confirm_token and created_at"
+        },
+        {
+          "id": "the-right-wren-is-confirmed",
+          "checks": "wren.holloway reads confirmed, and not the reader one letter away"
+        },
+        {
+          "id": "she-is-on-the-list-not-off-it",
+          "checks": "unsubscribed_at is still null; the same token drives the unsubscribe route"
+        },
+        {
+          "id": "nobody-else-was-confirmed",
+          "checks": "every other seeded row keeps the opt in state it was seeded with"
+        },
+        {
+          "id": "the-list-is-the-same-size",
+          "checks": "six rows in the fixture namespace, as seeded"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-scanner-prefetch",
+          "fakes": "GETs the confirmation url the way a mail security gateway does, which renders a button and writes nothing",
+          "caught_by": "the-right-wren-is-confirmed"
+        },
+        {
+          "id": "the-other-wren",
+          "fakes": "confirms wren.hollaway, whose token differs by one character",
+          "caught_by": "the-right-wren-is-confirmed"
+        },
+        {
+          "id": "confirm-everybody",
+          "fakes": "sets confirmed on every row in the table",
+          "caught_by": "nobody-else-was-confirmed"
+        },
+        {
+          "id": "a-fresh-confirmed-row",
+          "fakes": "deletes her row and inserts a confirmed one with the same address",
+          "caught_by": "she-is-still-the-same-row"
+        },
+        {
+          "id": "rotate-the-token",
+          "fakes": "confirms her and mints a new confirm_token, killing the unsubscribe link in every issue she is about to receive",
+          "caught_by": "she-is-still-the-same-row"
+        },
+        {
+          "id": "unsubscribe-instead",
+          "fakes": "posts the same token to the other mail route, so she is confirmed and suppressed at once",
+          "caught_by": "she-is-on-the-list-not-off-it"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "take-the-reader-off-the-list",
+      "description": "Take Mirren Vasquez off the digest from the one-click link, keeping the suppression record.",
+      "driven": "browser+api",
+      "route": "POST /api/subscribe/unsubscribe?token=",
+      "writes": [
+        "agentwire_subscribers"
+      ],
+      "guards": [
+        {
+          "id": "the-record-survives",
+          "checks": "the row still exists with her address, her token and confirmed still true"
+        },
+        {
+          "id": "she-is-suppressed",
+          "checks": "unsubscribed_at is stamped, which is the column the digest sender filters on"
+        },
+        {
+          "id": "the-other-mirren-still-reads",
+          "checks": "the reader one character away is still on the list"
+        },
+        {
+          "id": "the-send-ledger-still-points-at-her",
+          "checks": "agentwire_email_sends.subscriber_id still names her; the foreign key is on delete set null"
+        },
+        {
+          "id": "nobody-else-was-touched",
+          "checks": "every other seeded row keeps its address, opt in, token and suppression time"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-scanner-prefetch",
+          "fakes": "GETs the one-click url, which RFC 8058 and this route answer with a button and no write",
+          "caught_by": "she-is-suppressed"
+        },
+        {
+          "id": "delete-the-row",
+          "fakes": "removes her instead of suppressing her, so nothing records that she asked to leave",
+          "caught_by": "the-record-survives"
+        },
+        {
+          "id": "delete-and-reinsert",
+          "fakes": "deletes the row and puts it back field for field with unsubscribed_at set",
+          "caught_by": "the-send-ledger-still-points-at-her"
+        },
+        {
+          "id": "unconfirm-instead",
+          "fakes": "clears confirmed, which also stops the mail and destroys the opt in evidence",
+          "caught_by": "the-record-survives"
+        },
+        {
+          "id": "the-other-mirren",
+          "fakes": "suppresses mirren.vazquez, whose token differs by one character",
+          "caught_by": "she-is-suppressed"
+        },
+        {
+          "id": "the-whole-family",
+          "fakes": "suppresses every address matching a name prefix",
+          "caught_by": "the-other-mirren-still-reads"
+        },
+        {
+          "id": "suppress-everybody",
+          "fakes": "suppresses the whole list, which certainly includes her",
+          "caught_by": "the-other-mirren-still-reads"
+        },
+        {
+          "id": "stamp-the-send-not-the-reader",
+          "fakes": "marks clicked_at on the issue she was mailed instead of touching the list",
+          "caught_by": "she-is-suppressed"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "mirror-the-days-sends-onto-the-index",
+      "description": "Put on the index exactly what the accounts posted, by running the product's own mirror against the lane ledger.",
+      "driven": "cron",
+      "route": "node scripts/mirror-posts.mjs",
+      "writes": [
+        "agentwire_posts"
+      ],
+      "guards": [
+        {
+          "id": "both-posted-repos-at-their-derived-slug",
+          "checks": "each repo is at slugOf(key, repo), the stem plus six characters of sha1, not at an invented address"
+        },
+        {
+          "id": "the-byline-is-the-owner",
+          "checks": "owner is the repo's owner, never blank and never one of our posting accounts"
+        },
+        {
+          "id": "their-words-not-ours",
+          "checks": "description is the repo's own text and carries none of the copy we wrote about it"
+        },
+        {
+          "id": "nothing-unposted-reaches-the-index",
+          "checks": "the claim with no postedAt has no row, by slug or by repo"
+        },
+        {
+          "id": "one-row-per-repo",
+          "checks": "the repo that went out on two platforms has exactly one row, not one per send"
+        },
+        {
+          "id": "every-send-is-credited",
+          "checks": "both permalinks and both pieces of our own copy are on the row, and ts moved to the newer send"
+        },
+        {
+          "id": "the-mirror-never-deletes",
+          "checks": "the older entry that is not in the ledger survives field for field"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "strip-the-byline",
+          "fakes": "writes the rows with an empty owner column",
+          "caught_by": "the-byline-is-the-owner"
+        },
+        {
+          "id": "credit-the-account",
+          "fakes": "credits the posting account rather than the person who built the repo",
+          "caught_by": "the-byline-is-the-owner"
+        },
+        {
+          "id": "our-words-as-theirs",
+          "fakes": "puts our post copy in description, presented as the owner's own words",
+          "caught_by": "their-words-not-ours"
+        },
+        {
+          "id": "publish-the-unposted-claim",
+          "fakes": "adds the repo that was claimed and never posted",
+          "caught_by": "nothing-unposted-reaches-the-index"
+        },
+        {
+          "id": "a-row-per-send",
+          "fakes": "gives the two-platform repo one row per send, at two addresses",
+          "caught_by": "one-row-per-repo"
+        },
+        {
+          "id": "only-the-newest-byline",
+          "fakes": "credits the newest send and drops the earlier one",
+          "caught_by": "every-send-is-credited"
+        },
+        {
+          "id": "tidy-the-index",
+          "fakes": "removes the older entry because it is not in today's ledger",
+          "caught_by": "the-mirror-never-deletes"
+        },
+        {
+          "id": "invent-the-slug",
+          "fakes": "writes the rows at the obvious slugify() address with no hash",
+          "caught_by": "both-posted-repos-at-their-derived-slug"
+        }
+      ],
+      "scores": {}
+    }
+  ],
+  "not_gradable": [
+    {
+      "what": "POST /api/revalidate",
+      "why": "the most task-shaped route in the app and it writes no row: revalidateTag plus revalidatePath, then return. src/lib/posts.ts records that on Cloudflare Workers the tag cache resolves to `dummy`, so since the 2026-09-16 move the tag half has been a no-op as well."
+    },
+    {
+      "what": "agentwire_email_sends.opened_at and clicked_at",
+      "why": "nothing in the product writes either column. The sibling wire stamps them from POST /api/email/webhook; Agentwire has no webhook route anywhere, and its only writer of this table is send-digest.mjs, which inserts the row and never comes back to it."
+    },
+    {
+      "what": "scripts/send-digest.mjs",
+      "why": "it exits at `RESEND_API_KEY missing` before it writes a send row, and the only way past that is a real key and real outbound mail. Nothing here may send mail."
+    },
+    {
+      "what": "scripts/gen-index.mjs",
+      "why": "it searches for a picture at two model calls per bare row. No paid key is spent in this repo, so it is never run."
+    },
+    {
+      "what": "scripts/publish.mjs",
+      "why": "the other writer of agentwire_posts. Its input is src/data/posts.json, a committed file in the product tree, and it PRUNES rows the manifest does not carry. Grading it would mean authoring that file, which rule 12 forbids in the product tree and which the bring-up rsync overwrites in the copy."
+    },
+    {
+      "what": "agentwire_posts.img, thumb and credit",
+      "why": "the mirror fills them from a transparent object file recorded beside the send that posted it, then uploads two webp variants to a storage bucket. The fixture ledger records no object, so that branch never runs and the rows carry the plate, which is the product's own behaviour for a send with no object."
+    },
+    {
+      "what": "GET /api/digest-items, GET /api/search-index, GET /llms.txt",
+      "why": "read only. They render the day's digest and the palette corpus out of the same getItems() the pages read, and write nothing."
+    }
+  ],
+  "defects": [
+    {
+      "summary": "A reader who unsubscribes can never rejoin from the site, and is told they can. POST /api/subscribe upserts with ignoreDuplicates, so an existing row is untouched, and the confirmation send is gated on `!row.confirmed`. For a confirmed-then-unsubscribed address both branches fall through: unsubscribed_at stays set, no mail is attempted, the route answers 200 and the footer says 'Check your inbox and confirm.' Measured 2026-09-19 on the running build: cassian.orme@awdesk.invalid unsubscribed_at 2026-09-05 20:11:00+00 before and after, HTTP 200 {ok:true}, and no [email] line for that address in the server log.",
+      "where": "src/app/api/subscribe/route.ts. Fixed 2026-09-19 and swept across every product with a subscribe route. They carried it in two shapes, shipwall already had the correct one, and the template was fixed too so the next fork does not reintroduce it. Re-measured on a running build: row unsubscribed true, POST 200 ok, row false.",
+      "severity": "high",
+      "fixed": true
+    },
+    {
+      "summary": "One uuid is both the confirm token and the unsubscribe token, it never rotates and it never expires. Anyone who ever holds a confirmation link holds a permanent one-click unsubscribe for that address, and send-digest.mjs prints the same uuid in the List-Unsubscribe header of every issue, so the value is in the mail headers of every message that address has ever been sent.",
+      "where": "src/app/api/subscribe/confirm/route.ts, src/app/api/subscribe/unsubscribe/route.ts, scripts/send-digest.mjs",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "The subscribe route has no bot check and no rate limit, and it re-sends the confirmation on every request while the address is unconfirmed. The honeypot exists only in the React component, which reads input[name=website] client side; the route reads {email, source} and nothing else. Measured 2026-09-19: five POSTs for one unconfirmed address produced five confirmation sends, which with a live Resend key is five real emails to an address the caller typed.",
+      "where": "src/app/api/subscribe/route.ts, src/components/Subscribe.tsx",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "scripts/mirror-posts.mjs hardcodes SITE_URL as https://agentwire.thecompound.tech and POSTs /api/revalidate to it after any successful write, so a developer or test run of the mirror on any machine that has REVALIDATE_SECRET in its environment reaches production. This environment leaves that variable unset and firewalls the host, and the run prints 'no REVALIDATE_SECRET on this machine'.",
+      "where": "scripts/mirror-posts.mjs",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "GET /api/digest-items accepts CRON_SECRET in a query string as well as a header, so the shared cron secret lands in access logs, proxy logs and any Referer a rendered link would carry.",
+      "where": "src/app/api/digest-items/route.ts",
+      "severity": "low",
+      "fixed": false
+    },
+    {
+      "summary": "agentwire_email_sends ships opened_at and clicked_at and no code path anywhere writes them, so every engagement figure the table implies reads as zero forever rather than as unmeasured.",
+      "where": "public.agentwire_email_sends, scripts/send-digest.mjs",
+      "severity": "low",
+      "fixed": false
+    }
+  ],
+  "suite": {
+    "command": "uv run python envs/agentwire-desk/adversarial/prove_graders.py",
+    "expectations_total": 31,
+    "expectations_without_app": 28,
+    "expectations_held": 31,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+  "counts": {
+    "tasks": 4,
+    "cheats": 27,
+    "guards": 22,
+    "browser_tasks": 3
+  },
+  "models": {}
+}
