@@ -40,7 +40,7 @@ SERVICE="$(echo "$STATUS" | python3 -c 'import json,sys; print(json.load(sys.std
 echo "api $API_URL"
 
 say "schema, functions, rls, fixture"
-for f in 01-schema.sql 03-rls.sql 02-seed.sql; do
+for f in 01-schema.sql 04-auth-events.sql 03-rls.sql 02-seed.sql; do
   [ "$f" = "01-schema.sql" ] && docker exec "$DB" psql -U postgres -d postgres -tAc \
     "select 1 from information_schema.tables where table_name='cd_claims'" | grep -q 1 && {
       echo "skip $f (tables present)"; continue; }
@@ -74,12 +74,19 @@ say "app"
 if curl -s -o /dev/null -m 2 "http://127.0.0.1:$PORT/sign-in"; then
   echo "already serving on $PORT"
 else
-  npm start >/tmp/unemploy-desk-app.log 2>&1 &
+  # ⛔ DETACHED, AND THAT IS NOT DECORATION. Backgrounded with a plain `&` the server belongs to
+  # this script's process group, so whatever called up.sh takes the server down with it when it
+  # exits. That happened on 2026-09-19: the app was serving, the wrapper ended, and the port went
+  # dead with nothing in any log to say why. nohup plus disown detaches it from both.
+  nohup npm start >/tmp/unemploy-desk-app.log 2>&1 &
+  APP_PID=$!
+  disown "$APP_PID" 2>/dev/null || true
+  echo "$APP_PID" > /tmp/unemploy-desk-app.pid
   for _ in $(seq 1 30); do
     curl -s -o /dev/null -m 2 "http://127.0.0.1:$PORT/sign-in" && break
     sleep 1
   done
-  echo "started on $PORT"
+  echo "started on $PORT (pid $APP_PID, log /tmp/unemploy-desk-app.log)"
 fi
 
 say "session"
