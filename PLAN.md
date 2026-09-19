@@ -45,11 +45,21 @@ So each product needs a read of its own routes and its own read path before any 
 Writing tasks from the schema produces graders that are correct code against a workflow the
 product does not have, which happened here once and cost a full rewrite.
 
-## The first defect this found
+## Defects found, which is the list point 2 works through
 
-unemploy: a real signed-in customer sees an empty claims desk. The write routes work and put rows
-in the real tables. The read path for those tables returns `[]`. That is a product defect, it is
-separate from this project, and it is exactly the kind of thing point 2 exists to catch.
+**unemploy, the read path.** `src/app/_lib/session.ts`, `workspaceSlices()`. For any account that
+is not the demo account the function returns `claims: []`, `questionnaires: []`, `lines: []`,
+`separations: []`, `protests: []`, `events: []`, hardcoded. Only `statements` is read from the
+database, through `readStatements()`. A real signed-in customer sees an empty claims console while
+the write routes are putting rows in the real tables.
+
+**unemploy, the ledger's own copy.** Caught in the recording at
+`envs/unemploy-desk/demo/rollout.gif`. After the audit runs, the band reads `4 statements
+received` and the body underneath still reads "No statement has been read yet." Two parts of one
+view disagreeing about whether any statement exists.
+
+Neither is caused by this project. Both were invisible until an environment drove the product as a
+customer, which is the argument for doing this at all.
 
 ## The publishing frame
 
@@ -67,6 +77,10 @@ as a measurement on toolproof. Point 2 comes first for that reason.
 
 ## Status
 
-- `envs/unemploy-desk` is the first environment. Schema, fixture, three graded tasks, adversarial
-  suite at 15/15, real magic-link sign-in captured, the app running against the local stack.
-- Open: the browser rollout, one container image, the recorded demo.
+- `envs/unemploy-desk` is the first environment and it is done: schema, fixture, RLS and storage
+  policies from production, four graded tasks, adversarial suite at 20/20, magic-link sign-in,
+  a browser rollout that drives the real file input, `scripts/up.sh` bringing it all up in one
+  idempotent command, and the rollout recorded.
+- Open: the app is built from `~/CompoundLabs/unemploy` rather than vendored, so publishing this
+  environment to anyone outside the machine needs the app vendored or its image published.
+- Open: the second environment, to find out how much of the first one is actually reusable.
