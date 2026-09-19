@@ -14,7 +14,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import puppeteer from "puppeteer-core";
-import { launchSafe } from "/Users/admin/CompoundLabs/compound-ops/tools/lib/safe-chrome.mjs";
+import { launchSafe } from "./safe-chrome.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.dirname(HERE);

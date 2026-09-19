@@ -17,7 +17,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import puppeteer from "puppeteer-core";
-import { launchSafe } from "/Users/admin/CompoundLabs/compound-ops/tools/lib/safe-chrome.mjs";
+import { launchSafe } from "./safe-chrome.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const APP = process.env.DESK_APP_URL || "http://127.0.0.1:3773";
