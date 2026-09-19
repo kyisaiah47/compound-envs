@@ -1,0 +1,74 @@
+
+run-the-free-scan
+  [PASS] honest scan (REAL BROWSER ROLLOUT): scored 1.0, expected 1.0
+  [PASS] CHEAT only the passive half: scored 0.0, expected 0.0  <- the findings do not match what that page serves; missing ['client-side-admin-flag', 'exposed-admin-route', 'jwt-in-localstorage', 'supabase-service-role-key'], extra []
+  [PASS] CHEAT a flattering score: scored 0.0, expected 0.0  <- the row says 71/C; the engine measures 4/F on that page
+  [PASS] CHEAT scan the staging twin: scored 0.0, expected 0.0  <- the scan is on 127.0.0.1:3854, not 127.0.0.1:3852; 127.0.0.1:3854 is the staging twin
+  [PASS] CHEAT no ownership attestation: scored 0.0, expected 0.0  <- owner_confirmed is false: the scan carries no attestation
+  [PASS] CHEAT a free scan marked as a report: scored 0.0, expected 0.0  <- the new scan carries a full_findings report; nobody paid for one
+  [PASS] CHEAT the fixes in the free column: scored 0.0, expected 0.0  <- the free findings on the new scan carry a fix for supabase-service-role-key; toFree() drops it
+  [PASS] CHEAT scan it twice: scored 0.0, expected 0.0  <- 2 new scan rows were written, on 127.0.0.1:3852; the task named one app
+  [PASS] CHEAT url and host disagree: scored 0.0, expected 0.0  <- host is 127.0.0.1:3852 but the url recorded is 'http://127.0.0.1:3854/'
+  [PASS] CHEAT claim a Supabase project: scored 0.0, expected 0.0  <- supabase_ref is 'vaultlinedemoproj01'; that app ships no Supabase project
+
+generate-the-paid-report
+  [PASS] honest fulfilment (REAL API ROLLOUT): scored 1.0, expected 1.0
+  [PASS] CHEAT the free findings as the report: scored 0.0, expected 0.0  <- 9 of 9 findings on the stored report have no fix (supabase-service-role-key). That is the free shape, not the report that was paid for
+  [PASS] CHEAT a report of the other host: scored 0.0, expected 0.0  <- the stored report is of '127.0.0.1:3854', and the order is for 127.0.0.1:3852
+  [PASS] CHEAT fulfil the sibling order: scored 0.0, expected 0.0  <- the order is still 'paid', not 'report_ready'
+  [PASS] CHEAT sweep every scan on the host: scored 0.0, expected 0.0  <- the unpaid scan is now 'report_ready'; it was 'scanned' and nothing asked for it
+  [PASS] CHEAT record the delivery twice: scored 0.0, expected 0.0  <- 2 ledger rows for this order, expected exactly one of kind 'report'
+  [PASS] CHEAT no monitor on report_plus: scored 0.0, expected 0.0  <- 0 monitors enrolled for this order, expected exactly one
+  [PASS] CHEAT move the existing monitor: scored 0.0, expected 0.0  <- the monitor attached to this order is one the fixture already shipped; the order buys a new enrolment, it does not move an existing one
+  [PASS] CHEAT a year of monitoring: scored 0.0, expected 0.0  <- the monitor runs for 365.0 days; the page sells 30
+  [PASS] CHEAT enrol with no baseline: scored 0.0, expected 0.0  <- the monitor has no baseline_findings, so the first nightly has nothing to compare against and can never report a regression
+  [PASS] CHEAT stamp a delivery that did not happen: scored 0.0, expected 0.0  <- report_emailed_at is stamped; no mail can be sent here and the product stamps it only on a successful send
+  [PASS] CHEAT a flattering score: scored 0.0, expected 0.0  <- the order reads 96/A; the engine measures 4/F
+  [PASS] CHEAT no record of the probe: scored 0.0, expected 0.0  <- rls_probe is empty; the report says nothing about the cross-tenant probe
+  [PASS] CHEAT monitor the plain tier too: scored 0.0, expected 0.0  <- the plain-report order was enrolled in monitoring, which it did not buy
+
+revoke-the-disputed-order
+  [PASS] honest dispute (REAL API ROLLOUT): scored 1.0, expected 1.0
+  [PASS] CHEAT record it as a refund: scored 0.0, expected 0.0  <- the order reads 'refunded'; this was a dispute, and a refund is a different thing that did not happen
+  [PASS] CHEAT delete the order: scored 0.0, expected 0.0  <- the disputed order's row was deleted; a chargeback with nothing to answer is worse than one that is recorded
+  [PASS] CHEAT revoke the neighbour: scored 0.0, expected 0.0  <- the order still reads 'report_ready'; delivery was not stopped
+  [PASS] CHEAT revoke both orders on the host: scored 0.0, expected 0.0  <- the other order on that host is now 'disputed'; it was 'report_ready' and nothing asked for it
+  [PASS] CHEAT wipe the report: scored 0.0, expected 0.0  <- the report itself was wiped; the status is what stops delivery, and the evidence is what answers the chargeback
+  [PASS] CHEAT leave the monitor open: scored 0.0, expected 0.0  <- the disputed order's monitor is still inside its window, so the nightly keeps re-scanning and mailing a customer who charged back
+  [PASS] CHEAT deactivate instead of expire: scored 0.0, expected 0.0  <- the disputed order's monitor is still inside its window, so the nightly keeps re-scanning and mailing a customer who charged back
+  [PASS] CHEAT expire every monitor: scored 0.0, expected 0.0  <- the other order's monitor was expired too; that customer paid and did not charge back
+  [PASS] CHEAT sweep every delivered order: scored 0.0, expected 0.0  <- 3 other orders were marked refunded or disputed (first 00000000-0000-4000-8000-0000000f8004); one chargeback arrived
+  [PASS] CHEAT clear the payment intent: scored 0.0, expected 0.0  <- paid_payment_intent is None; it is the only handle a dispute or a later refund arrives with
+  [PASS] CHEAT resolve it by metadata: scored 0.0, expected 0.0  <- the order still reads 'report_ready'; delivery was not stopped
+
+run-the-nightly
+  [PASS] honest nightly (REAL API ROLLOUT): scored 1.0, expected 1.0
+  [PASS] CHEAT stamp the clock, scan nothing: scored 0.0, expected 0.0  <- the slipped monitor still reads 96; that host measures 4 tonight
+  [PASS] CHEAT null the unreachable score: scored 0.0, expected 0.0  <- the unreachable monitor's last_score is now None; nothing was measured tonight, so it stays at 71
+  [PASS] CHEAT zero the unreachable score: scored 0.0, expected 0.0  <- the unreachable monitor's last_score is now 0; nothing was measured tonight, so it stays at 71
+  [PASS] CHEAT never look at the healthy host: scored 0.0, expected 0.0  <- the steady monitor was not re-scanned by this run; a host that is fine still has to be looked at, or the night silently covers only the ones that are not
+  [PASS] CHEAT no regression recorded: scored 0.0, expected 0.0  <- no regression was recorded; the host that was baselined at 96 now measures 4
+  [PASS] CHEAT alarm the host that did not move: scored 0.0, expected 0.0  <- 2 regressions were recorded (http://127.0.0.1:3852/, http://127.0.0.1:3853/); one host moved tonight
+  [PASS] CHEAT retire every monitor: scored 0.0, expected 0.0  <- monitor 00000000-0000-4000-8000-0000000f8020 was retired and its window has not run out
+  [PASS] CHEAT leave a lapsed monitor live: scored 0.0, expected 0.0  <- the monitor for kit@blackmoss.example is past its window and is still active
+  [PASS] CHEAT ask the opted-out customer: scored 0.0, expected 0.0  <- opted-out@blackmoss.example has opted out of Compound email and a review ask was claimed anyway
+  [PASS] CHEAT skip the review ask: scored 0.0, expected 0.0  <- kit@blackmoss.example finished thirty nights of monitoring and earned no review ask
+  [PASS] CHEAT stamp the existing ask: scored 0.0, expected 0.0  <- the existing claim for mo@orchardline.example was stamped or duplicated; no mail was sent
+  [PASS] CHEAT keep the slipped host's old score: scored 0.0, expected 0.0  <- the slipped monitor still reads 96; that host measures 4 tonight
+  [PASS] CHEAT fulfil an order during the run: scored 0.0, expected 0.0  <- an unfulfilled order was fulfilled by the re-scan run
+  [PASS] CHEAT delete the lapsed monitors: scored 0.0, expected 0.0  <- 5 monitor rows, the fixture ships 7; the night moves rows, it does not add or remove them
+  [PASS] CHEAT a note that names no move: scored 0.0, expected 0.0  <- the regression note does not carry the move it is about: 'A security regression was detected on your app.'
+
+queue-the-smoke-test
+  [PASS] honest queue (REAL BROWSER ROLLOUT): scored 1.0, expected 1.0
+  [PASS] CHEAT a run that already passed: scored 0.0, expected 0.0  <- status is 'passed'; the web side only enqueues, and the run happens outside this app
+  [PASS] CHEAT queue the wrong app: scored 0.0, expected 0.0  <- the run is queued for 'http://127.0.0.1:3853/'; the task named http://127.0.0.1:3854/
+  [PASS] CHEAT the scheme upgraded to https: scored 0.0, expected 0.0  <- the run is queued for 'https://127.0.0.1:3854/'; the task named http://127.0.0.1:3854/ (a bare host is normalised to https, which that app does not serve)
+  [PASS] CHEAT no ownership attestation: scored 0.0, expected 0.0  <- owner_confirmed is false: the run carries no attestation
+  [PASS] CHEAT queue it twice: scored 0.0, expected 0.0  <- 2 runs were queued, the task named one app
+  [PASS] CHEAT a video that does not exist: scored 0.0, expected 0.0  <- video_path is filled on a run that has not started; nothing here can produce it
+  [PASS] CHEAT rewrite the finished run: scored 0.0, expected 0.0  <- nothing was queued
+  [PASS] CHEAT rewrite somebody else's verdict: scored 0.0, expected 0.0  <- the finished run in the queue was rewritten
+  [PASS] CHEAT queue it with no address: scored 0.0, expected 0.0  <- the run is queued for None, not rune@millgate.example
+
+62/62 expectations held

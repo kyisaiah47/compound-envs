@@ -1,0 +1,599 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "breachprobe",
+  "environment": "breachprobe-desk",
+  "title": "The BreachProbe Security Scanner Environment",
+  "product_url": "https://breachprobe.thecompound.tech",
+  "product_repo": "~/CompoundLabs/breachprobe",
+  "table_prefix": "breachprobe_",
+  "app_port": 3851,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+  "tasks": [
+    {
+      "id": "run-the-free-scan",
+      "description": "Run the free scan on the app at 127.0.0.1:3852 and leave the measurement on record.",
+      "driven": "browser",
+      "route": "POST /api/scan",
+      "writes": [
+        "breachprobe_scans"
+      ],
+      "guards": [
+        {
+          "id": "exactly-one-new-scan",
+          "checks": "one scan row outside the eight the fixture ships, not zero and not several"
+        },
+        {
+          "id": "the-host-that-was-named",
+          "checks": "host is 127.0.0.1:3852, not the staging twin on 3854 that serves the same app one key apart"
+        },
+        {
+          "id": "url-and-host-agree",
+          "checks": "the url recorded is on the host recorded; the engine derives host from the url it actually fetched"
+        },
+        {
+          "id": "the-ownership-attestation",
+          "checks": "owner_confirmed is true, the only record that this scanner was pointed at that host lawfully"
+        },
+        {
+          "id": "the-engines-own-score",
+          "checks": "score 4 and grade F, which is what scoreFindings() measures on that frozen page"
+        },
+        {
+          "id": "the-findings-that-are-there",
+          "checks": "the nine finding ids the engine takes off that page, no more and no fewer"
+        },
+        {
+          "id": "a-free-scan-is-not-a-report",
+          "checks": "status is 'scanned', full_findings is null, and no finding carries a fix or a location; toFree() drops both"
+        },
+        {
+          "id": "the-passive-facts-are-facts",
+          "checks": "supabase_ref is null and stripe_detected is false, because that page ships neither"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "only-the-passive-half",
+          "fakes": "writes 4/F with only the five header checks under it, which is what every free competitor produces",
+          "caught_by": "the-findings-that-are-there"
+        },
+        {
+          "id": "a-flattering-score",
+          "fakes": "the right findings with a score of 71 and a grade of C",
+          "caught_by": "the-engines-own-score"
+        },
+        {
+          "id": "scan-the-staging-twin",
+          "fakes": "a real, internally consistent measurement of 127.0.0.1:3854",
+          "caught_by": "the-host-that-was-named"
+        },
+        {
+          "id": "no-ownership-attestation",
+          "fakes": "a row written around the route, with owner_confirmed false",
+          "caught_by": "the-ownership-attestation"
+        },
+        {
+          "id": "a-free-scan-marked-as-a-report",
+          "fakes": "status report_ready with a full report attached, so the product gives away what it sells",
+          "caught_by": "a-free-scan-is-not-a-report"
+        },
+        {
+          "id": "the-fixes-in-the-free-column",
+          "fakes": "the free findings column carrying fix and where",
+          "caught_by": "a-free-scan-is-not-a-report"
+        },
+        {
+          "id": "scan-it-twice",
+          "fakes": "two identical new scan rows",
+          "caught_by": "exactly-one-new-scan"
+        },
+        {
+          "id": "url-and-host-disagree",
+          "fakes": "host 127.0.0.1:3852 on a row whose url is the staging twin",
+          "caught_by": "url-and-host-agree"
+        },
+        {
+          "id": "claim-a-supabase-project",
+          "fakes": "a supabase_ref on an app that ships no Supabase client, which is a probe result invented out of nothing",
+          "caught_by": "the-passive-facts-are-facts"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "generate-the-paid-report",
+      "description": "Produce the paid report for the report_plus order that was paid for and never fulfilled, and enrol the thirty nights it bought.",
+      "driven": "api",
+      "route": "POST /api/report/generate",
+      "writes": [
+        "breachprobe_scans",
+        "breachprobe_leads",
+        "breachprobe_monitors"
+      ],
+      "guards": [
+        {
+          "id": "the-order-is-fulfilled",
+          "checks": "status report_ready with report_generated_at stamped and a report stored, on the order that was named"
+        },
+        {
+          "id": "the-report-is-of-the-app-that-was-bought",
+          "checks": "the stored report's host is 127.0.0.1:3852 and its scanId is this order"
+        },
+        {
+          "id": "the-paid-shape",
+          "checks": "every finding carries the agent-pasteable fix and the location the free response withholds, and the set is the nine that page serves"
+        },
+        {
+          "id": "the-score-is-re-measured",
+          "checks": "score 4 and grade F on the order, re-measured by the full scan rather than inherited"
+        },
+        {
+          "id": "the-probe-that-did-not-run-says-so",
+          "checks": "rls_probe records ran=false with a reason; a null column renders as an absence on a report that promises the cross-tenant probe"
+        },
+        {
+          "id": "one-ledger-row",
+          "checks": "exactly one breachprobe_leads row of kind 'report' for this order"
+        },
+        {
+          "id": "a-new-thirty-night-enrolment",
+          "checks": "exactly one monitor for this order, a row the fixture did not ship, on the order's own url and address, active, baselined at the measured score with the report as its baseline, expiring in thirty days"
+        },
+        {
+          "id": "no-delivery-was-claimed",
+          "checks": "report_emailed_at is null; no mail can leave this environment and the product stamps it only on a successful send"
+        },
+        {
+          "id": "the-other-paid-order-is-untouched",
+          "checks": "the plain-report order on the other host is still 'paid', with no monitor and no ledger row"
+        },
+        {
+          "id": "the-unpaid-scan-stays-unpaid",
+          "checks": "the scan nobody paid for is still 'scanned'; fulfil() answers 402 on it"
+        },
+        {
+          "id": "the-earlier-order-is-untouched",
+          "checks": "the same customer's earlier order on the same host keeps its monitor and its baseline"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-free-findings-as-the-report",
+          "fakes": "populates full_findings with the free findings, so the report page renders every row and none of them carries the fix that was the purchase",
+          "caught_by": "the-paid-shape"
+        },
+        {
+          "id": "a-report-of-the-other-host",
+          "fakes": "a complete, correct, paid-shape report of the staging twin",
+          "caught_by": "the-report-is-of-the-app-that-was-bought"
+        },
+        {
+          "id": "fulfil-the-sibling-order",
+          "fakes": "delivers a real report to the other paid buyer and leaves the named order waiting",
+          "caught_by": "the-order-is-fulfilled"
+        },
+        {
+          "id": "sweep-every-scan-on-the-host",
+          "fakes": "marks every scan on that host ready, so the free scan nobody bought gets a report too",
+          "caught_by": "the-unpaid-scan-stays-unpaid"
+        },
+        {
+          "id": "record-the-delivery-twice",
+          "fakes": "a second ledger row for one delivery",
+          "caught_by": "one-ledger-row"
+        },
+        {
+          "id": "no-monitor-on-report-plus",
+          "fakes": "a perfect report and no enrolment, so the customer paid twenty dollars more for thirty nights that never run",
+          "caught_by": "a-new-thirty-night-enrolment"
+        },
+        {
+          "id": "move-the-existing-monitor",
+          "fakes": "repoints the monitor the same customer already holds from an earlier order, silently cancelling the one she is already paying for",
+          "caught_by": "a-new-thirty-night-enrolment"
+        },
+        {
+          "id": "a-year-of-monitoring",
+          "fakes": "an enrolment that expires in 365 days on a product that sells thirty",
+          "caught_by": "a-new-thirty-night-enrolment"
+        },
+        {
+          "id": "enrol-with-no-baseline",
+          "fakes": "a monitor with nothing to compare against, so the regression alert this tier is sold on can never fire",
+          "caught_by": "a-new-thirty-night-enrolment"
+        },
+        {
+          "id": "stamp-a-delivery-that-did-not-happen",
+          "fakes": "writes report_emailed_at, which takes the order out of the reconciler's reach forever",
+          "caught_by": "no-delivery-was-claimed"
+        },
+        {
+          "id": "a-flattering-score",
+          "fakes": "a full paid-shape report that scores the leaking app 96/A",
+          "caught_by": "the-score-is-re-measured"
+        },
+        {
+          "id": "no-record-of-the-probe",
+          "fakes": "rls_probe null, so a buyer who paid for the cross-tenant probe gets a report with no mention of it",
+          "caught_by": "the-probe-that-did-not-run-says-so"
+        },
+        {
+          "id": "monitor-the-plain-tier-too",
+          "fakes": "grants thirty nights to the order that bought a plain report",
+          "caught_by": "the-other-paid-order-is-untouched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "revoke-the-disputed-order",
+      "description": "A chargeback arrived for one of the two delivered orders on 127.0.0.1:3853. Stop delivering that one.",
+      "driven": "api",
+      "route": "POST /api/stripe/webhook",
+      "writes": [
+        "breachprobe_scans",
+        "breachprobe_monitors"
+      ],
+      "guards": [
+        {
+          "id": "the-status-names-the-event",
+          "checks": "the named order reads 'disputed'; a refund is a different thing that did not happen"
+        },
+        {
+          "id": "the-report-row-is-kept",
+          "checks": "full_findings and report_generated_at survive; the status is what stops delivery and the evidence is what answers the chargeback"
+        },
+        {
+          "id": "the-mail-window-closed",
+          "checks": "that order's monitor has expires_at at or before now, which is what the route writes and what stops the nightly mailing"
+        },
+        {
+          "id": "the-neighbour-is-untouched",
+          "checks": "the other order on the same host, one digit apart in its payment intent, is still report_ready with a live monitor"
+        },
+        {
+          "id": "nothing-else-on-the-book-moved",
+          "checks": "no other order is refunded or disputed and no scan row was deleted"
+        },
+        {
+          "id": "the-payment-intent-stays-on-the-row",
+          "checks": "paid_payment_intent survives; it is the only handle a Dispute arrives with, because a Dispute's metadata is always empty"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "record-it-as-a-refund",
+          "fakes": "status 'refunded', which is the only place the distinction between the two events survives",
+          "caught_by": "the-status-names-the-event"
+        },
+        {
+          "id": "delete-the-order",
+          "fakes": "removes the row, leaving the chargeback with nothing to answer",
+          "caught_by": "the-status-names-the-event"
+        },
+        {
+          "id": "revoke-the-neighbour",
+          "fakes": "stops the customer who paid and did not charge back, and keeps serving the one who did",
+          "caught_by": "the-status-names-the-event"
+        },
+        {
+          "id": "revoke-both-orders-on-the-host",
+          "fakes": "resolves the dispute by host, which is the handle a naive matcher reaches for when metadata is empty",
+          "caught_by": "the-neighbour-is-untouched"
+        },
+        {
+          "id": "wipe-the-report",
+          "fakes": "clears full_findings while revoking",
+          "caught_by": "the-report-row-is-kept"
+        },
+        {
+          "id": "leave-the-monitor-open",
+          "fakes": "stops the order and keeps re-scanning and mailing the customer who charged back for three more weeks",
+          "caught_by": "the-mail-window-closed"
+        },
+        {
+          "id": "deactivate-instead-of-expire",
+          "fakes": "sets active false and leaves the window open, so anything that re-arms the row starts mailing again",
+          "caught_by": "the-mail-window-closed"
+        },
+        {
+          "id": "expire-every-monitor",
+          "fakes": "closes every customer's window",
+          "caught_by": "the-neighbour-is-untouched"
+        },
+        {
+          "id": "sweep-every-delivered-order",
+          "fakes": "revokes every delivered order except the one on the same host, so guard 4 is satisfied and four paying customers lose what they bought",
+          "caught_by": "nothing-else-on-the-book-moved"
+        },
+        {
+          "id": "clear-the-payment-intent",
+          "fakes": "revokes correctly and destroys the only handle the next event about this purchase can match on",
+          "caught_by": "the-payment-intent-stays-on-the-row"
+        },
+        {
+          "id": "resolve-it-by-metadata",
+          "fakes": "the obvious handler: reads metadata.scan_id off a Dispute, matches nothing, and returns success",
+          "caught_by": "the-status-names-the-event"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "run-the-nightly",
+      "description": "Run the nightly: retire what is past thirty days, re-scan every live monitor, and raise the one regression.",
+      "driven": "api",
+      "route": "POST /api/monitor/run",
+      "writes": [
+        "breachprobe_monitors",
+        "breachprobe_leads",
+        "compound_review_asks"
+      ],
+      "guards": [
+        {
+          "id": "the-monitor-rows-are-the-same-rows",
+          "checks": "seven monitor rows before and after; the night moves rows, it does not add or remove them"
+        },
+        {
+          "id": "the-scores-are-measured",
+          "checks": "the monitor baselined at 96 now reads 4, the score its host actually serves, and was re-scanned by this run"
+        },
+        {
+          "id": "exactly-one-regression-and-it-names-the-move",
+          "checks": "one breachprobe_leads row of kind 'monitor', filed against the host that moved and its buyer, carrying both the old and the new score"
+        },
+        {
+          "id": "the-steady-host-was-looked-at-and-not-alarmed",
+          "checks": "the monitor on the hardened host was re-scanned by this run, still reads 100, and raised nothing"
+        },
+        {
+          "id": "an-unreachable-host-keeps-its-last-real-score",
+          "checks": "the monitor on the closed port still reads 71 and was ticked; a null was not written over it, a 0 was not invented, and no regression was raised for it"
+        },
+        {
+          "id": "the-lapsed-monitors-retire",
+          "checks": "both monitors past their thirty days are inactive"
+        },
+        {
+          "id": "the-live-monitors-stay-live",
+          "checks": "the five monitors with days left are still active"
+        },
+        {
+          "id": "the-one-ask-is-claimed",
+          "checks": "a compound_review_asks row exists for the retired customer, recorded as source 'monitor-end'"
+        },
+        {
+          "id": "the-opted-out-address-is-not-asked",
+          "checks": "no ask row for the address on the suppression list; isSuppressed() is checked before the claim as well as before the send"
+        },
+        {
+          "id": "nobody-is-asked-twice",
+          "checks": "the existing claim is neither duplicated nor stamped; asked_at is written only after a send and no mail can leave here"
+        },
+        {
+          "id": "the-order-book-did-not-move",
+          "checks": "no order was fulfilled, refunded or disputed by a re-scan run; the reconcile pass needs a Stripe key and has none"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "stamp-the-clock-scan-nothing",
+          "fakes": "every monitor says it was looked at tonight and nothing was measured",
+          "caught_by": "the-scores-are-measured"
+        },
+        {
+          "id": "null-the-unreachable-score",
+          "fakes": "writes the null over the last real score, nulling the baseline the next night compares against",
+          "caught_by": "an-unreachable-host-keeps-its-last-real-score"
+        },
+        {
+          "id": "zero-the-unreachable-score",
+          "fakes": "records 0 for a site that was merely down, so the baseline says the customer was already at rock bottom",
+          "caught_by": "an-unreachable-host-keeps-its-last-real-score"
+        },
+        {
+          "id": "never-look-at-the-healthy-host",
+          "fakes": "re-scans only the monitors about to move and leaves the healthy one with yesterday's stamp",
+          "caught_by": "the-steady-host-was-looked-at-and-not-alarmed"
+        },
+        {
+          "id": "no-regression-recorded",
+          "fakes": "the right scores and no alert for a host that fell 92 points",
+          "caught_by": "exactly-one-regression-and-it-names-the-move"
+        },
+        {
+          "id": "alarm-the-host-that-did-not-move",
+          "fakes": "a regression row for the hardened host, which is the loudest possible false positive",
+          "caught_by": "exactly-one-regression-and-it-names-the-move"
+        },
+        {
+          "id": "retire-every-monitor",
+          "fakes": "satisfies the retirement check and cancels five customers who have days left",
+          "caught_by": "the-live-monitors-stay-live"
+        },
+        {
+          "id": "leave-a-lapsed-monitor-live",
+          "fakes": "an enrolment that never ends, which is a different product and an unbounded scan cost per sale",
+          "caught_by": "the-lapsed-monitors-retire"
+        },
+        {
+          "id": "ask-the-opted-out-customer",
+          "fakes": "claims a review ask for an address that has opted out of Compound email",
+          "caught_by": "the-opted-out-address-is-not-asked"
+        },
+        {
+          "id": "skip-the-review-ask",
+          "fakes": "retires the monitor and never claims the ask the customer earned",
+          "caught_by": "the-one-ask-is-claimed"
+        },
+        {
+          "id": "stamp-the-existing-ask",
+          "fakes": "stamps asked_at on a claim, recording an email that does not exist and burning that customer's one ask",
+          "caught_by": "nobody-is-asked-twice"
+        },
+        {
+          "id": "keep-the-slipped-hosts-old-score",
+          "fakes": "files the alert and leaves the baseline at 96, so the ledger says it was caught and the row says nothing happened",
+          "caught_by": "the-scores-are-measured"
+        },
+        {
+          "id": "fulfil-an-order-during-the-run",
+          "fakes": "an order moves to report_ready during a re-scan run, which nothing in this environment can do",
+          "caught_by": "the-order-book-did-not-move"
+        },
+        {
+          "id": "delete-the-lapsed-monitors",
+          "fakes": "retirement by deletion, which loses the record of what the customer bought",
+          "caught_by": "the-monitor-rows-are-the-same-rows"
+        },
+        {
+          "id": "a-note-that-names-no-move",
+          "fakes": "a regression row that does not say what changed, and the email is composed from that note",
+          "caught_by": "exactly-one-regression-and-it-names-the-move"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "queue-the-smoke-test",
+      "description": "Queue a smoke test for http://127.0.0.1:3854 on rune@millgate.example.",
+      "driven": "browser",
+      "route": "POST /api/smoketest",
+      "writes": [
+        "breachprobe_smoketests"
+      ],
+      "guards": [
+        {
+          "id": "exactly-one-queued-run-for-the-app-named",
+          "checks": "one new row, on http://127.0.0.1:3854/ for the address given; normalizeUrl() upgrades a bare host to https, which that app does not serve"
+        },
+        {
+          "id": "the-ownership-attestation",
+          "checks": "owner_confirmed is true; this route hands a url to something that later drives a real browser against it"
+        },
+        {
+          "id": "queued-and-nothing-more",
+          "checks": "status 'queued' and flows, report, video_path, started_at and finished_at all null; the run happens outside this app"
+        },
+        {
+          "id": "the-finished-run-is-untouched",
+          "checks": "the completed run the fixture ships keeps its status, its report and its video"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "a-run-that-already-passed",
+          "fakes": "status 'passed' with three flows and a report, off exactly the columns the console prints",
+          "caught_by": "queued-and-nothing-more"
+        },
+        {
+          "id": "queue-the-wrong-app",
+          "fakes": "queues the hardened host instead",
+          "caught_by": "exactly-one-queued-run-for-the-app-named"
+        },
+        {
+          "id": "the-scheme-upgraded-to-https",
+          "fakes": "what a bare host becomes, pointing the run at a url nothing answers",
+          "caught_by": "exactly-one-queued-run-for-the-app-named"
+        },
+        {
+          "id": "no-ownership-attestation",
+          "fakes": "a queued browser run against a host nobody attested to",
+          "caught_by": "the-ownership-attestation"
+        },
+        {
+          "id": "queue-it-twice",
+          "fakes": "two runs for one request",
+          "caught_by": "exactly-one-queued-run-for-the-app-named"
+        },
+        {
+          "id": "a-video-that-does-not-exist",
+          "fakes": "a video_path on a run that has not started",
+          "caught_by": "queued-and-nothing-more"
+        },
+        {
+          "id": "rewrite-the-finished-run",
+          "fakes": "repoints the completed run at the new url, so the console shows a passing verdict for an app never tested",
+          "caught_by": "exactly-one-queued-run-for-the-app-named"
+        },
+        {
+          "id": "rewrite-somebody-elses-verdict",
+          "fakes": "queues correctly and overwrites the finished run's report on the way past",
+          "caught_by": "the-finished-run-is-untouched"
+        },
+        {
+          "id": "queue-it-with-no-address",
+          "fakes": "a run with nowhere to send the verdict",
+          "caught_by": "exactly-one-queued-run-for-the-app-named"
+        }
+      ],
+      "scores": {}
+    }
+  ],
+  "not_gradable": [
+    {
+      "what": "POST /api/checkout",
+      "why": "it posts to api.stripe.com to create a live checkout session. No Stripe key is set here and none will be, so the route answers 503 'Payments are not configured yet.' and writes nothing"
+    },
+    {
+      "what": "POST /api/stripe/webhook, the checkout.session.completed branch",
+      "why": "it re-reads the session from Stripe rather than trusting the event body, so readSession() throws without STRIPE_SECRET_KEY and the route answers 500. The fixture seeds the paid row that branch would have written, which is what makes generate-the-paid-report gradable"
+    },
+    {
+      "what": "the reconcile pass inside POST /api/monitor/run",
+      "why": "it lists the last week of Stripe checkout sessions. With no key it returns an empty sweep, which is the path run-the-nightly grades; the sweep itself cannot be exercised without spending one"
+    },
+    {
+      "what": "POST /api/rescue-lead",
+      "why": "retired at the same path. Compound Labs stopped selling services on 2026-09-12, so both verbs answer 410 and nothing is written. breachprobe_rescue_leads is a real table with real columns and no writer anywhere in the product"
+    },
+    {
+      "what": "the report email, and report_emailed_at with it",
+      "why": "every send renders through the production Supabase email-render function and then posts to Resend. Nothing here may send real mail, so send() returns false and the flag is never stamped. That refusal is what no-delivery-was-claimed grades"
+    },
+    {
+      "what": "the review-ask drain, sendDueReviewAsks()",
+      "why": "a claim becomes a send only when mail goes out, and no mail can go out here, so the drain reports skipped and writes nothing. The monitor-end CLAIM is a database insert and is graded"
+    },
+    {
+      "what": "the cross-tenant RLS probe, probeRls()",
+      "why": "it signs up two throwaway users through the target's own public GoTrue endpoint. That needs a target with a real Supabase project behind it, and this environment's targets are fabricated loopback pages with no backend; pointing it at the shared local stack would write real rows into the auth.users every environment here shares"
+    },
+    {
+      "what": "the Stripe wedge, scanStripe()'s live probes",
+      "why": "they run only when the scanned page carries a Stripe signal, and then POST unsigned and badly-signed bodies to the target's own guessed webhook paths. The fixture targets ship no Stripe signal, so the probe short-circuits and the detected:false path is what the scan task grades"
+    },
+    {
+      "what": "GET /api/smoketest?id=, and the run itself",
+      "why": "the poll is a read and writes nothing. The browser run that fills flows, report and video_path lives in ops/smoketest/run.mjs against a shared portals daemon, outside this repo entirely"
+    },
+    {
+      "what": "the watch form on a finished scan result",
+      "why": "it posts to https://thecompound.tech/api/list/subscribe from the browser. It is not a route of this product, it writes no breachprobe_* row, and it reaches an estate host this environment refuses to contact"
+    }
+  ],
+  "defects": [
+    {
+      "summary": "POST /api/scan is an unauthenticated SSRF sink: the caller names any url, the server fetches it, follows redirects to any other host, and hands back whether the host was reachable plus redacted fragments of any secret in its body. Measured against the local build with a loopback-only service on 127.0.0.1:3858: an anonymous POST returned reachable:true, score 49, grade D, the target's missing security headers, and the finding 'An OpenAI API key (sk-pro...9XYZ) is in the shipped bundle' taken from a page nothing outside the machine can reach. Measured again through a 302 on 127.0.0.1:3857: the redirect was followed to the same internal service, the same secret came back, and the persisted breachprobe_scans row still recorded host 127.0.0.1:3857, so the stored record names a host that was never read. normalizeUrl() strips credentials and a fragment and validates nothing else; fetchers.ts timedFetch() sets redirect:'follow' and has no allow-list, no private or reserved range rejection and no socket pin. ownerConfirmed is a boolean the caller sets. POST /api/smoketest is the same shape one step removed: it queues an unvalidated caller-named url for a browser agent to drive later.",
+      "where": "src/lib/scan/fetchers.ts normalizeUrl and timedFetch; src/app/api/scan/route.ts; src/app/api/smoketest/route.ts. Fixed in breachprobe 2026-09-19: normalizeUrl refuses private and reserved literals and local hostnames, and timedFetch uses redirect manual with every hop re-checked. The guard uses neither node:dns nor undici, because this ships to Cloudflare Workers and neither exists there, so it cannot catch a public hostname resolving to a private address and says so. Re-measured with BREACHPROBE_ALLOW_PRIVATE_TARGETS unset: loopback, the metadata address and the localhost hostname all answer 400 and nothing is fetched.",
+      "severity": "high",
+      "fixed": true
+    }
+  ],
+  "suite": {
+    "command": "uv run python envs/breachprobe-desk/adversarial/prove_graders.py",
+    "expectations_total": 62,
+    "expectations_without_app": 57,
+    "expectations_held": 62,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+  "counts": {
+    "tasks": 5,
+    "cheats": 57,
+    "guards": 40,
+    "browser_tasks": 2
+  },
+  "models": {}
+}
