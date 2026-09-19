@@ -95,6 +95,16 @@ CHANGED="$(rsync -a --delete --itemize-changes \
 echo "copied to $APP ($CHANGED paths changed)"
 
 say "app build"
+# ⛔ THE SHARED GUARD RUNS BESIDE THIS SCRIPT'S OWN RSYNC TEST, AND IT COVERS THE ONE THING
+# THAT TEST CANNOT SEE. Deciding the rebuild by what rsync moved catches a change in the
+# product tree, which is the common case and is why it was written. It does NOT catch a build
+# made against a DIFFERENT Supabase API: the product is unchanged, so CHANGED is 0, no rebuild
+# happens, and every NEXT_PUBLIC_* value stays inlined from the previous API. That is rule 9's
+# original hazard. tools/stale-build.sh stamps the API onto the build so it cannot go
+# unnoticed, and the two compose: the guard removes a .next it judges stale, and the
+# `[ ! -d .next ]` test below then rebuilds.
+. "$HERE/../../tools/stale-build.sh"
+desk_invalidate_stale_build "$APP" "$API_URL" "$PORT"
 cd "$APP"
 cat > .env.local <<EOF
 NEXT_PUBLIC_SUPABASE_URL=$API_URL
@@ -113,6 +123,7 @@ if [ ! -d .next ] || [ "$CHANGED" -gt 0 ]; then
   REBUILT=1
 fi
 echo "built"
+desk_stamp_build "$APP" "$API_URL"
 
 say "app"
 # A REBUILD WITHOUT A RESTART SERVES THE OLD BUNDLE. `next start` reads .next once, at boot,
