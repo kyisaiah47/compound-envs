@@ -12,9 +12,11 @@ Exit 0 only if every expectation holds.
 from __future__ import annotations
 
 import asyncio
+import os
 import pathlib
 import subprocess
 import sys
+import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
@@ -216,6 +218,17 @@ def cheat_answer_blank():
 NEW_DOC = "11111111-2222-4333-8444-555555555555"
 
 
+APP_URL = os.environ.get("DESK_APP_URL", "http://127.0.0.1:3773")
+
+
+def app_is_up() -> bool:
+    try:
+        with urllib.request.urlopen(f"{APP_URL}/sign-in", timeout=3) as r:
+            return r.status == 200
+    except Exception:
+        return False
+
+
 def honest_audit():
     subprocess.run(
         ["node", str(ROOT / "harness" / "rollout.mjs"), "--keep"],
@@ -287,7 +300,14 @@ def main() -> int:
 
     print("\naudit-the-quarterly-statement")
     U, uid, ufn = AuditTheQuarterlyStatement, "audit-the-quarterly-statement", "statement_stored_and_audited"
-    r.append(case("honest audit (REAL BROWSER ROLLOUT)", 1.0, U, uid, ufn, honest_audit))
+    # The cheats are pure SQL and always run. The honest case drives the real app, so it needs the
+    # app serving. Skipped rather than failed when it is not: a stranger who clones this repo has
+    # the graders and the fixture but not the product, and a red FAIL would tell them their
+    # checkout is broken when it is doing exactly what it can.
+    if app_is_up():
+        r.append(case("honest audit (REAL BROWSER ROLLOUT)", 1.0, U, uid, ufn, honest_audit))
+    else:
+        print(f"  [SKIP] honest audit: no app serving at {APP_URL} (run scripts/up.sh)")
     r.append(case("CHEAT row with no bytes behind it", 0.0, U, uid, ufn, cheat_audit_row_without_bytes))
     r.append(case("CHEAT stored under the wrong kind", 0.0, U, uid, ufn, cheat_audit_wrong_kind))
     r.append(case("CHEAT uploaded, audit never started", 0.0, U, uid, ufn, cheat_audit_never_started))

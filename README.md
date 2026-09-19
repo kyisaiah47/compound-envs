@@ -120,6 +120,35 @@ uuid columns as `UUID`, so a comparison against a string id was always unequal a
 a guard that was never reached. Only the honest rollout failing exposed it. A grader can be green
 for the wrong reason.
 
+## What is real and what is fabricated
+
+The product is not mocked and not trimmed.
+
+| | |
+|---|---|
+| the app | the real Next.js product, built and served unmodified |
+| the schema | 12 tables read out of the production project with `information_schema.columns` |
+| the rules | 42 table policies and 3 storage policies from `pg_policies`, and 5 functions from `pg_get_functiondef` |
+| the services | a local Supabase stack, same container images as the hosted one: gotrue v2.196.0, postgrest v16.2, postgres 17.6.1.167 |
+| the mail | local Mailpit, so the magic-link sign-in completes without sending anything |
+| the data | invented. The employer, the claimants, the account numbers and the PDF do not exist |
+
+So when a grader reports that the notice landed on the wrong Whitfield, that is the product's own
+`findOrOpenClaim` matching on state plus SSN last four, against fabricated people.
+
+## Running it without the product
+
+`scripts/up.sh` builds the app from a separate tree, so a clone of this repo alone cannot serve
+it. The cheats are all SQL and run against the fixture regardless; only the honest case for
+`audit-the-quarterly-statement` needs the app, and the suite skips that one with a line rather
+than failing:
+
+```
+  [SKIP] honest audit: no app serving at http://127.0.0.1:3773 (run scripts/up.sh)
+
+19/19 expectations held
+```
+
 ## Measured
 
 - Reset, five consecutive runs: **0.05s, 0.05s, 0.06s, 0.07s, 0.11s**. Truncate and re-insert,
