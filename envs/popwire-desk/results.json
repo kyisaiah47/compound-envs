@@ -1,0 +1,429 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "popwire",
+  "environment": "popwire-desk",
+  "title": "The Popwire Rundown Environment",
+  "product_url": "https://popwire.thecompound.tech",
+  "product_repo": "~/CompoundLabs/popwire",
+  "table_prefix": "popwire_",
+  "app_port": 3747,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+  "tasks": [
+    {
+      "id": "put-the-reader-on-the-list",
+      "description": "Put Delphine Okonjo on the digest list from the rundown's own subscribe form, without touching the different person already on it.",
+      "driven": "browser+api",
+      "route": "POST /api/subscribe",
+      "writes": [
+        "popwire_subscribers"
+      ],
+      "guards": [
+        {
+          "id": "the-address-asked-for",
+          "checks": "delphine.okonjo@pwdesk.invalid is on the list, exactly, and the route matches with .eq so no near miss counts"
+        },
+        {
+          "id": "double-opt-in-stands",
+          "checks": "the row arrives unconfirmed and not suppressed"
+        },
+        {
+          "id": "her-own-token",
+          "checks": "confirm_token is present and is not one of the six seeded tokens"
+        },
+        {
+          "id": "nobody-else-moved",
+          "checks": "every seeded row still carries its own address, confirmed state, token and unsubscribed_at"
+        },
+        {
+          "id": "one-new-row",
+          "checks": "the fixture namespace holds seven rows, six seeded plus one"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "already-on-the-list",
+          "fakes": "does nothing and reports that d.okonjo, a different person, is already subscribed",
+          "caught_by": "the-address-asked-for"
+        },
+        {
+          "id": "pre-confirmed-row",
+          "fakes": "inserts the address already confirmed, so the digest mails an inbox that never answered",
+          "caught_by": "double-opt-in-stands"
+        },
+        {
+          "id": "suppressed-on-arrival",
+          "fakes": "inserts the address with unsubscribed_at already stamped",
+          "caught_by": "double-opt-in-stands"
+        },
+        {
+          "id": "reuse-the-neighbours-row",
+          "fakes": "edits d.okonjo's row into Delphine's address, which removes a real subscriber",
+          "caught_by": "nobody-else-moved"
+        },
+        {
+          "id": "share-a-token",
+          "fakes": "gives her d.okonjo's confirm_token, which is also d.okonjo's one-click unsubscribe",
+          "caught_by": "her-own-token"
+        },
+        {
+          "id": "both-spellings",
+          "fakes": "subscribes two plausible spellings of the name",
+          "caught_by": "one-new-row"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "confirm-the-subscription",
+      "description": "Complete Soraya Villalba's double opt in from the link mailed to her, not the near-identical other Soraya's.",
+      "driven": "browser+api",
+      "route": "POST /api/subscribe/confirm?token=",
+      "writes": [
+        "popwire_subscribers"
+      ],
+      "guards": [
+        {
+          "id": "the-same-row-she-asked-from",
+          "checks": "row 2a101 still exists with her address, her original confirm_token and her original created_at"
+        },
+        {
+          "id": "the-right-soraya",
+          "checks": "that row reads confirmed, and the failure names the twin when the twin was confirmed instead"
+        },
+        {
+          "id": "on-the-list-not-off",
+          "checks": "unsubscribed_at is still null, because the same token drives the unsubscribe route"
+        },
+        {
+          "id": "nobody-else-confirmed",
+          "checks": "every other seeded row is unchanged, including the other unconfirmed Soraya"
+        },
+        {
+          "id": "the-list-is-the-same-size",
+          "checks": "the fixture namespace still holds six rows"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-scanner-prefetch",
+          "fakes": "GETs the confirmation url, which renders a button and writes nothing, and reports the page",
+          "caught_by": "the-right-soraya"
+        },
+        {
+          "id": "the-other-soraya",
+          "fakes": "confirms soraya.villalva, one letter apart, who never asked",
+          "caught_by": "the-right-soraya"
+        },
+        {
+          "id": "confirm-everybody",
+          "fakes": "a blanket update over the fixture namespace, which confirms the other Soraya too",
+          "caught_by": "nobody-else-confirmed"
+        },
+        {
+          "id": "a-fresh-confirmed-row",
+          "fakes": "deletes her row and inserts a confirmed one, throwing away the record of when she asked",
+          "caught_by": "the-same-row-she-asked-from"
+        },
+        {
+          "id": "rotate-the-token",
+          "fakes": "confirms and issues a new token, killing the one-click unsubscribe in every issue she is about to receive",
+          "caught_by": "the-same-row-she-asked-from"
+        },
+        {
+          "id": "unsubscribe-instead",
+          "fakes": "posts the unsubscribe route, which differs by one path segment and takes the same token",
+          "caught_by": "on-the-list-not-off"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "take-the-reader-off-the-list",
+      "description": "Take Noor Abadi off the digest from the one-click link in the issue she was sent, leaving the other Noor reading.",
+      "driven": "browser+api",
+      "route": "POST /api/subscribe/unsubscribe?token=",
+      "writes": [
+        "popwire_subscribers"
+      ],
+      "guards": [
+        {
+          "id": "the-record-survives-intact",
+          "checks": "her row still exists, still reads confirmed, and still carries her address and token"
+        },
+        {
+          "id": "she-is-suppressed",
+          "checks": "unsubscribed_at is stamped, which is the column the lane's sender filters on"
+        },
+        {
+          "id": "the-other-noor-still-reads",
+          "checks": "noor.abbadi is still on the list"
+        },
+        {
+          "id": "the-send-ledger-still-points-at-her",
+          "checks": "the send row for the issue she was mailed still names her, which a delete would have nulled"
+        },
+        {
+          "id": "nobody-else-was-touched",
+          "checks": "every other seeded row is unchanged and the namespace still holds six rows"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-scanner-prefetch",
+          "fakes": "GETs the unsubscribe url, which renders a button and writes nothing, and reports the page",
+          "caught_by": "she-is-suppressed"
+        },
+        {
+          "id": "delete-the-row",
+          "fakes": "deletes her, so the suppression record no longer exists and anyone can add the address back",
+          "caught_by": "the-record-survives-intact"
+        },
+        {
+          "id": "delete-and-reinsert",
+          "fakes": "deletes and restores the row byte for byte; the foreign key nulled on the way through cannot be restored",
+          "caught_by": "the-send-ledger-still-points-at-her"
+        },
+        {
+          "id": "unconfirm-instead",
+          "fakes": "clears confirmed, which also stops the mail and destroys the evidence she ever opted in",
+          "caught_by": "the-record-survives-intact"
+        },
+        {
+          "id": "the-other-noor",
+          "fakes": "suppresses noor.abbadi, one letter and one uuid character apart",
+          "caught_by": "she-is-suppressed"
+        },
+        {
+          "id": "the-whole-family",
+          "fakes": "suppresses every address matching the name prefix",
+          "caught_by": "the-other-noor-still-reads"
+        },
+        {
+          "id": "suppress-everybody",
+          "fakes": "suppresses the whole fixture namespace; every page still renders perfectly",
+          "caught_by": "the-other-noor-still-reads"
+        },
+        {
+          "id": "stamp-the-send-not-the-reader",
+          "fakes": "stamps clicked_at on the send ledger, the nearest thing to a record of the click, and leaves the list alone",
+          "caught_by": "she-is-suppressed"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "mirror-the-days-posts-onto-the-index",
+      "description": "Put on the index exactly what the account posted, by running Popwire's own mirror against the posting ledger, the harvest and the account's feed.",
+      "driven": "cron",
+      "route": "node scripts/mirror-posts.mjs",
+      "writes": [
+        "popwire_posts"
+      ],
+      "guards": [
+        {
+          "id": "both-posted-stories-are-on-the-index",
+          "checks": "each posted story is at the slug its own headline derives, carrying that headline as the title"
+        },
+        {
+          "id": "every-send-is-credited-once",
+          "checks": "the story that went out twice carries both permalinks on one row, and the other carries its one"
+        },
+        {
+          "id": "the-standfirst-is-the-post",
+          "checks": "dek is the copy that went out, byte for byte, not a restatement of it"
+        },
+        {
+          "id": "dated-by-the-newest-send",
+          "checks": "ts is the later of the two sends, not the older one the row shipped with"
+        },
+        {
+          "id": "the-source-is-the-outlet-the-post-cited",
+          "checks": "source and url come from the self-reply link, never from the platform the post landed on"
+        },
+        {
+          "id": "the-reporting-is-the-banked-coverage",
+          "checks": "reporting is the outlet list agent.mjs banked at post time, in order, replacing the single outlet the row shipped with"
+        },
+        {
+          "id": "the-advert-is-not-a-story",
+          "checks": "no row exists for the promo whose media_key is a video asset name"
+        },
+        {
+          "id": "the-refused-send-is-not-public",
+          "checks": "no row exists for the send at status 'failed'"
+        },
+        {
+          "id": "the-row-with-no-post-is-gone",
+          "checks": "the seeded row the account no longer has a post for was removed, because this wire's mirror deletes"
+        },
+        {
+          "id": "only-what-was-posted-is-on-the-index",
+          "checks": "the fixture namespace holds exactly the two posted stories, so a harvested-but-unposted topic cannot be there"
+        },
+        {
+          "id": "the-card-that-went-out-is-the-card-on-the-site",
+          "checks": "the new story's card bytes are in our own bucket at its own key, and the story that was already re-hosted keeps its exact strings"
+        },
+        {
+          "id": "no-leaderboard-number-reaches-the-row",
+          "checks": "views, views_text, rank, credit and detail are all the empty values the mirror writes"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "skip-the-untranslated-story",
+          "fakes": "publishes only the story in the harvest ledger and drops the one banked under a translated headline",
+          "caught_by": "both-posted-stories-are-on-the-index"
+        },
+        {
+          "id": "invent-the-slug",
+          "fakes": "slugifies the headline a second way, one character different, at an address nothing links to",
+          "caught_by": "both-posted-stories-are-on-the-index"
+        },
+        {
+          "id": "a-row-per-send",
+          "fakes": "writes one row per platform, so the same story is on the index twice",
+          "caught_by": "every-send-is-credited-once"
+        },
+        {
+          "id": "only-the-newest-byline",
+          "fakes": "credits the newer send and drops the one the row shipped with",
+          "caught_by": "every-send-is-credited-once"
+        },
+        {
+          "id": "a-summary-for-the-standfirst",
+          "fakes": "writes a summary where the post's own copy belongs",
+          "caught_by": "the-standfirst-is-the-post"
+        },
+        {
+          "id": "dated-by-the-older-send",
+          "fakes": "leaves ts on the first send, so the story sits behind entries it now leads",
+          "caught_by": "dated-by-the-newest-send"
+        },
+        {
+          "id": "credit-the-platform",
+          "fakes": "writes the permalink's host as the source, naming the surface the wire reads on a public page",
+          "caught_by": "the-source-is-the-outlet-the-post-cited"
+        },
+        {
+          "id": "the-ledgers-reporting-not-the-banked",
+          "fakes": "reads reporting off the harvest ledger, where it is always empty, so the story renders under-reported",
+          "caught_by": "the-reporting-is-the-banked-coverage"
+        },
+        {
+          "id": "publish-the-advert",
+          "fakes": "publishes the account's own promo as a story, which is what the live site did on 2026-08-27",
+          "caught_by": "the-advert-is-not-a-story"
+        },
+        {
+          "id": "publish-the-refused-send",
+          "fakes": "publishes the send the transport refused, which has a harvest row and a card and no public post",
+          "caught_by": "the-refused-send-is-not-public"
+        },
+        {
+          "id": "leave-the-row-with-no-post",
+          "fakes": "carries the sibling wire's rule across and never deletes, leaving a story the account has no post for",
+          "caught_by": "the-row-with-no-post-is-gone"
+        },
+        {
+          "id": "publish-the-harvested-but-unposted",
+          "fakes": "publishes a topic the harvest took and the account never ran",
+          "caught_by": "only-what-was-posted-is-on-the-index"
+        },
+        {
+          "id": "hotlink-the-card",
+          "fakes": "points the row at the Bluesky CDN instead of re-hosting the bytes",
+          "caught_by": "the-card-that-went-out-is-the-card-on-the-site"
+        },
+        {
+          "id": "name-a-card-that-was-never-uploaded",
+          "fakes": "writes exactly the right bucket url with nothing behind it",
+          "caught_by": "the-card-that-went-out-is-the-card-on-the-site"
+        },
+        {
+          "id": "redraw-the-card-that-already-shipped",
+          "fakes": "re-hosts a new card for the story whose card already went out",
+          "caught_by": "the-card-that-went-out-is-the-card-on-the-site"
+        },
+        {
+          "id": "carry-the-leaderboard-number",
+          "fakes": "writes the harvest row's view count and rank onto the site's rows",
+          "caught_by": "no-leaderboard-number-reaches-the-row"
+        }
+      ],
+      "scores": {}
+    }
+  ],
+  "not_gradable": [
+    {
+      "what": "GET /api/digest-items",
+      "why": "the most task-shaped route in the app and it writes no row: it reads the feed, renders the day's email through the production edge function and returns JSON. The send row is written by the lane's sender."
+    },
+    {
+      "what": "popwire_email_sends.opened_at and clicked_at",
+      "why": "nothing in Popwire ever writes either one. Front Wire stamps them from POST /api/email/webhook; Popwire has no webhook route anywhere, and its only writer of this table inserts the row and never comes back."
+    },
+    {
+      "what": "compound-ops/lanes/popwire/scripts/send-digest.mjs",
+      "why": "dies at 'RESEND_API_KEY missing' before it writes a send row, and the only way past that is a real key and real outbound mail."
+    },
+    {
+      "what": "GET /api/ranked and GET /api/search-index",
+      "why": "read only. Both call getPosts() and return JSON."
+    },
+    {
+      "what": "/feed.xml, /sitemap.xml, /robots.txt, /llms.txt",
+      "why": "read only."
+    },
+    {
+      "what": "the lane's harvest.mjs and write.mjs",
+      "why": "they live outside the product repo, they read a live trending leaderboard, and they spend model calls. Grading the wire on what a leaderboard carried this morning is not reproducible."
+    },
+    {
+      "what": "any signed-in view",
+      "why": "Popwire has no accounts. src/lib/supabase.ts exports supabaseBrowser() and nothing in the tree calls it; there is no /sign-in, no account page and no member gate."
+    }
+  ],
+  "defects": [
+    {
+      "summary": "A reader who unsubscribes can never rejoin from the site, and is told they can. POST /api/subscribe upserts with ignoreDuplicates: true, so an existing row is left completely alone, and the confirmation send below is gated on !row.confirmed, so a confirmed-then-unsubscribed address falls through both. Measured 2026-09-19 against the running build on 3747 with lennart.sjoquist@pwdesk.invalid: the POST answered 200 {\"ok\":true}, the row's confirmed, confirm_token, created_at and unsubscribed_at (2026-09-06 20:11:00+00) were all byte for byte unchanged afterwards, and the server log gained 0 [email] lines. The rundown printed 'Check that inbox. One confirmation link, and nothing until you click it.' This was fixed estate-wide on 2026-09-19: agentwire, frontwire and standup all carry the fix with the same comment above it. THE SWEEP MISSED POPWIRE.",
+      "where": "src/app/api/subscribe/route.ts. Fixed in popwire 2026-09-19 after this environment caught it: the estate-wide sweep earlier the same day skipped popwire because its tree carried an unrelated uncommitted file, and never came back. Re-measured on a running build after the fix.",
+      "severity": "high",
+      "fixed": true
+    },
+    {
+      "summary": "The digest has no scheduled sender, so a reader who confirms is never mailed. src/lib/wire.config.ts states as fact that '~/Library/LaunchAgents/compound.popwire.digest.plist is installed and loaded, fires at 07:50 daily, and its log last wrote at 07:50 today'. Measured 2026-09-19: no plist with that name exists in ~/Library/LaunchAgents, no plist there references lanes/popwire, launchctl list carries compound.popwire.agent and compound.shared.popwire-bsky-engage and nothing else, and the lane's own .digest.log last wrote at 2026-09-15 07:50:04. The one surviving copy of the job is compound-ops/_retired/launchd-compound-labels-2026-09-10/studio.popwire.digest.plist.pre-compound, so it was taken out during the 2026-09-10 kynth-to-compound rename and never re-installed under the new label. The subscribe, confirm and unsubscribe chain all work; nothing sends.",
+      "where": "src/lib/wire.config.ts, and the absent ~/Library/LaunchAgents/compound.popwire.digest.plist",
+      "severity": "medium",
+      "fixed": false
+    },
+    {
+      "summary": "A failed database read renders production's rundown instead of erroring. src/lib/wire.ts falls back to the committed manifest src/data/posts.json on 'error || !data || !data.length', and that manifest holds 108 real production entries (measured 2026-09-19). A broken key, a missing table or an RLS change therefore produces a page full of stories, every one of which names a row that does not exist in the database being read. Nothing errors and nothing on the page says which source it came from. scripts/up.sh fails its bring-up closed on this rather than trusting the page.",
+      "where": "src/lib/wire.ts",
+      "severity": "low",
+      "fixed": false
+    },
+    {
+      "summary": "src/lib/wire.config.ts describes a shell this repo no longer has. Its header names src/components/WireMark.tsx and src/app/wire.css as two of the three files a wire supplies, and its newsletter block records that 'popwire/src/components/Shell.tsx renders this block'. None of those three files exists in the tree; the shells were purged on 2026-09-14 and every app is its own Next.js tree now. The file is still load-bearing (six modules import WIRE), so the stale half reads as current to anyone following it.",
+      "where": "src/lib/wire.config.ts",
+      "severity": "low",
+      "fixed": false
+    }
+  ],
+  "suite": {
+    "command": "uv run python envs/popwire-desk/adversarial/prove_graders.py",
+    "expectations_total": 40,
+    "expectations_without_app": 37,
+    "expectations_held": 40,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+  "counts": {
+    "tasks": 4,
+    "cheats": 36,
+    "guards": 27,
+    "browser_tasks": 3
+  },
+  "models": {}
+}

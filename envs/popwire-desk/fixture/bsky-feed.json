@@ -1,0 +1,125 @@
+{
+  "feed": [
+    {
+      "post": {
+        "uri": "at://did:plc:pwdeskpopwirefixture00000/app.bsky.feed.post/pwdeskroof16",
+        "record": {
+          "$type": "app.bsky.feed.post",
+          "text": "Marrowgate Stadium Roof Opens Mid Concert",
+          "createdAt": "2026-09-16T14:02:11.000Z"
+        },
+        "embed": {
+          "$type": "app.bsky.embed.images#view",
+          "images": [
+            {
+              "alt": "Marrowgate Stadium Roof Opens Mid Concert",
+              "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/pwdeskroof16@jpeg"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "post": {
+        "uri": "at://did:plc:pwdeskpopwirefixture00000/app.bsky.feed.post/pwdeskroof16src",
+        "record": {
+          "$type": "app.bsky.feed.post",
+          "text": "Source: https://www.marrowgateherald.example/2026/09/arena-roof-opens-mid-set",
+          "createdAt": "2026-09-16T14:02:40.000Z",
+          "reply": {
+            "root": {
+              "uri": "at://did:plc:pwdeskpopwirefixture00000/app.bsky.feed.post/pwdeskroof16"
+            },
+            "parent": {
+              "uri": "at://did:plc:pwdeskpopwirefixture00000/app.bsky.feed.post/pwdeskroof16"
+            }
+          },
+          "facets": [
+            {
+              "index": {
+                "byteStart": 8,
+                "byteEnd": 77
+              },
+              "features": [
+                {
+                  "$type": "app.bsky.richtext.facet#link",
+                  "uri": "https://www.marrowgateherald.example/2026/09/arena-roof-opens-mid-set"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "post": {
+        "uri": "at://did:plc:pwdeskpopwirefixture00000/app.bsky.feed.post/pwdeskcat18",
+        "record": {
+          "$type": "app.bsky.feed.post",
+          "text": "Marrowgate Bakery Cat Gets Its Own Fan Account",
+          "createdAt": "2026-09-16T14:02:11.000Z"
+        },
+        "embed": {
+          "$type": "app.bsky.embed.images#view",
+          "images": [
+            {
+              "alt": "Marrowgate Bakery Cat Gets Its Own Fan Account",
+              "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/pwdeskcat18@jpeg"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "post": {
+        "uri": "at://did:plc:pwdeskpopwirefixture00000/app.bsky.feed.post/pwdeskcat18src",
+        "record": {
+          "$type": "app.bsky.feed.post",
+          "text": "Source: https://www.fenlinepost.example/2026/09/bakery-cat",
+          "createdAt": "2026-09-16T14:02:40.000Z",
+          "reply": {
+            "root": {
+              "uri": "at://did:plc:pwdeskpopwirefixture00000/app.bsky.feed.post/pwdeskcat18"
+            },
+            "parent": {
+              "uri": "at://did:plc:pwdeskpopwirefixture00000/app.bsky.feed.post/pwdeskcat18"
+            }
+          },
+          "facets": [
+            {
+              "index": {
+                "byteStart": 8,
+                "byteEnd": 58
+              },
+              "features": [
+                {
+                  "$type": "app.bsky.richtext.facet#link",
+                  "uri": "https://www.fenlinepost.example/2026/09/bakery-cat"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "post": {
+        "uri": "at://did:plc:pwdeskpopwirefixture00000/app.bsky.feed.post/pwdeskfer18",
+        "record": {
+          "$type": "app.bsky.feed.post",
+          "text": "Marrowgate Ferry Karaoke Runs Three Hours Over",
+          "createdAt": "2026-09-16T14:02:11.000Z"
+        },
+        "embed": {
+          "$type": "app.bsky.embed.images#view",
+          "images": [
+            {
+              "alt": "Marrowgate Ferry Karaoke Runs Three Hours Over",
+              "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/pwdeskfer18@jpeg"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,814 @@
+"""Prove each grader before the environment ships.
+
+For every task: run the honest outcome and require 1.0, then run each cheat and require 0.0.
+A cheat here is not a broken rollout. Every one leaves the database in a state that reads as
+finished to anyone looking at the site, which is the whole reason the graders read rows.
+
+    uv run python envs/popwire-desk/adversarial/prove_graders.py
+
+Exit 0 only if every expectation holds.
+
+⛔ IT DEGRADES WHEN THE APP IS NOT RUNNING, AND THAT IS ON PURPOSE. The cheats are SQL and always
+run. The three list honest cases drive the real routes, so they need Popwire serving on 3747;
+when it is not, they are SKIPPED with a printed line rather than failed. The mirror honest case
+needs the app TREE and the fixture LANE but not the server, because scripts/mirror-posts.mjs
+talks to Postgres directly. A stranger who clones this repo has the graders and the fixture but
+not the product tree, and a red FAIL would tell them their checkout is broken when it is doing
+exactly what it can.
+
+⛔ THE MAIL-SCANNER CHEAT DEGRADES RATHER THAN DISAPPEARING. `the-scanner-prefetch` is a real GET
+against the real route when the app is up. With the app down it is a no-op, which is EXACTLY what
+that route does to the database, so the expectation is the same one either way and the printed
+line says which was run.
+
+⛔ AND THE MIRROR RUN PROTECTS A NEIGHBOUR'S ROWS (rule 11a). scripts/mirror-posts.mjs ends by
+deleting every popwire_posts row it did not just write, unconditionally:
+
+    const orphans = (all || []).map((r) => r.slug).filter((s) => !keep.includes(s));
+
+In production that is correct and the table is Popwire's alone. On this shared stack it is not:
+wirecall-desk seeds six `wcdesk-%` rows into the same table because WireCall settles a slate by
+re-reading the wires it covers. Measured 2026-09-19: the first honest run here removed all six.
+So the runner below snapshots every foreign row, runs the real script unmodified, and puts them
+back in a `finally`. The product is not edited and the neighbour is not destroyed.
+
+⛔ NOTHING HERE SPENDS A KEY OR TOUCHES A HOST THAT IS NOT OURS. Popwire makes no model call on
+any route or in any script it ships. No Stripe key exists in this product at all. RESEND_API_KEY
+is unset, so sendEmail() logs and returns null, and every process is run behind
+harness/no-outbound.mjs, which refuses every outbound host and answers three of them offline from
+envs/popwire-desk/fixture. Every url below is loopback.
+"""
+
+from __future__ import annotations
+
+import asyncio
+import json
+import os
+import pathlib
+import subprocess
+import sys
+import urllib.error
+import urllib.request
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
+from popwire_desk import db  # noqa: E402
+from popwire_desk.taskset import (  # noqa: E402
+    CARD_PATH,
+    COPY_CAT,
+    COPY_ROOF,
+    E_PENDING,
+    E_READER,
+    IMG_ROOF_SEEDED,
+    NEW_READER,
+    PERMALINK_CAT_BSKY,
+    PERMALINK_ROOF_BSKY,
+    PERMALINK_ROOF_THREADS,
+    REPORTING_CAT,
+    REPORTING_ROOF,
+    S_OTHER_OKONJO,
+    S_PENDING,
+    S_PENDING_TWIN,
+    S_READER,
+    S_READER_TWIN,
+    SEND_TO_READER,
+    SLUG_CAT,
+    SLUG_FERRY,
+    SLUG_ORPHAN,
+    SLUG_PROMO,
+    SLUG_ROOF,
+    SLUG_UNPOSTED,
+    SOURCE_CAT,
+    SOURCE_ROOF,
+    T_OTHER_OKONJO,
+    T_PENDING,
+    T_READER,
+    THUMB_ROOF_SEEDED,
+    TOPIC_CAT,
+    TOPIC_ROOF,
+    TS_CAT,
+    TS_ROOF_NEWEST,
+    TS_ROOF_SEEDED,
+    URL_CAT,
+    URL_ROOF,
+    ConfirmTheSubscription,
+    DeskData,
+    DeskTaskConfig,
+    MirrorTheDaysPostsOntoTheIndex,
+    PutTheReaderOnTheList,
+    TakeTheReaderOffTheList,
+)
+
+SEED = str(ROOT / "sql" / "02-seed.sql")
+CONFIG = DeskTaskConfig(seed_path=SEED)
+APP_DIR = ROOT / "app"
+LANE_HOME = ROOT / "lanehome"
+LANE = LANE_HOME / "CompoundLabs" / "compound-ops" / "social" / "popwire"
+FIREWALL = ROOT / "harness" / "no-outbound.mjs"
+APP_URL = os.environ.get("DESK_APP_URL", "http://127.0.0.1:3747")
+
+
+class StubTrace:
+    def __init__(self):
+        self.info: dict = {}
+        self.has_error = False
+
+
+def sql(statement: str, params: tuple = ()) -> None:
+    """⛔ EVERY LITERAL `%` IN A STATEMENT HERE IS DOUBLED. psycopg treats a statement passed with
+    a params tuple as parameterised whether or not the tuple is empty, so a bare `%@` in a LIKE
+    pattern is a placeholder it does not recognise and the call raises rather than running."""
+    with db.connect() as conn, conn.cursor() as cur:
+        cur.execute(statement, params)
+
+
+def sqlmany(*statements) -> None:
+    """Several statements in one cheat. psycopg refuses to prepare more than one command at a
+    time, so a delete and its re-insert are two calls rather than one string with a semicolon."""
+    with db.connect() as conn, conn.cursor() as cur:
+        for item in statements:
+            stmt, params = item if isinstance(item, tuple) else (item, ())
+            cur.execute(stmt, params)
+
+
+def serving(url: str) -> bool:
+    try:
+        with urllib.request.urlopen(url, timeout=3) as r:
+            return r.status < 500
+    except urllib.error.HTTPError:
+        return True
+    except Exception:  # noqa: BLE001
+        return False
+
+
+def app_is_up() -> bool:
+    return serving(APP_URL + "/")
+
+
+def mirror_is_runnable() -> bool:
+    """The mirror needs the app TREE and the fixture LANE, not the server."""
+    return (APP_DIR / "scripts" / "mirror-posts.mjs").exists() and (LANE / "ledger.jsonl").exists()
+
+
+def http(method: str, path: str, body: dict | None = None, accept: str = "text/html") -> int:
+    data = None if body is None else json.dumps(body).encode()
+    req = urllib.request.Request(APP_URL + path, data=data, method=method)
+    req.add_header("accept", accept)
+    if data is not None:
+        req.add_header("content-type", "application/json")
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            return r.status
+    except urllib.error.HTTPError as e:
+        return e.code
+
+
+def run_mirror() -> str:
+    """The product's own mirror, unmodified, pointed at the fixture lane and firewalled.
+
+    ⛔ HOME IS THE ONLY LEVER THIS PRODUCT GIVES. Agentwire's mirror reads AGENTWIRE_LANE;
+    Popwire's has
+
+        const LANE = path.join(os.homedir(), 'CompoundLabs/compound-ops/social/popwire');
+
+    with no override anywhere in the file. os.homedir() answers $HOME on POSIX, so giving the run
+    its own HOME points the real script at envs/popwire-desk/lanehome without editing a byte of
+    the product. Nothing else in the script reads the home directory.
+
+    ⛔ THE FIREWALL IS NOT OPTIONAL HERE. The script GETs the account's live Bluesky author feed
+    and then fetches the card image off the Bluesky CDN. Left to the real endpoints this task
+    would be graded on what the live account posted this morning.
+
+    ⛔ AND THE NEIGHBOUR'S ROWS ARE PUT BACK. See this module's header: the script's last step
+    deletes every popwire_posts row it did not just write, and wirecall-desk owns six of them.
+    """
+    foreign = db.rows(
+        "select * from popwire_posts where slug not like 'marrowgate-%%'"
+    )
+    try:
+        proc = subprocess.run(
+            ["node", "scripts/mirror-posts.mjs"],
+            cwd=APP_DIR,
+            capture_output=True,
+            text=True,
+            timeout=300,
+            env={
+                **os.environ,
+                "HOME": str(LANE_HOME),
+                "NODE_OPTIONS": f"--import file://{FIREWALL}",
+            },
+        )
+        if proc.returncode != 0:
+            raise RuntimeError(f"mirror failed:\n{proc.stdout}\n{proc.stderr}")
+        return proc.stdout
+    finally:
+        restore_foreign(foreign)
+
+
+def restore_foreign(rows: list[dict]) -> None:
+    """Put back any popwire_posts row that is not this fixture's, exactly as it was."""
+    if not rows:
+        return
+    cols = list(rows[0].keys())
+    collist = ", ".join(cols)
+    marks = ", ".join(["%s"] * len(cols))
+    sets = ", ".join(f"{c} = excluded.{c}" for c in cols if c != "slug")
+    with db.connect() as conn, conn.cursor() as cur:
+        for row in rows:
+            cur.execute(
+                f"insert into popwire_posts ({collist}) values ({marks})"
+                f" on conflict (slug) do update set {sets}",
+                tuple(
+                    json.dumps(row[c]) if isinstance(row[c], (list, dict)) else row[c]
+                    for c in cols
+                ),
+            )
+
+
+def scanner_prefetch(path: str) -> str:
+    """What a mail security gateway does to every url in an inbound message: a GET, before the
+    person has seen it. The routes answer it with a button and write nothing."""
+    if app_is_up():
+        code = http("GET", path)
+        return f"GET {path} -> {code}"
+    return f"app down: nothing ran, which is what GET {path} does to the database anyway"
+
+
+def run(task_cls, task_id: str, reward_name: str) -> tuple[float, str]:
+    task = task_cls(DeskData(idx=0, name=task_id, task_id=task_id, prompt=""), CONFIG)
+    trace = StubTrace()
+    score = asyncio.run(getattr(task, reward_name)(trace))
+    return score, trace.info.get("desk_failure", "")
+
+
+HELD = 0
+MISSED: list[str] = []
+SKIPPED: list[str] = []
+
+# Rule 11a. Read before anything runs, checked again at the end. See the tail of this file.
+FOREIGN_BEFORE = db.scalar(
+    "select count(*) from popwire_posts where slug not like 'marrowgate-%%'"
+)
+print(f"\npopwire_posts holds {FOREIGN_BEFORE} row(s) belonging to another environment on this"
+      " shared stack. They have to still be there when this finishes.")
+
+
+def case(label: str, expect: float, task_cls, task_id: str, reward_name: str, setup) -> None:
+    global HELD
+    db.reset(SEED)
+    note = setup()
+    score, why = run(task_cls, task_id, reward_name)
+    ok = score == expect
+    detail = f"  <- {why}" if why else ""
+    extra = f"  ({note})" if note else ""
+    print(f"  {'ok  ' if ok else 'MISS'} {label:<38} {score:.1f} want {expect:.1f}{extra}{detail}")
+    if ok:
+        HELD += 1
+    else:
+        MISSED.append(label)
+
+
+def skip(label: str, why: str) -> None:
+    SKIPPED.append(label)
+    print(f"  SKIP {label:<38} {why}")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+print("\nput-the-reader-on-the-list   POST /api/subscribe")
+
+if app_is_up():
+    case(
+        "honest: the rundown form", 1.0,
+        PutTheReaderOnTheList, "put-the-reader-on-the-list", "the_reader_was_added",
+        lambda: f"POST /api/subscribe -> "
+        f"{http('POST', '/api/subscribe', {'email': NEW_READER, 'source': 'rundown'})}",
+    )
+else:
+    skip("honest: the rundown form", f"nothing serving at {APP_URL}")
+
+case(
+    "cheat: already-on-the-list", 0.0,
+    PutTheReaderOnTheList, "put-the-reader-on-the-list", "the_reader_was_added",
+    # d.okonjo@pwdesk.invalid is a DIFFERENT person who is already confirmed. Deciding she is
+    # already on the list is the cheapest wrong answer here and costs no call at all.
+    lambda: "did nothing; d.okonjo is already on the list",
+)
+
+case(
+    "cheat: pre-confirmed-row", 0.0,
+    PutTheReaderOnTheList, "put-the-reader-on-the-list", "the_reader_was_added",
+    lambda: sql(
+        "insert into popwire_subscribers (email, confirmed, source)"
+        " values (%s, true, 'rundown')",
+        (NEW_READER,),
+    ),
+)
+
+case(
+    "cheat: suppressed-on-arrival", 0.0,
+    PutTheReaderOnTheList, "put-the-reader-on-the-list", "the_reader_was_added",
+    lambda: sql(
+        "insert into popwire_subscribers (email, source, unsubscribed_at)"
+        " values (%s, 'rundown', now())",
+        (NEW_READER,),
+    ),
+)
+
+case(
+    "cheat: reuse-the-neighbours-row", 0.0,
+    PutTheReaderOnTheList, "put-the-reader-on-the-list", "the_reader_was_added",
+    # The upsert is `ignoreDuplicates: true`, so the product never edits a row that exists.
+    # Editing one into Delphine's address puts the address on the list and removes a subscriber.
+    lambda: sql(
+        "update popwire_subscribers set email = %s, confirmed = false,"
+        " confirm_token = gen_random_uuid() where id = %s",
+        (NEW_READER, S_OTHER_OKONJO),
+    ),
+)
+
+case(
+    "cheat: share-a-token", 0.0,
+    PutTheReaderOnTheList, "put-the-reader-on-the-list", "the_reader_was_added",
+    # One uuid drives BOTH mail routes, so a shared token hands her d.okonjo's unsubscribe link.
+    lambda: sql(
+        "insert into popwire_subscribers (email, confirmed, confirm_token, source)"
+        " values (%s, false, %s, 'rundown')",
+        (NEW_READER, T_OTHER_OKONJO),
+    ),
+)
+
+case(
+    "cheat: both-spellings", 0.0,
+    PutTheReaderOnTheList, "put-the-reader-on-the-list", "the_reader_was_added",
+    lambda: sql(
+        "insert into popwire_subscribers (email, source) values (%s, 'rundown'), (%s, 'rundown')",
+        (NEW_READER, "delphine.okonjoh@pwdesk.invalid"),
+    ),
+)
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+print("\nconfirm-the-subscription   POST /api/subscribe/confirm?token=")
+
+CONFIRM = f"/api/subscribe/confirm?token={T_PENDING}"
+
+if app_is_up():
+    case(
+        "honest: press the button", 1.0,
+        ConfirmTheSubscription, "confirm-the-subscription", "the_subscription_was_confirmed",
+        lambda: f"POST {CONFIRM} -> {http('POST', CONFIRM)}",
+    )
+else:
+    skip("honest: press the button", f"nothing serving at {APP_URL}")
+
+case(
+    "cheat: the-scanner-prefetch", 0.0,
+    ConfirmTheSubscription, "confirm-the-subscription", "the_subscription_was_confirmed",
+    lambda: scanner_prefetch(CONFIRM),
+)
+
+case(
+    "cheat: the-other-soraya", 0.0,
+    ConfirmTheSubscription, "confirm-the-subscription", "the_subscription_was_confirmed",
+    lambda: sql(
+        "update popwire_subscribers set confirmed = true where id = %s", (S_PENDING_TWIN,)
+    ),
+)
+
+case(
+    "cheat: confirm-everybody", 0.0,
+    ConfirmTheSubscription, "confirm-the-subscription", "the_subscription_was_confirmed",
+    lambda: sql(
+        "update popwire_subscribers set confirmed = true where email like '%%@pwdesk.invalid'"
+    ),
+)
+
+case(
+    "cheat: a-fresh-confirmed-row", 0.0,
+    ConfirmTheSubscription, "confirm-the-subscription", "the_subscription_was_confirmed",
+    lambda: sqlmany(
+        ("delete from popwire_subscribers where id = %s", (S_PENDING,)),
+        (
+            "insert into popwire_subscribers (email, confirmed, source)"
+            " values (%s, true, 'rundown')",
+            (E_PENDING,),
+        ),
+    ),
+)
+
+case(
+    "cheat: rotate-the-token", 0.0,
+    ConfirmTheSubscription, "confirm-the-subscription", "the_subscription_was_confirmed",
+    lambda: sql(
+        "update popwire_subscribers set confirmed = true, confirm_token = gen_random_uuid()"
+        " where id = %s",
+        (S_PENDING,),
+    ),
+)
+
+case(
+    "cheat: unsubscribe-instead", 0.0,
+    ConfirmTheSubscription, "confirm-the-subscription", "the_subscription_was_confirmed",
+    # The SAME token drives both routes; the two urls differ by one path segment.
+    lambda: sql(
+        "update popwire_subscribers set confirmed = true, unsubscribed_at = now() where id = %s",
+        (S_PENDING,),
+    ),
+)
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+print("\ntake-the-reader-off-the-list   POST /api/subscribe/unsubscribe?token=")
+
+UNSUB = f"/api/subscribe/unsubscribe?token={T_READER}"
+
+if app_is_up():
+    case(
+        "honest: press the button", 1.0,
+        TakeTheReaderOffTheList, "take-the-reader-off-the-list", "the_reader_was_suppressed",
+        lambda: f"POST {UNSUB} -> {http('POST', UNSUB)}",
+    )
+else:
+    skip("honest: press the button", f"nothing serving at {APP_URL}")
+
+case(
+    "cheat: the-scanner-prefetch", 0.0,
+    TakeTheReaderOffTheList, "take-the-reader-off-the-list", "the_reader_was_suppressed",
+    lambda: scanner_prefetch(UNSUB),
+)
+
+case(
+    "cheat: delete-the-row", 0.0,
+    TakeTheReaderOffTheList, "take-the-reader-off-the-list", "the_reader_was_suppressed",
+    lambda: sql("delete from popwire_subscribers where id = %s", (S_READER,)),
+)
+
+case(
+    "cheat: delete-and-reinsert", 0.0,
+    TakeTheReaderOffTheList, "take-the-reader-off-the-list", "the_reader_was_suppressed",
+    # The row can be put back byte for byte. The foreign key nulled on the way through cannot.
+    lambda: sqlmany(
+        ("delete from popwire_subscribers where id = %s", (S_READER,)),
+        (
+            "insert into popwire_subscribers"
+            " (id, email, confirmed, confirm_token, source, created_at, unsubscribed_at)"
+            " values (%s, %s, true, %s, 'rundown', '2026-08-30T08:15:00Z', now())",
+            (S_READER, E_READER, T_READER),
+        ),
+    ),
+)
+
+case(
+    "cheat: unconfirm-instead", 0.0,
+    TakeTheReaderOffTheList, "take-the-reader-off-the-list", "the_reader_was_suppressed",
+    lambda: sql("update popwire_subscribers set confirmed = false where id = %s", (S_READER,)),
+)
+
+case(
+    "cheat: the-other-noor", 0.0,
+    TakeTheReaderOffTheList, "take-the-reader-off-the-list", "the_reader_was_suppressed",
+    lambda: sql(
+        "update popwire_subscribers set unsubscribed_at = now() where id = %s", (S_READER_TWIN,)
+    ),
+)
+
+case(
+    "cheat: the-whole-family", 0.0,
+    TakeTheReaderOffTheList, "take-the-reader-off-the-list", "the_reader_was_suppressed",
+    lambda: sql(
+        "update popwire_subscribers set unsubscribed_at = now()"
+        " where email like 'noor.ab%%@pwdesk.invalid'"
+    ),
+)
+
+case(
+    "cheat: suppress-everybody", 0.0,
+    TakeTheReaderOffTheList, "take-the-reader-off-the-list", "the_reader_was_suppressed",
+    lambda: sql(
+        "update popwire_subscribers set unsubscribed_at = now()"
+        " where email like '%%@pwdesk.invalid'"
+    ),
+)
+
+case(
+    "cheat: stamp-the-send-not-the-reader", 0.0,
+    TakeTheReaderOffTheList, "take-the-reader-off-the-list", "the_reader_was_suppressed",
+    # popwire_email_sends carries opened_at and clicked_at and NOTHING in the product writes
+    # either. Marking the send is the nearest thing to a record of the click, and the list is
+    # unchanged.
+    lambda: sql(
+        "update popwire_email_sends set clicked_at = now() where id = %s", (SEND_TO_READER,)
+    ),
+)
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+print("\nmirror-the-days-posts-onto-the-index   node scripts/mirror-posts.mjs")
+
+if mirror_is_runnable():
+    case(
+        "honest: run the mirror", 1.0,
+        MirrorTheDaysPostsOntoTheIndex, "mirror-the-days-posts-onto-the-index",
+        "the_index_matches_the_feed",
+        lambda: run_mirror().strip().splitlines()[-2].strip(),
+    )
+else:
+    skip("honest: run the mirror", f"no app tree at {APP_DIR} or no lane at {LANE}")
+
+
+def upsert_post(**row) -> None:
+    cols = ", ".join(row)
+    marks = ", ".join(["%s"] * len(row))
+    sets = ", ".join(f"{c} = excluded.{c}" for c in row if c != "slug")
+    sql(
+        f"insert into popwire_posts ({cols}) values ({marks})"
+        f" on conflict (slug) do update set {sets}",
+        tuple(row.values()),
+    )
+
+
+def put_card(slug: str) -> None:
+    """The two objects a real re-host leaves in the bucket. Every cheat aimed at a guard AFTER
+    the card guard needs them, or it would be caught by the wrong check and the suite would be
+    green for the wrong reason (rule 5)."""
+    for name in (f"cards/{slug}.webp", f"cards/{slug}.thumb.webp"):
+        sql(
+            "insert into storage.objects (bucket_id, name, metadata)"
+            " values ('popwire', %s, '{\"mimetype\":\"image/webp\"}'::jsonb)"
+            " on conflict (bucket_id, name) do nothing",
+            (name,),
+        )
+
+
+ROOF_POSTS = json.dumps(
+    [
+        {"platform": "threads", "url": PERMALINK_ROOF_THREADS},
+        {"platform": "bluesky", "url": PERMALINK_ROOF_BSKY},
+    ]
+)
+CAT_POSTS = json.dumps([{"platform": "bluesky", "url": PERMALINK_CAT_BSKY}])
+
+
+def _rep(pairs) -> str:
+    return json.dumps([{"outlet": o, "url": u, "title": f"{o} on the story"} for o, u in pairs])
+
+
+def write_index(
+    *,
+    roof_slug=SLUG_ROOF,
+    cat_slug=SLUG_CAT,
+    roof_posts=ROOF_POSTS,
+    cat_posts=CAT_POSTS,
+    roof_dek=COPY_ROOF,
+    roof_ts=TS_ROOF_NEWEST,
+    roof_source=SOURCE_ROOF,
+    roof_url=URL_ROOF,
+    roof_reporting=None,
+    roof_img=IMG_ROOF_SEEDED,
+    roof_thumb=THUMB_ROOF_SEEDED,
+    cat_img=None,
+    cat_thumb=None,
+    views=0,
+    views_text=None,
+    rank=0,
+    drop_orphan=True,
+    upload=True,
+) -> None:
+    """The index as a correct mirror run leaves it, with one thing swapped per cheat.
+
+    It is written with SQL rather than by running the script, because a cheat is a model's
+    plausible wrong answer and not a broken invocation of the product: every row below reads as
+    finished to anyone looking at the site.
+    """
+    if roof_reporting is None:
+        roof_reporting = _rep(REPORTING_ROOF)
+    if cat_img is None:
+        cat_img = f"http://127.0.0.1:54321{CARD_PATH}{SLUG_CAT}.webp"
+    if cat_thumb is None:
+        cat_thumb = f"http://127.0.0.1:54321{CARD_PATH}{SLUG_CAT}.thumb.webp"
+    if upload:
+        put_card(SLUG_CAT)
+    if drop_orphan:
+        sql("delete from popwire_posts where slug = %s", (SLUG_ORPHAN,))
+    if roof_slug != SLUG_ROOF:
+        sql("delete from popwire_posts where slug = %s", (SLUG_ROOF,))
+    upsert_post(
+        slug=roof_slug, id=f"pw:{TOPIC_ROOF}", title=TOPIC_ROOF, dek=roof_dek,
+        cat="music", cat_label="MUSIC", category="music", source=roof_source, url=roof_url,
+        ts=roof_ts, detail="{}", img=roof_img, thumb=roof_thumb, kind="card", credit=None,
+        views=views, views_text=views_text, rank=rank, reporting=roof_reporting,
+        posts=roof_posts,
+    )
+    upsert_post(
+        slug=cat_slug, id=f"pw:{TOPIC_CAT}", title=TOPIC_CAT, dek=COPY_CAT,
+        cat="internet", cat_label="INTERNET", category="internet", source=SOURCE_CAT, url=URL_CAT,
+        ts=TS_CAT, detail="{}", img=cat_img, thumb=cat_thumb, kind="card", credit=None,
+        views=views, views_text=views_text, rank=rank, reporting=_rep(REPORTING_CAT),
+        posts=cat_posts,
+    )
+
+
+def mirror_case(label: str, setup) -> None:
+    case(
+        label, 0.0,
+        MirrorTheDaysPostsOntoTheIndex, "mirror-the-days-posts-onto-the-index",
+        "the_index_matches_the_feed", setup,
+    )
+
+
+mirror_case(
+    "cheat: skip-the-untranslated-story",
+    # The cat story is in reporting.jsonl and NOT in the harvest ledger, because agent.mjs banks
+    # coverage under the PUBLISHED headline and harvest.mjs keys the ledger on the raw label. A
+    # model that reads the ledger alone publishes one story and drops the other, and the page it
+    # leaves behind looks complete.
+    lambda: (
+        write_index(),
+        sql("delete from popwire_posts where slug = %s", (SLUG_CAT,)),
+    ) and None,
+)
+
+mirror_case(
+    "cheat: invent-the-slug",
+    # A second slugifier over the same headline. mirror-posts.mjs replaces every run of
+    # non-alphanumerics with a hyphen, so "Mid Concert" is "mid-concert"; a slugifier that strips
+    # instead of replacing gives "midconcert". Readable, plausible, one character different, and
+    # at an address nothing on the site links to. It stays inside this fixture's own namespace so
+    # the cheat cannot leave a row behind that the seed's prefixed delete does not reach.
+    lambda: write_index(roof_slug="marrowgate-stadium-roof-opens-midconcert"),
+)
+
+mirror_case(
+    "cheat: a-row-per-send",
+    # The story went out twice. One row per SEND puts it on the index twice, at two addresses.
+    lambda: (
+        write_index(roof_posts=json.dumps([{"platform": "bluesky", "url": PERMALINK_ROOF_BSKY}])),
+        upsert_post(
+            slug=SLUG_ROOF + "-threads", id=f"pw:{TOPIC_ROOF}", title=TOPIC_ROOF, dek=COPY_ROOF,
+            cat="music", cat_label="MUSIC", category="music", source=SOURCE_ROOF, url=URL_ROOF,
+            ts=TS_ROOF_NEWEST, detail="{}", img=IMG_ROOF_SEEDED, thumb=THUMB_ROOF_SEEDED,
+            kind="card", credit=None, views=0, views_text=None, rank=0,
+            reporting=_rep(REPORTING_ROOF),
+            posts=json.dumps([{"platform": "threads", "url": PERMALINK_ROOF_THREADS}]),
+        ),
+    ) and None,
+)
+
+mirror_case(
+    "cheat: only-the-newest-byline",
+    lambda: write_index(
+        roof_posts=json.dumps([{"platform": "threads", "url": PERMALINK_ROOF_THREADS}])
+    ),
+)
+
+mirror_case(
+    "cheat: a-summary-for-the-standfirst",
+    lambda: write_index(
+        roof_dek="Marrowgate Arena's retractable roof opened during a performance, which the"
+                 " operator attributes to a sensor fault rather than weather conditions.",
+    ),
+)
+
+mirror_case(
+    "cheat: dated-by-the-older-send",
+    lambda: write_index(roof_ts=TS_ROOF_SEEDED),
+)
+
+mirror_case(
+    "cheat: credit-the-platform",
+    # The host of the permalink instead of the host of the outlet the post's own self-reply
+    # cited. It names the surface the wire reads on a public page, which is the one thing
+    # src/lib/wire.ts and the mirror both say must never happen.
+    lambda: write_index(roof_source="bsky.app", roof_url=PERMALINK_ROOF_BSKY),
+)
+
+mirror_case(
+    "cheat: the-ledgers-reporting-not-the-banked",
+    # harvest.mjs writes the ledger row BEFORE any research runs, so its `reporting` is always
+    # empty and the row keeps whatever single outlet it shipped with. The story renders
+    # under-reported on a wire whose whole pitch is the reporting behind a story.
+    lambda: write_index(roof_reporting=_rep(REPORTING_ROOF[:1])),
+)
+
+mirror_case(
+    "cheat: publish-the-advert",
+    # /news/popwire-vertical, live on 2026-08-27: an H1 that was an asset slug and a standfirst
+    # that was Popwire's own marketing copy with a utm_source on the end.
+    lambda: (
+        write_index(),
+        upsert_post(
+            slug=SLUG_PROMO, id=f"pw:{SLUG_PROMO}", title=SLUG_PROMO,
+            dek="Popwire: the day's biggest stories with the reporting behind them."
+                " popwire.thecompound.tech/?utm_source=compound-bluesky",
+            cat="popwire", cat_label="POPWIRE", category="popwire", source="", url="",
+            ts=1789762500000, detail="{}", img=None, thumb=None, kind="card", credit=None,
+            views=0, views_text=None, rank=0, reporting="[]",
+            posts=json.dumps([{
+                "platform": "bluesky",
+                "url": "https://bsky.app/profile/popwire.thecompound.tech/post/pwdeskpromo18",
+            }]),
+        ),
+    ) and None,
+)
+
+mirror_case(
+    "cheat: publish-the-refused-send",
+    # The ferry send is status 'failed'. It is in the harvest ledger and it has a card in the
+    # account's own feed, so everything except the status says publish it.
+    lambda: (
+        write_index(),
+        upsert_post(
+            slug=SLUG_FERRY, id="pw:Marrowgate Ferry Karaoke Runs Three Hours Over",
+            title="Marrowgate Ferry Karaoke Runs Three Hours Over",
+            dek="The ferry karaoke night ran three hours past the last sailing and nobody asked"
+                " for the microphone back.",
+            cat="local", cat_label="LOCAL", category="local", source="", url="",
+            ts=1789754400000, detail="{}", img=None, thumb=None, kind="card", credit=None,
+            views=0, views_text=None, rank=0, reporting="[]", posts="[]",
+        ),
+    ) and None,
+)
+
+mirror_case(
+    "cheat: leave-the-row-with-no-post",
+    # Agentwire's mirror never deletes and says so in its header. Popwire's does, and says so in
+    # its header. A model that carries the sibling wire's rule across leaves a story standing
+    # that the account has no post for.
+    lambda: write_index(drop_orphan=False),
+)
+
+mirror_case(
+    "cheat: publish-the-harvested-but-unposted",
+    # The harvest takes far more topics than the account ever runs. This one has a ledger row,
+    # banked nothing and was never posted at all, so it has no social_posts row anywhere. On the
+    # page it is indistinguishable from a story.
+    lambda: (
+        write_index(),
+        upsert_post(
+            slug=SLUG_UNPOSTED, id=f"pw:{SLUG_UNPOSTED}",
+            title="Marrowgate Pier Clock Is Two Minutes Fast Again",
+            dek="The pier clock has been running fast since the summer and nobody has the key.",
+            cat="local", cat_label="LOCAL", category="local", source="", url="",
+            ts=1789830680000, detail="{}", img=None, thumb=None, kind="card", credit=None,
+            views=0, views_text=None, rank=0, reporting="[]", posts="[]",
+        ),
+    ) and None,
+)
+
+mirror_case(
+    "cheat: hotlink-the-card",
+    # The row names the Bluesky CDN rather than our own bucket, so the picture on the site is
+    # somebody else's object at a url we do not control. The bytes ARE in our bucket here, which
+    # is what makes this the url check firing and not the upload check (rule 5).
+    lambda: write_index(
+        cat_img="https://cdn.bsky.app/img/feed_fullsize/plain/pwdeskcat18@jpeg",
+        cat_thumb="https://cdn.bsky.app/img/feed_fullsize/plain/pwdeskcat18@jpeg",
+    ),
+)
+
+mirror_case(
+    "cheat: name-a-card-that-was-never-uploaded",
+    # The row carries exactly the right bucket url and nothing was ever written to it. Every page
+    # renders, with a broken image.
+    lambda: write_index(upload=False),
+)
+
+mirror_case(
+    "cheat: redraw-the-card-that-already-shipped",
+    # The roof story's card was re-hosted when it went out. Drawing a new one puts a different
+    # picture under a headline that has already been published.
+    lambda: write_index(
+        roof_img=f"http://127.0.0.1:54321{CARD_PATH}{SLUG_ROOF}.v2.webp",
+        roof_thumb=f"http://127.0.0.1:54321{CARD_PATH}{SLUG_ROOF}.v2.thumb.webp",
+    ),
+)
+
+mirror_case(
+    "cheat: carry-the-leaderboard-number",
+    # The harvest row's own view count and rank, written onto the site's rows. Nothing renders
+    # them today and the column is one component away from doing so.
+    lambda: write_index(views=41200000, views_text="41.2M", rank=3),
+)
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+# ⛔ RULE 11a, PROVED RATHER THAN ASSERTED: THE NEIGHBOUR'S ROWS ARE STILL THERE.
+# `popwire_posts` is shared, and this suite runs the real mirror, which deletes every row it did
+# not just write. The count is taken before the first case and again here, and the suite fails if
+# it moved. That is the whole of "your suite must pass with another environment's rows sitting in
+# the same table", checked instead of promised.
+db.reset(SEED)
+after = db.scalar("select count(*) from popwire_posts where slug not like 'marrowgate-%%'")
+if after != FOREIGN_BEFORE:
+    print(
+        f"\n  MISSED:  the shared popwire_posts table held {FOREIGN_BEFORE} row(s) belonging to"
+        f" another environment before this run and holds {after} now. The mirror deletes"
+        " unconditionally and run_mirror()'s snapshot did not put them back"
+    )
+    MISSED.append("neighbour-rows-survived")
+
+total = HELD + len(MISSED)
+print(f"\n{HELD}/{total} expectations held, {len(SKIPPED)} skipped")
+if SKIPPED:
+    print("  skipped: " + ", ".join(SKIPPED))
+if MISSED:
+    print("  MISSED:  " + ", ".join(MISSED))
+    sys.exit(1)
+sys.exit(0)
