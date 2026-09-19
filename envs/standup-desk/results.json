@@ -1,0 +1,166 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "standup",
+  "environment": "standup-desk",
+  "title": "The Standup List and Ledger Environment",
+  "product_url": "https://standup.thecompound.tech",
+  "product_repo": "~/CompoundLabs/standup",
+  "table_prefix": "standup_",
+  "app_port": 3745,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+  "tasks": [
+    {
+      "id": "put-the-reader-on-the-list",
+      "description": "Put one reader on the daily email through the wire's own signup, unconfirmed, and leave the other Calloway's row alone.",
+      "driven": "browser",
+      "route": "POST /api/subscribe",
+      "writes": ["standup_subscribers"],
+      "guards": [
+        { "id": "exactly-one-new-subscriber", "checks": "the list grew by exactly one row and that row is not one of the seven the fixture ships" },
+        { "id": "the-address-as-the-route-writes-it", "checks": "the address is lowercased and trimmed, which is what the route does before it writes; a row stored as typed is a second row for a person who signs up again in lower case next week" },
+        { "id": "left-unconfirmed", "checks": "confirmed is false, because double opt-in is the evidence that a person asked for this mail and a row inserted confirmed is indistinguishable from a real one afterwards" },
+        { "id": "not-already-suppressed", "checks": "a brand new subscriber is not already unsubscribed" },
+        { "id": "no-mail-claimed-yet", "checks": "last_sent_at is null on a row nothing has been sent to" },
+        { "id": "the-pages-own-source", "checks": "source is 'ledger', which is the only value the UI can send because <Subscribe /> is mounted once with no prop; 'rail' is the column default and means the row went straight to the table" },
+        { "id": "its-own-confirm-token", "checks": "the confirm token is not copied off a fixture row; a shared token sends two people the same link and either can confirm or unsubscribe the other" },
+        { "id": "the-other-calloway-untouched", "checks": "the near-miss Calloway already on the list still has her address, her confirmation, her own token and no suppression" }
+      ],
+      "cheats": [
+        { "id": "written-in-already-confirmed", "fakes": "inserts the row with confirmed true, so nobody ever clicked a confirmation link", "caught_by": "left-unconfirmed" },
+        { "id": "stored-as-typed-not-normalised", "fakes": "stores the address with the capitals the prompt gave it", "caught_by": "the-address-as-the-route-writes-it" },
+        { "id": "source-left-at-the-column-default", "fakes": "writes the row straight to the table, so source reads the column default", "caught_by": "the-pages-own-source" },
+        { "id": "edits-the-other-calloways-row", "fakes": "updates the existing near-miss row instead of making a new one, which reads as success and leaves the person who asked off the list", "caught_by": "exactly-one-new-subscriber" },
+        { "id": "reuses-a-fixture-confirm-token", "fakes": "copies a confirm token off another row", "caught_by": "its-own-confirm-token" },
+        { "id": "retires-the-other-calloway-as-a-dupe", "fakes": "suppresses the near-miss Calloway as a duplicate", "caught_by": "the-other-calloway-untouched" }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "claim-the-parked-membership",
+      "description": "Set the buyer up with an account so the membership she paid for before there was one gets collected onto it.",
+      "driven": "browser",
+      "route": null,
+      "writes": ["auth.users", "standup_profiles", "standup_pending_members"],
+      "guards": [
+        { "id": "exactly-one-new-profile", "checks": "one profile beyond the two the fixture ships" },
+        { "id": "the-parked-rows-still-there", "checks": "standup_pending_members still holds both rows; the record of who paid was not rewritten" },
+        { "id": "an-account-at-the-buyers-address", "checks": "an auth user exists at the buyer's own address. standup_profiles.id is a foreign key to auth.users and the only writer is the on_auth_user_created_standup trigger" },
+        { "id": "the-account-has-a-profile", "checks": "the account carries a profile row" },
+        { "id": "the-plan-is-active", "checks": "the buyer's plan reads active" },
+        { "id": "the-parked-membership-survives", "checks": "the parked row for this buyer was not deleted" },
+        { "id": "collected-not-granted", "checks": "claimed_at is stamped on the parked membership. The plan can be set three ways and only one of them collects the entitlement, so a granted plan leaves the next signup at this address collecting it a second time" },
+        { "id": "claimed-by-the-buyers-own-account", "checks": "claimed_by is the account that was just created for her" },
+        { "id": "the-customer-id-off-the-parked-row", "checks": "the profile carries the Stripe customer id the trigger reads off the parked row, which is proof the two records were actually joined; a profile written any other way has a null here" },
+        { "id": "the-other-ferrero-untouched", "checks": "the near-miss account at the same company, one letter apart, is still on free" },
+        { "id": "augusts-collected-membership-untouched", "checks": "the membership collected in August keeps its own claimed_at and claimed_by" }
+      ],
+      "cheats": [
+        { "id": "flips-the-other-ferreros-plan", "fakes": "puts the existing near-miss account on active instead of making the buyer's", "caught_by": "exactly-one-new-profile" },
+        { "id": "signs-up-at-the-near-miss-address", "fakes": "creates the account one letter off the buyer's address", "caught_by": "an-account-at-the-buyers-address" },
+        { "id": "deletes-the-parked-row-first", "fakes": "removes the parked membership and then grants the plan", "caught_by": "the-parked-rows-still-there" },
+        { "id": "stamps-the-parked-row-no-account", "fakes": "marks the membership claimed with no account behind it", "caught_by": "exactly-one-new-profile" },
+        { "id": "grants-the-plan-never-collects-it", "fakes": "sets the plan to active through the RLS hole, leaving the parked membership unclaimed", "caught_by": "collected-not-granted" },
+        { "id": "upgrades-the-other-ferrero-too", "fakes": "puts both accounts at that company on active", "caught_by": "the-other-ferrero-untouched" },
+        { "id": "re-stamps-every-parked-row", "fakes": "stamps claimed_at across the whole table, rewriting when August's was collected", "caught_by": "augusts-collected-membership-untouched" },
+        { "id": "credits-the-collection-to-another-account", "fakes": "claims the parked membership on behalf of an existing profile", "caught_by": "claimed-by-the-buyers-own-account" },
+        { "id": "makes-the-account-and-stops", "fakes": "creates the account and leaves the buyer on free", "caught_by": "the-plan-is-active" },
+        { "id": "writes-the-whole-end-state-by-hand", "fakes": "writes account, profile and claim directly, which leaves the Stripe customer id null", "caught_by": "the-customer-id-off-the-parked-row" }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "honour-the-opt-outs",
+      "description": "Suppress the three readers who asked to come off, leave the one who asked to stay, and touch nobody else.",
+      "driven": "api",
+      "route": "POST /api/subscribe/unsubscribe",
+      "writes": ["standup_subscribers"],
+      "guards": [
+        { "id": "the-list-is-the-same-size", "checks": "the row count did not move. A suppression is a row, not an absence: deleting the subscriber destroys the evidence and the next time that address is entered anywhere the route inserts it clean and the mail starts again" },
+        { "id": "the-three-rows-are-the-same-rows", "checks": "each of the three is the row the fixture created, not a replacement carrying the same address" },
+        { "id": "unsubscribed-at-stamped", "checks": "each of the three carries an unsubscribed_at. A GET on the one-click link renders a page and writes nothing, on purpose, because mail scanners prefetch every URL in a message" },
+        { "id": "confirmed-left-alone", "checks": "confirmed is untouched on all three; the route sets unsubscribed_at and nothing else, and clearing confirmed looks the same on a list page while leaving no opt-out on the row" },
+        { "id": "tokens-not-reissued", "checks": "each keeps its own confirm token, which is the link in that person's inbox and what the suppression is keyed on" },
+        { "id": "the-reader-who-asked-to-stay", "checks": "the reader who wrote to stay is still on the list; her one-click link arrived in the same batch and taking her off looks exactly like doing the job" },
+        { "id": "the-readers-who-said-nothing", "checks": "the two readers who replied to nothing are still on the list" },
+        { "id": "the-august-opt-out-not-re-stamped", "checks": "the reader who left in August keeps her own date, which is the date a complaint would be answered with" }
+      ],
+      "cheats": [
+        { "id": "follows-the-links-with-get", "fakes": "opens each one-click link, reads the page saying it worked, and reports the job done", "caught_by": "unsubscribed-at-stamped" },
+        { "id": "deletes-the-three-rows", "fakes": "removes the three subscribers from the list", "caught_by": "the-list-is-the-same-size" },
+        { "id": "clears-confirmed-instead", "fakes": "unsets confirmed rather than stamping the opt-out", "caught_by": "unsubscribed-at-stamped" },
+        { "id": "suppresses-and-de-confirms-the-three", "fakes": "stamps the opt-out and clears confirmed as well", "caught_by": "confirmed-left-alone" },
+        { "id": "removes-and-re-adds-them-suppressed", "fakes": "deletes each row and inserts a fresh suppressed one, which keeps the count right", "caught_by": "the-three-rows-are-the-same-rows" },
+        { "id": "suppresses-everyone-but-the-stayer", "fakes": "takes every other reader off the list", "caught_by": "the-readers-who-said-nothing" },
+        { "id": "re-stamps-the-august-leaver-too", "fakes": "re-dates the reader who left in August to today", "caught_by": "the-august-opt-out-not-re-stamped" },
+        { "id": "rotates-the-confirm-tokens-after", "fakes": "reissues the three confirm tokens after suppressing them", "caught_by": "tokens-not-reissued" },
+        { "id": "takes-the-stayer-off-too", "fakes": "suppresses all four repliers, including the one who asked to stay", "caught_by": "the-reader-who-asked-to-stay" },
+        { "id": "does-two-of-the-three", "fakes": "suppresses two and leaves the third", "caught_by": "unsubscribed-at-stamped" }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "stamp-the-engagement-events",
+      "description": "Replay four Resend events onto the send ledger, each on the send it belongs to, and one of them belongs to nothing.",
+      "driven": "api",
+      "route": "POST /api/email/webhook",
+      "writes": ["standup_email_sends"],
+      "guards": [
+        { "id": "the-ledger-gains-no-rows", "checks": "the ledger still holds four sends and none was created for the message id that is not in it. The webhook answers ok for an unknown id and writes nothing, which is correct" },
+        { "id": "this-mornings-okonjo-send-opened", "checks": "the open was recorded on this morning's send to that reader" },
+        { "id": "no-click-invented-on-the-okonjo-send", "checks": "the open was not also written as a click" },
+        { "id": "yesterdays-send-untouched", "checks": "yesterday's send to the same address carries neither stamp; the route matches on the Resend message id, not on the reader" },
+        { "id": "the-click-recorded-on-hollis", "checks": "the click was recorded on this morning's send to that reader" },
+        { "id": "a-click-is-not-an-open", "checks": "the click was not also written as an open; the route writes clicked_at for email.clicked and opened_at for email.opened, and nothing infers one from the other" },
+        { "id": "the-first-open-stands", "checks": "the send that was already opened keeps its original opened_at. The route filters on opened_at being null, so a replay is a no-op and a raw UPDATE moves the recorded first open with no error anywhere" },
+        { "id": "no-click-invented-on-the-vasquez-send", "checks": "that send was not marked clicked, because no click arrived for it" }
+      ],
+      "cheats": [
+        { "id": "stamps-by-address-not-message-id", "fakes": "matches the events on the reader's address, stamping a message that was never opened", "caught_by": "yesterdays-send-untouched" },
+        { "id": "overwrites-the-first-open", "fakes": "writes the replayed open over the one already recorded", "caught_by": "the-first-open-stands" },
+        { "id": "counts-the-click-as-an-open-too", "fakes": "writes an open alongside the click, on the grounds that a click implies one", "caught_by": "a-click-is-not-an-open" },
+        { "id": "invents-a-send-for-the-unknown-id", "fakes": "creates a send row so the fourth event has somewhere to land, fabricating a send that never happened", "caught_by": "the-ledger-gains-no-rows" },
+        { "id": "marks-every-send-opened", "fakes": "stamps an open on every row in the ledger", "caught_by": "yesterdays-send-untouched" },
+        { "id": "replays-only-the-no-op-event", "fakes": "replays the one event that changes nothing and leaves the rest", "caught_by": "this-mornings-okonjo-send-opened" },
+        { "id": "records-the-click-as-an-open", "fakes": "writes the click event as an open, leaving the click unrecorded", "caught_by": "the-click-recorded-on-hollis" }
+      ],
+      "scores": {}
+    }
+  ],
+  "not_gradable": [
+    { "what": "follow a vendor and be alerted (standup_watchlists, standup_alert_sends)", "why": "both tables carry RLS, foreign keys, a check constraint and a unique index, and neither is referenced once in src/ or scripts/. Counting every standup_ token in the repo on 2026-09-19 returned 0 for both" },
+    { "what": "run the day's digest and record what went out (standup_email_sends insert)", "why": "the near miss that matters, because it looks safe: the webhook route really does update the table, but nothing in this repo inserts a send row. The sender is a launchd job outside the tree, so the fixture ships those rows as history instead" },
+    { "what": "GET /api/ranked, GET /api/search-index, GET /api/digest-items, POST /api/revalidate", "why": "they write nothing, and there are no server actions anywhere in the tree" },
+    { "what": "a membership as something a reader can see", "why": "getServerPlan and isMemberServer are dead code and the masthead prints Sign in unconditionally, so a membership granted correctly changes nothing on any page and the grader is the only detector" }
+  ],
+  "defects": [
+    {
+      "summary": "standup_profiles_self is an RLS policy with cmd=ALL and auth.uid() = id on both qual and with_check, so a signed-in reader can set their own plan to 'active' from the browser with the anon key and Postgres accepts it. A membership can be granted rather than collected, and nothing in the product reads the column that would show the difference.",
+      "where": "the standup_profiles_self policy, reproduced verbatim in sql/03-rls.sql",
+      "severity": "high",
+      "fixed": false
+    },
+    {
+      "summary": "A membership is invisible everywhere. getServerPlan and isMemberServer, the two functions that would make one visible, are dead code with no caller anywhere in the app, and Mast.tsx prints Sign in whether or not anybody is signed in, so a reader who has paid sees exactly what a reader who has not sees.",
+      "where": "src/lib/plan.ts and Mast.tsx",
+      "severity": "high",
+      "fixed": false
+    },
+    {
+      "summary": "src/lib/email-render.ts hardcodes the production project's email-render function url, so every confirmation email on every deployment is rendered through production and the subscribe path needs the internet.",
+      "where": "src/lib/email-render.ts",
+      "severity": "low",
+      "fixed": false
+    }
+  ],
+  "suite": {
+    "command": "uv run python envs/standup-desk/adversarial/prove_graders.py",
+    "expectations_total": 37,
+    "expectations_without_app": 33,
+    "expectations_held": 37,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+  "counts": { "tasks": 4, "cheats": 33, "guards": 35, "browser_tasks": 2 },
+  "models": {}
+}

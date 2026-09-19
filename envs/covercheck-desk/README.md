@@ -28,7 +28,7 @@ node harness/rollout.mjs --task sign-and-approve-the-chase   # a real browser ro
 | `stop-the-approved-chase` | `POST /api/chase/[id]` | `cc_chase_messages`, `cc_events` |
 | `run-the-expiry-sweep` | `POST /api/cron/expiry-sweep` | `cc_checks`, `cc_chase_threads`, `cc_chase_messages` |
 
-All five are reachable from the console at `/`. Three of them have a scripted browser rollout in
+Four are reachable from the console at `/`. `run-the-expiry-sweep` is not: `expiry-sweep` appears in the product's `src/` exactly once, in a comment in `lib/covercheck/schedule.ts`, and nothing in the UI calls it. It is an operator route behind a bearer token, which is what the taskset's own route inventory annotates it as. Three of them have a scripted browser rollout in
 `harness/rollout.mjs`: `file-the-certificate`, `sign-and-approve-the-chase` and
 `stop-the-approved-chase`. Each rollout drives the real controls and asserts on the requests the
 page makes.

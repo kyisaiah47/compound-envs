@@ -16,7 +16,7 @@ fixtures/contracts.mjs       the invented agreements, as prose
 fixtures/facts.json          GENERATED. What the product's reader makes of that prose.
 clausewatch_desk/db.py       Postgres access for the graders
 clausewatch_desk/taskset.py  the five tasks and their @reward graders
-adversarial/prove_graders.py five honest cases, forty-one cheats, one premise probe
+adversarial/prove_graders.py nine honest cases, thirty-seven cheats, one premise probe
 harness/signin.mjs           real emailed-link sign-in, real callback, captured cookies
 harness/rollout.mjs          the browser task, driven against the running app
 harness/act.mjs              the four API tasks, driven against the real routes
