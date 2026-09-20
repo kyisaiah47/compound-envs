@@ -91,7 +91,9 @@
           "caught_by": "receipt-written"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "kill-the-queued-reply",
@@ -160,7 +162,9 @@
           "caught_by": "receipt-written"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "arm-autopilot",
@@ -233,7 +237,9 @@
           "caught_by": "receipt-names-the-mode"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "one-dispatcher-tick",
@@ -302,7 +308,9 @@
           "caught_by": "receipt-written"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 0.0
+      }
     }
   ],
   "not_gradable": [
@@ -363,5 +371,15 @@
     "guards": 26,
     "browser_tasks": 1
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 0.75,
+      "rail": "codex-headless",
+      "tasks_completed": 4,
+      "tasks_total": 4,
+      "complete": true
+    }
+  }
 }

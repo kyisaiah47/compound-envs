@@ -84,7 +84,9 @@
           "caught_by": "the-other-calloway-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "claim-the-parked-membership",
@@ -194,7 +196,9 @@
           "caught_by": "the-customer-id-off-the-parked-row"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "honour-the-opt-outs",
@@ -290,7 +294,9 @@
           "caught_by": "unsubscribed-at-stamped"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "stamp-the-engagement-events",
@@ -371,7 +377,9 @@
           "caught_by": "the-click-recorded-on-hollis"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     }
   ],
   "not_gradable": [
@@ -432,5 +440,15 @@
     "guards": 35,
     "browser_tasks": 2
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 1.0,
+      "rail": "codex-headless",
+      "tasks_completed": 4,
+      "tasks_total": 4,
+      "complete": true
+    }
+  }
 }

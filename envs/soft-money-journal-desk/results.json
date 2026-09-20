@@ -128,7 +128,9 @@
           "caught_by": "the-send-ledger-was-not-touched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "take-the-reader-off-the-letter",
@@ -226,7 +228,9 @@
           "caught_by": "the-send-ledger-was-not-touched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "publish-the-journal-live",
@@ -371,7 +375,9 @@
           "caught_by": "the-other-publications-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     }
   ],
   "not_gradable": [
@@ -442,5 +448,15 @@
     "guards": 24,
     "browser_tasks": 2
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 1.0,
+      "rail": "codex-headless",
+      "tasks_completed": 3,
+      "tasks_total": 3,
+      "complete": true
+    }
+  }
 }

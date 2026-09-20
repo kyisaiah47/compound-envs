@@ -128,7 +128,9 @@
           "caught_by": "one-run-opened-and-closed"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "watch-the-catalogue-from-the-page",
@@ -211,7 +213,9 @@
           "caught_by": "the-existing-watchers-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "watch-one-service-only",
@@ -294,7 +298,9 @@
           "caught_by": "on-the-live-list"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "keep-the-returning-watcher",
@@ -386,7 +392,9 @@
           "caught_by": "the-rest-of-the-list-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     }
   ],
   "not_gradable": [
@@ -469,5 +477,15 @@
     "guards": 29,
     "browser_tasks": 1
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 1.0,
+      "rail": "codex-headless",
+      "tasks_completed": 4,
+      "tasks_total": 4,
+      "complete": true
+    }
+  }
 }

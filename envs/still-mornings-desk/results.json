@@ -114,7 +114,9 @@
           "caught_by": "the-address-that-was-asked-for"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 0.0
+      }
     },
     {
       "id": "take-the-reader-off-the-letter",
@@ -221,7 +223,9 @@
           "caught_by": "only-this-publication"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "mirror-the-archive-to-the-live-table",
@@ -359,7 +363,9 @@
           "caught_by": "the-neighbours-were-not-touched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     }
   ],
   "not_gradable": [
@@ -430,5 +436,15 @@
     "guards": 26,
     "browser_tasks": 2
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 0.6666666666666666,
+      "rail": "codex-headless",
+      "tasks_completed": 3,
+      "tasks_total": 3,
+      "complete": true
+    }
+  }
 }

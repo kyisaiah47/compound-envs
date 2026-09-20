@@ -93,7 +93,9 @@
           "caught_by": "the-unpaid-checkout-left-alone"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "the-tenth-dry-pack",
@@ -155,7 +157,9 @@
           "caught_by": "streak-reset-because-it-hit"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "trade-in-the-two-ash-blobs",
@@ -225,7 +229,9 @@
           "caught_by": "a-ledger-row-per-card"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "buy-the-bot-from-the-dust-shop",
@@ -314,7 +320,9 @@
           "caught_by": "the-purchase-is-on-the-ledger"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "reverse-the-charged-back-pack",
@@ -392,7 +400,9 @@
           "caught_by": "the-rival-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "count-the-visit-once",
@@ -452,7 +462,9 @@
           "caught_by": "the-rivals-reach-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 0.0
+      }
     }
   ],
   "not_gradable": [
@@ -547,5 +559,15 @@
     "guards": 38,
     "browser_tasks": 2
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 0.8333333333333334,
+      "rail": "codex-headless",
+      "tasks_completed": 6,
+      "tasks_total": 6,
+      "complete": true
+    }
+  }
 }
