@@ -446,7 +446,7 @@
       "summary": "The per-service watch the route supports cannot be reached from the product. The column, the partial index (service_slug where unsubscribed = false) and the route branch all exist for it, and the route's own header explains why it matters: somebody running Supabase and Clerk does not want to hear that a vendor they have never used redesigned a page. PriceWatch.tsx posts an email and a honeypot and nothing else. Measured by driving the running landing at 1440px 2026-09-19: two input[type=email], two button[type=submit], and zero select[name=service] or input[name=service] anywhere on the page. So every subscription a visitor can create is the whole catalogue, and the feature is reachable only by a hand-written HTTP request.",
       "where": "src/components/PriceWatch.tsx, against src/app/api/watch/route.ts",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "There is no way off the watch list. stacktab_price_watch.unsubscribed exists and a partial index is built on it, and nothing in the product tree or the engine ever writes it: no route, no token, no link, no page. Verified by grep over src/ and scripts/ in the product and over compound-ops/lanes/stacktab/engine, which between them contain one write to this table, the upsert that adds a row. Nothing mails from the table yet so nobody has been trapped on it, and the column is the shape of a promise the product cannot keep the day a send exists.",

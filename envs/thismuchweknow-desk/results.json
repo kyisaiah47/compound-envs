@@ -261,7 +261,7 @@
       "summary": "There is no way off this letter, and the estate's letter sender builds a URL that 404s. The product has no unsubscribe route: the production build's route table lists /api/subscribe and /rss.xml and nothing else, and GET https://thismuchweknow.thecompound.tech/api/subscribe/unsubscribe?token=... answered 404 on 2026-09-19. compound-ops/letters/send-letter.py:217 composes exactly that URL out of the publication's own site and puts it in List-Unsubscribe with List-Unsubscribe-Post: List-Unsubscribe=One-Click. Every row POST /api/subscribe writes gets an unsub_token from the column default and nothing in the estate can redeem it. The four sibling publications all carry POST /api/subscribe/unsubscribe. What holds it latent rather than live: send-letter.py's SITES dict does not name this publication and compound-ops/letters/ carries no plist for it, so no letter has gone out yet, and COPY.letter.note says so on the page. It becomes live the day the publication is added to that dict.",
       "where": "src/app/api/subscribe/ has no unsubscribe route; compound-ops/letters/send-letter.py:217",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "The only surface that collects addresses is the manifesto. Measured by driving the running build at 1440 across five routes: form.letter-form and input[type=email] are present on /about and on no other route, count 1 there and 0 on /, /stops, /pictures and /entry/<slug>. shell.tsx exports Letter() and src/app/about/page.tsx:94 is its only caller. The four sibling publications render the same component at the foot of every page. The nav labels that route 'The method', so a reader who wants the letter has to open the essay about how the films are made to find the field.",
@@ -273,7 +273,7 @@
       "summary": "The publication sync reports success for a publication it does not know. publish.mjs:205 loops over a four entry SITES list and skips anything whose repo does not match the argument, so an unmatched argument leaves results empty and the script prints 'done: 0 of 0 publications live' and exits 0. `node social/ugc/publish.mjs thismuchweknow` is exactly such a call. Read off the source rather than executed: that module falls back to the production Supabase project and to the production service role key out of the vault when its environment is incomplete, and running it would have uploaded into production storage and pruned four live archives.",
       "where": "compound-ops/social/ugc/publish.mjs:205-213",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     }
   ],
   "suite": {

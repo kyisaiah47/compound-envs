@@ -331,19 +331,19 @@
       "summary": "One uuid is both the confirm token and the unsubscribe token, it never rotates and it never expires. Anyone who ever holds a confirmation link holds a permanent one-click unsubscribe for that address, and send-digest.mjs prints the same uuid in the List-Unsubscribe header of every issue, so the value is in the mail headers of every message that address has ever been sent.",
       "where": "src/app/api/subscribe/confirm/route.ts, src/app/api/subscribe/unsubscribe/route.ts, scripts/send-digest.mjs",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "The subscribe route has no bot check and no rate limit, and it re-sends the confirmation on every request while the address is unconfirmed. The honeypot exists only in the React component, which reads input[name=website] client side; the route reads {email, source} and nothing else. Measured 2026-09-19: five POSTs for one unconfirmed address produced five confirmation sends, which with a live Resend key is five real emails to an address the caller typed.",
       "where": "src/app/api/subscribe/route.ts, src/components/Subscribe.tsx",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "scripts/mirror-posts.mjs hardcodes SITE_URL as https://agentwire.thecompound.tech and POSTs /api/revalidate to it after any successful write, so a developer or test run of the mirror on any machine that has REVALIDATE_SECRET in its environment reaches production. This environment leaves that variable unset and firewalls the host, and the run prints 'no REVALIDATE_SECRET on this machine'.",
       "where": "scripts/mirror-posts.mjs",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "GET /api/digest-items accepts CRON_SECRET in a query string as well as a header, so the shared cron secret lands in access logs, proxy logs and any Referer a rendered link would carry.",

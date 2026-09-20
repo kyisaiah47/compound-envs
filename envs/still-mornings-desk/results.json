@@ -413,7 +413,7 @@
       "summary": "publication_letter_sends has no unique index on (publication, entry_url), so the one-letter-per-entry skip is a SELECT and not a constraint. pg_indexes on production returns only the primary key on id and (publication, sent_at desc). Two runs of the lane that overlap both read an empty result and both mail the same entry to the same list.",
       "where": "public.publication_letter_sends, compound-ops/letters/send-letter.py",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     }
   ],
   "suite": {

@@ -45,6 +45,7 @@ create table if not exists public.agentwire_subscribers (
   email           text        not null unique,
   confirmed       boolean     not null default false,
   confirm_token   uuid        not null default gen_random_uuid(),
+  unsubscribe_token uuid      not null default gen_random_uuid(),
   source          text        default 'footer',
   created_at      timestamptz not null default now(),
   unsubscribed_at timestamptz,

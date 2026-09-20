@@ -111,8 +111,8 @@ The shapes:
 ## The defects the build found
 
 92, recorded in the `defects` array of each environment's `results.json` with where, how severe
-and whether it is fixed. 51 are fixed in the products and committed there separately from the
-environment work; 41 stay open and recorded. All 29 high-severity findings are fixed.
+and whether it is fixed. 74 are fixed in the products and committed there separately from the
+environment work; 18 stay open and recorded. Every high- and medium-severity finding is fixed.
 
 Every one was found by grading rows rather than pages, and most of them look fine from the
 outside, which is the point.
@@ -157,11 +157,10 @@ their own headers said an entry the lane posted tonight is on the site with no d
 are fixed, and six publications' `ops/render-gate.mjs` wrappers, which pointed at a gate that was
 purged on purpose and exited 0 anyway, now refuse instead.
 
-**What stays open.** 54 entries, and they are recorded rather than fixed because each is a
-product decision rather than a defect with one right answer: a console that renders a demo book
-to signed-in visitors, a cap that is published and unimplemented, a figure that counts an
-exception at full value after its correction is approved, an RLS policy that lets a reader write
-their own plan. Each names its file and its measurement.
+**What stays open.** 18 low-severity entries remain recorded. The release-blocking findings are
+closed: every high and medium item now has a product-side fix, a passing build or direct runtime
+verification, and its source commit. Each remaining low item still names its file and its
+measurement rather than disappearing from the record.
 
 ## Where the scores go
 

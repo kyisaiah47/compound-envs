@@ -250,7 +250,7 @@
       "summary": "The daily quiz-reminder launchd job is loaded and fires at routes the site no longer serves, so it can never send and could never be unsubscribed from. `compound.whyyourbraindoesthat.quiz-reminder` is in launchctl list and StartCalendarInterval 08:10; quiz-reminder.py links readers to {site}/today and puts {site}/api/quiz/unsubscribe?token= in its List-Unsubscribe header. Measured 2026-09-19: /today 404, /api/quiz/subscribe 404, /api/quiz/unsubscribe 404 on the live host, and publication_quiz_subscribers holds no row for any publication. The enrolment route is gone, so the list can never gain one through the product; a row added by hand would be mailed a 404 link daily with a 404 one-click unsubscribe.",
       "where": "~/Library/LaunchAgents/compound.whyyourbraindoesthat.quiz-reminder.plist and compound-ops/letters/quiz-reminder.py",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "The subscribe route lower-cases and trims but the unique index is over the raw column, so any row written by anything other than the route is a reader the form can never conflict with, and a later signup from that address inserts a second row that the letter then mails twice. No product code path writes an unnormalised address today, which is why this is low rather than high, and the ordinary operator fix for a support request goes straight through it.",

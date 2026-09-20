@@ -362,19 +362,19 @@
       "summary": "POST /api/subscribe/unsubscribe answers 200 before it looks at whether a row matched, for any caller that did not ask for HTML. The handler returns `new NextResponse(null, {status: 200})` on the `!wantsHtml` branch, and only the HTML branch inspects `data` and answers 400 when nothing matched. RFC 8058 one-click unsubscribe, which send-letter.py enables on every letter with `List-Unsubscribe-Post: List-Unsubscribe=One-Click`, is exactly that shape of caller: a bare POST with no Accept: text/html. Measured 2026-09-19 against the running copy: `curl -X POST '/api/subscribe/unsubscribe?token=deadbeef-0000-4000-8000-000000000000'` answered 200 with an empty body and no row changed, while the same token with Accept: text/html answered 400 \"That link didn't work\". A mail provider whose one-click call carried a mangled or expired token records a successful unsubscribe, the reader is told they are off, and the next letter arrives.",
       "where": "src/app/api/subscribe/unsubscribe/route.ts:80",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "The one-letter-per-entry skip is a SELECT with no constraint behind it, so two runs can mail the same entry twice. send-letter.py reads publication_letter_sends filtered by (publication, entry_url) with limit 1 and returns early if anything comes back, then writes one row per recipient after each successful send. pg_indexes on production carries only publication_letter_sends_pkey on id and publication_letter_sends_pub_idx on (publication, sent_at desc); there is no unique index on (publication, entry_url), measured 2026-09-19. Two overlapping runs, or a hand run beside the Sunday 09:10 launchd tick, both read an empty result and both send. The publication-sync lane has a mkdir lock for exactly this reason; the letter lane has none.",
       "where": "compound-ops/letters/send-letter.py, the `sent` query in main(), against the schema of public.publication_letter_sends",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "publish.mjs defaults SUPABASE_URL to the production project and falls back to reading the production service role key out of the vault, so a run from any directory with an incomplete environment writes production. `const URL = process.env.SUPABASE_URL || 'https://xowekqdsttxwbhfxvusa.supabase.co'` and, when SUPABASE_SERVICE_ROLE_KEY is unset, an execFileSync of ~/bin/compound-secret. sync-site.sh does pass the key, so the live lane is correct; the hazard is any other caller. Running it that way uploads pictures into production storage and upserts and PRUNES the live archive of four sites that are up. This environment's copy has exactly those two lines changed and up.sh proves it twice: the diff must be four lines and each must name the thing it replaced, and the patched copy is then run with no environment at all and must refuse.",
       "where": "compound-ops/social/ugc/publish.mjs:59-64",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     }
   ],
   "suite": {

@@ -512,13 +512,13 @@
       "summary": "A chargeback keeps the dust and buys a board seat with it. refundOrder marks the pulls traded_in and closes the order; it does not reverse dust already paid out for those same cards, and buyFromShop's seat check reads outrip_pulls with no traded_in filter, so a buyer holding zero live cards on a domain still buys onto it. Measured end to end 2026-09-19: five cards traded for 1227 dust, the charge reversed, the dust kept, and a rating-723 card minted onto the board with nothing live on the seat.",
       "where": "src/lib/orders.ts refundOrder, src/lib/collection.ts buyFromShop",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "settleFromStripe is called unguarded from four of its five callers, so a Stripe outage or an expired session answers 500 instead of the product's own unpaid path. /rip, /rip/tools, /api/claim and /api/rip/open all call it bare; unopenedOrder in orders.ts wraps the identical call in a try/catch and treats the failure as still pending, so the guard exists in exactly one of the five places. Measured 2026-09-19: loading /rip with a pending order whose session lookup fails returned 500 rather than redirecting to /packs?unpaid=1, so a buyer who paid sees an error page when the processor is slow.",
       "where": "src/app/rip/page.tsx, src/app/rip/tools/page.tsx, src/app/api/claim/route.ts, src/app/api/rip/open/route.ts",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "The Reach dedup key is taken from a client-settable header with no trusted-proxy check. /out/[domain] hashes x-forwarded-for and reads split(',')[0], the leftmost value, which is the one a caller supplies when a proxy appends rather than replaces. A caller that varies the header chooses its own dedup key. Source-verified only: which value the live edge puts first was not measured, because measuring it means writing real click rows on the production board.",

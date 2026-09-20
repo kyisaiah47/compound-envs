@@ -564,7 +564,7 @@
       "summary": "Autopilot cannot be turned on by a customer. leadgrade_settings.autonomy, autopilot_threshold, daily_enrichment_cap and icp are read by the scoring pass and rendered by the console, and no route, server action or UI control in the repo writes any of them: the only writers are seedAccount() (insert-only, ignoreDuplicates) and setWatermark(). /how-it-works and the terms page both state that autopilot is opt-in, and there is nothing to opt in with.",
       "where": "src/app/_lib/billing/entitlement.ts seedAccount(), and the absence of any settings route",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "The console's \"Take it back\" control cancels ONE held write-back per lead, whichever `writesOf(lead.id).find(w => w.state === 'queued')` returns first, and the same panel says \"N writes held\". Measured 2026-09-19: approving Ardenhall's COO queued nine rows, the console rendered nine held, one press of Take it back left one cancelled and eight queued. A buyer who stops a write they did not mean to make stops one ninth of it. The API route is fine; it takes a write-back id, which is why the kill task in this environment is written against a lead holding exactly one held row.",
@@ -576,7 +576,7 @@
       "summary": "The form endpoint's own comment says a retry is de-duplicated because \"same email + same minute + same form is the same submission\", and the implementation is sha256 of the ENTIRE raw body. Any difference at all, a re-ordered key, an added tracking field, a timestamp the tool stamps per delivery, produces a different source_id and a second lead. Measured: two byte-identical posts upsert onto one row, which is what the retry case needs, and the guarantee is narrower than the sentence describing it.",
       "where": "src/app/api/webhooks/forms/[token]/route.ts",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "A retried form delivery writes a SECOND `ingested` receipt against the same lead. upsertLead de-duplicates on (user_id, source, source_id) so the lead is one row, and insertEvents then runs unconditionally, so the ledger shows the same submission arriving twice. Measured 2026-09-19 by posting the fixture body twice: one lead, two receipts.",
@@ -588,7 +588,7 @@
       "summary": "The per-lead enrichment attempt cap is published and unimplemented. LEAD_ENRICHMENT_ATTEMPT_CAP and leadEnrichmentExhausted() exist in _lib/agent/guardrails.ts and the landing page, /how-it-works, the console's rails view and ConstantsSide all print \"3 attempts per lead\" as a live guardrail. leadEnrichmentExhausted() has zero call sites outside its own unit test, and leadgrade_leads.enrichment_attempts is never incremented or read. Verified after driving a real pass: every enriched lead still reads enrichment_attempts = 0.",
       "where": "src/app/_lib/agent/guardrails.ts, src/app/_lib/db/writes.ts",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "leadgrade_writebacks.run_id never matches a row in leadgrade_runs. The pass mints its run id with ports.newId(\"run\"), a randomUUID, and stamps it on every write-back it queues; insertRun() then inserts the run row WITHOUT an id, so the database generates a different one. The link between a write-back and the pass that produced it is broken for every autopilot row. Only reachable in autopilot, which no customer can turn on, which is why it is low.",

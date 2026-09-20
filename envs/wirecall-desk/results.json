@@ -387,13 +387,13 @@
       "summary": "wc_players.display_name has no writer anywhere in the product, and the Wire Pass is sold on \"a named spot on the leaderboard\". It appears in a SELECT in src/lib/device.ts, in the /api/device response and in the board view, and in no INSERT or UPDATE in any of the seven routes, three library writers or the cron. Measured on production: 0 of 650 player rows carry one. The only name a player can have is the generated caller_tag, the first four hex characters of their uuid, and production already has 3 tags shared by more than one player at 650 rows, so two paying players can render as the same board entry.",
       "where": "src/lib/device.ts:63, src/app/api/device/route.ts:37, the wc_leaderboard view",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "POST /api/device inserts a wc_players row on every anonymous call with no rate limit, and the crawl guard cannot see it: src/middleware.ts excludes api/ from its matcher. That guard exists because other products on this estate took 149,991 and 719,915 crawler hits in a day, and this is the one route that WRITES on an unauthenticated call. Measured against the running copy: 25 POSTs with an empty body took wc_players from 6 rows to 31. Production holds 650 player rows, 1 of which has ever scored.",
       "where": "src/app/api/device/route.ts:19, src/middleware.ts:82",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "A failed checkout leaves a permanent pending wc_orders row carrying the buyer's email address. The route inserts the order before it calls Stripe and the catch block returns 500 without touching it; there is no failed status, no expiry and no cleanup path. Measured against the running copy with Stripe unreachable: 3 POSTs to /api/checkout answered 500 three times, wc_orders went from 3 rows to 6 and wc_players from 6 to 9, and all three new orders read pending with a null stripe_session_id and the address stored.",

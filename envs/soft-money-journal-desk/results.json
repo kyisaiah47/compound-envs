@@ -407,19 +407,19 @@
       "summary": "One click unsubscribe is reported as done whether or not anyone came off. POST /api/subscribe/unsubscribe returns `new NextResponse(null, {status: 200})` on the !wantsHtml branch, before the code that inspects whether a row matched. Measured: a token that was never issued answered 200 with nobody off any list, while the same token with Accept: text/html answered 400 That link didn't work. send-letter.py sets List-Unsubscribe-Post: List-Unsubscribe=One-Click on every letter, and an RFC 8058 one click call is exactly a bare POST with no Accept: text/html, so a provider whose call carried a mangled or expired token records a successful unsubscribe, the reader is told they are off, and the next letter arrives.",
       "where": "src/app/api/subscribe/unsubscribe/route.ts:80",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "The one letter per entry skip has no constraint behind it. send-letter.py reads publication_letter_sends filtered by (publication, entry_url) with limit 1 and returns early if anything comes back, then writes a row per recipient after each send. Read off production pg_indexes 2026-09-19: the only indexes on that table are the primary key on id and a non unique (publication, sent_at desc). Two overlapping runs both read empty and both send the same letter to the same list.",
       "where": "compound-ops/letters/send-letter.py:205 against public.publication_letter_sends",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "The publish engine defaults to production when its environment is incomplete. publish.mjs:59-64 falls back to the production Supabase project url and to ~/bin/compound-secret for the service role key, so any caller that forgot one export uploads plates into production storage and upserts and PRUNES four live archives. sync-site.sh does pass the key, so the live lane is correct; the hazard is any other caller. This environment's copy has exactly those two lines changed and scripts/up.sh proves both that the patch touched nothing else and that the result refuses to run with an empty environment.",
       "where": "compound-ops/social/ugc/publish.mjs:59-64",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "Two sibling environments keep cross publication fixture rows on this product's own publication key, which rule 11a forbids. still-mornings-desk seeds one publication_subscribers row and two publication_posts rows on softmoneyjournal, and whyyourbraindoesthat-desk seeds two subscriber rows, both because when they were written this publication had no environment. Measured 2026-09-19: an honest run of the publish engine reported 3 pruned where this fixture accounts for 1, and the two still-mornings archive rows were gone afterwards, because publish.mjs's prune is bounded by publication and by nothing finer. This suite therefore snapshots those rows before its first case and restores them at the end; the finding is in the sibling environments, not in the product.",

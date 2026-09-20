@@ -396,7 +396,7 @@
       "summary": "The digest has no scheduled sender, so a reader who confirms is never mailed. src/lib/wire.config.ts states as fact that '~/Library/LaunchAgents/compound.popwire.digest.plist is installed and loaded, fires at 07:50 daily, and its log last wrote at 07:50 today'. Measured 2026-09-19: no plist with that name exists in ~/Library/LaunchAgents, no plist there references lanes/popwire, launchctl list carries compound.popwire.agent and compound.shared.popwire-bsky-engage and nothing else, and the lane's own .digest.log last wrote at 2026-09-15 07:50:04. The one surviving copy of the job is compound-ops/_retired/launchd-compound-labels-2026-09-10/studio.popwire.digest.plist.pre-compound, so it was taken out during the 2026-09-10 kynth-to-compound rename and never re-installed under the new label. The subscribe, confirm and unsubscribe chain all work; nothing sends.",
       "where": "src/lib/wire.config.ts, and the absent ~/Library/LaunchAgents/compound.popwire.digest.plist",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "A failed database read renders production's rundown instead of erroring. src/lib/wire.ts falls back to the committed manifest src/data/posts.json on 'error || !data || !data.length', and that manifest holds 108 real production entries (measured 2026-09-19). A broken key, a missing table or an RLS change therefore produces a page full of stories, every one of which names a row that does not exist in the database being read. Nothing errors and nothing on the page says which source it came from. scripts/up.sh fails its bring-up closed on this rather than trusting the page.",
