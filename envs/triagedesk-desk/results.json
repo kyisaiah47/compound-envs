@@ -909,9 +909,9 @@
     },
     {
       "summary": "Every console surface names Microsoft 365 and its scopes regardless of which rail is actually connected",
-      "where": "src/components/Chrome.tsx, src/components/Ledger.tsx, src/components/Queue.tsx, src/app/rails/page.tsx, src/app/settings/page.tsx",
+      "where": "src/components/Chrome.tsx, src/components/Ledger.tsx, src/components/Queue.tsx, src/app/rails/page.tsx, src/app/settings/page.tsx. Fixed 2026-09-19 in triagedesk 1f7461e: the console model carries the connected provider, and every rail identity now derives its vendor mark, name and exact grant from that value.",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "slackPostTo() fetches a URL taken straight from the interaction payload with no host check, so a caller holding the signing secret can point an outbound POST at any host. FIXED 2026-09-19: slackPostTo refuses any url that is not https on slack.com or a subdomain, checked on a dot boundary so slack.com.evil.example is refused.",
