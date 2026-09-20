@@ -9,14 +9,15 @@
   "app_port": 3317,
   "generated_at": "2026-09-19",
   "verdict": "gradable",
-
   "tasks": [
     {
       "id": "put-the-reader-on-the-letter",
       "description": "Put a reader on this publication's letter through the form on /letter.",
       "driven": "browser",
       "route": "POST /api/subscribe",
-      "writes": ["publication_subscribers"],
+      "writes": [
+        "publication_subscribers"
+      ],
       "guards": [
         {
           "id": "the-existing-readers-untouched",
@@ -134,7 +135,9 @@
       "description": "Take one reader off this letter through the link her letter carried, leaving the other publication she reads with the same address alone.",
       "driven": "browser",
       "route": "POST /api/subscribe/unsubscribe",
-      "writes": ["publication_subscribers"],
+      "writes": [
+        "publication_subscribers"
+      ],
       "guards": [
         {
           "id": "flagged-not-deleted",
@@ -230,7 +233,9 @@
       "description": "Mirror the published archive into publication_posts by running the nightly sync, with the plates uploaded and nothing authored.",
       "driven": "cron",
       "route": "compound-ops/social/ugc/publish.mjs soft-money-journal",
-      "writes": ["publication_posts"],
+      "writes": [
+        "publication_posts"
+      ],
       "guards": [
         {
           "id": "the-other-publications-untouched",
@@ -369,7 +374,6 @@
       "scores": {}
     }
   ],
-
   "not_gradable": [
     {
       "what": "the weekly letter, compound-ops/letters/send-letter.py",
@@ -392,13 +396,12 @@
       "why": "pure reads. Nothing in the product writes a row anywhere but the two /api/subscribe handlers."
     }
   ],
-
   "defects": [
     {
-      "summary": "publication_posts reaches exactly one surface, /rss.xml, and the permalink the feed publishes for a live only row answers 404. Measured 2026-09-19 against a production build on 3317 with 83 rows on this publication: /rss.xml served 84 items including /entry/the-envelope-i-stopped-using, that url answered 404, /sitemap.xml listed 91 entry urls and not that one, and /all rendered 91 entry links and not that one. src/lib/live.ts says the table is what puts an entry on the site with no deploy; on this product only the feed imports it, every HTML route reads a build time copy of the archive, and compound-ops/letters/send-letter.py composes the weekly letter out of that feed's newest item.",
+      "summary": "publication_posts reaches exactly one surface, /rss.xml, and the permalink the feed publishes for a live only row answers 404. Measured 2026-09-19 against a production build on 3317 with 83 rows on this publication: /rss.xml served 84 items including /entry/the-envelope-i-stopped-using, that url answered 404, /sitemap.xml listed 91 entry urls and not that one, and /all rendered 91 entry links and not that one. src/lib/live.ts says the table is what puts an entry on the site with no deploy; on this product only the feed imports it, every HTML route reads a build time copy of the archive, and compound-ops/letters/send-letter.py composes the weekly letter out of that feed's newest item. FIXED 2026-09-19 in soft-money-journal 9fbfe2d: src/lib/live-corpus.ts wraps getArchive() in the site's own Entry shape and every surface reads it, so a live-only row reaches the door, /all, /archive, /shapes, /about, the sitemap and its own entry page instead of 404ing.",
       "where": "src/lib/live.ts against src/lib/corpus.ts, and every route under src/app that imports corpus",
       "severity": "high",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "One click unsubscribe is reported as done whether or not anyone came off. POST /api/subscribe/unsubscribe returns `new NextResponse(null, {status: 200})` on the !wantsHtml branch, before the code that inspects whether a row matched. Measured: a token that was never issued answered 200 with nobody off any list, while the same token with Accept: text/html answered 400 That link didn't work. send-letter.py sets List-Unsubscribe-Post: List-Unsubscribe=One-Click on every letter, and an RFC 8058 one click call is exactly a bare POST with no Accept: text/html, so a provider whose call carried a mangled or expired token records a successful unsubscribe, the reader is told they are off, and the next letter arrives.",
@@ -425,7 +428,6 @@
       "fixed": false
     }
   ],
-
   "suite": {
     "command": "uv run python envs/soft-money-journal-desk/adversarial/prove_graders.py",
     "expectations_total": 48,
@@ -434,13 +436,11 @@
     "exit_code": 0,
     "last_run": "2026-09-19"
   },
-
   "counts": {
     "tasks": 3,
     "cheats": 45,
     "guards": 24,
     "browser_tasks": 2
   },
-
   "models": {}
 }
