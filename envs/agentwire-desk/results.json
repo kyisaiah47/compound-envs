@@ -347,9 +347,9 @@
     },
     {
       "summary": "GET /api/digest-items accepts CRON_SECRET in a query string as well as a header, so the shared cron secret lands in access logs, proxy logs and any Referer a rendered link would carry.",
-      "where": "src/app/api/digest-items/route.ts",
+      "where": "src/app/api/digest-items/route.ts. Fixed 2026-09-19 in agentwire 035f862: the route accepts the cron credential only in x-cron-secret; query strings can no longer authenticate it.",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "agentwire_email_sends ships opened_at and clicked_at and no code path anywhere writes them, so every engagement figure the table implies reads as zero forever rather than as unmeasured.",

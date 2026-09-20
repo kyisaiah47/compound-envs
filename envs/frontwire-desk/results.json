@@ -492,15 +492,15 @@
     },
     {
       "summary": "POST /api/email/webhook verifies nothing. It has no svix signature check, no shared secret and no allowlist, so anyone on the internet can POST an event shape to it and stamp opened_at or clicked_at on the send ledger. Resend message ids are not guessable, which is the only thing limiting it, and the route's own comment records the signature check as deferred.",
-      "where": "src/app/api/email/webhook/route.ts",
+      "where": "src/app/api/email/webhook/route.ts. Fixed 2026-09-19 in frontwire 114e2c6: the raw payload, Svix id and timestamp must pass the Resend signing secret HMAC within a five-minute replay window before a ledger row can move.",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "The contact form has no honeypot, no rate limit and no captcha, so frontwire_contacts takes anonymous writes at any volume. The subscribe form on the same pages carries a honeypot field; the contact form does not.",
-      "where": "src/components/ContactForm.tsx and src/app/api/contact/route.ts",
+      "where": "src/components/ContactForm.tsx and src/app/api/contact/route.ts. Fixed 2026-09-19 in frontwire 114e2c6: the UI and route share a honeypot, and accepted writes are limited to five per trusted edge address per hour through the estate rate-limit RPC.",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     }
   ],
   "suite": {

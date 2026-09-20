@@ -413,9 +413,9 @@
     },
     {
       "summary": "src/lib/email-render.ts hardcodes the production project's email-render function url, so every confirmation email on every deployment is rendered through production and the subscribe path needs the internet.",
-      "where": "src/lib/email-render.ts",
+      "where": "src/lib/email-render.ts. Fixed 2026-09-19 in standup 4a9e2df: the function URL is derived from EMAIL_RENDER_URL or the deployment's NEXT_PUBLIC_SUPABASE_URL and fails closed when neither exists.",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     }
   ],
   "suite": {

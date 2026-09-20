@@ -582,7 +582,7 @@
       "summary": "A retried form delivery writes a SECOND `ingested` receipt against the same lead. upsertLead de-duplicates on (user_id, source, source_id) so the lead is one row, and insertEvents then runs unconditionally, so the ledger shows the same submission arriving twice. Measured 2026-09-19 by posting the fixture body twice: one lead, two receipts.",
       "where": "src/app/api/webhooks/forms/[token]/route.ts",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "The per-lead enrichment attempt cap is published and unimplemented. LEAD_ENRICHMENT_ATTEMPT_CAP and leadEnrichmentExhausted() exist in _lib/agent/guardrails.ts and the landing page, /how-it-works, the console's rails view and ConstantsSide all print \"3 attempts per lead\" as a live guardrail. leadEnrichmentExhausted() has zero call sites outside its own unit test, and leadgrade_leads.enrichment_attempts is never incremented or read. Verified after driving a real pass: every enriched lead still reads enrichment_attempts = 0.",
@@ -594,13 +594,13 @@
       "summary": "leadgrade_writebacks.run_id never matches a row in leadgrade_runs. The pass mints its run id with ports.newId(\"run\"), a randomUUID, and stamps it on every write-back it queues; insertRun() then inserts the run row WITHOUT an id, so the database generates a different one. The link between a write-back and the pass that produced it is broken for every autopilot row. Only reachable in autopilot, which no customer can turn on, which is why it is low.",
       "where": "src/app/_lib/agent/pipeline.ts and src/app/_lib/db/writes.ts insertRun()",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "The public form endpoint's hourly ceiling is the account's daily_enrichment_cap column. The route's own comment reasons that this gives 24x more headroom than the pass can process, which holds only at the default of 250. An account on a lower cap silently gets a lower hourly ceiling on inbound leads, and leads over it are answered 429 and never stored, which is the one failure the same file says the product cannot have. Reachable today only through a direct database edit, because nothing in the product writes that column.",
       "where": "src/app/api/webhooks/forms/[token]/route.ts",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     }
   ],
   "suite": {

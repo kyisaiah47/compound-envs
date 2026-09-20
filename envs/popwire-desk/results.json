@@ -402,13 +402,13 @@
       "summary": "A failed database read renders production's rundown instead of erroring. src/lib/wire.ts falls back to the committed manifest src/data/posts.json on 'error || !data || !data.length', and that manifest holds 108 real production entries (measured 2026-09-19). A broken key, a missing table or an RLS change therefore produces a page full of stories, every one of which names a row that does not exist in the database being read. Nothing errors and nothing on the page says which source it came from. scripts/up.sh fails its bring-up closed on this rather than trusting the page.",
       "where": "src/lib/wire.ts",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "src/lib/wire.config.ts describes a shell this repo no longer has. Its header names src/components/WireMark.tsx and src/app/wire.css as two of the three files a wire supplies, and its newsletter block records that 'popwire/src/components/Shell.tsx renders this block'. None of those three files exists in the tree; the shells were purged on 2026-09-14 and every app is its own Next.js tree now. The file is still load-bearing (six modules import WIRE), so the stale half reads as current to anyone following it.",
       "where": "src/lib/wire.config.ts",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     }
   ],
   "suite": {

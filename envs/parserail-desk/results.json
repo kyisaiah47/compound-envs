@@ -321,7 +321,9 @@
           "caught_by": "the-other-developers-wallet-is-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "queue-the-manifest-parse",
@@ -445,9 +447,9 @@
     },
     {
       "summary": "A brand-new account is walked to a call it cannot make. ensureAccount() creates a wallet at zero and nothing grants (the free tier was withdrawn on 2026-09-01), so serveEndpoint's balance precheck refuses every /v1 call 402 before any work. The console's AutoActivate modal still auto-opens on /dashboard for a zero-key, zero-call account and presents mint then reveal then first call as the next step, and that first call cannot succeed until the account buys a pack. The refusal is correct; the flow that leads to it was not updated with the pricing decision.",
-      "where": "src/app/(app)/dashboard/(workspace)/AutoActivate.tsx with src/lib/platform/account.ts",
+      "where": "src/app/(app)/dashboard/(workspace)/AutoActivate.tsx with src/lib/platform/account.ts. Fixed 2026-09-19 in parserail 1fd543d: a zero-balance first account is sent to add credits before key creation, so the guided next action can succeed.",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     }
   ],
   "suite": {
@@ -464,5 +466,15 @@
     "guards": 33,
     "browser_tasks": 3
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 1.0,
+      "rail": "codex-headless",
+      "tasks_completed": 1,
+      "tasks_total": 5,
+      "complete": false
+    }
+  }
 }
