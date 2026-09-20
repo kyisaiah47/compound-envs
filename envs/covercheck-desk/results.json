@@ -170,19 +170,19 @@
       "summary": "The whole console fails to render for a signed-out visitor when no demo account exists. loadConsole() falls back to demoOrgId(), which looks up one hardcoded QA address in cc_members and returns null when it is absent, and page.tsx then renders one line of apology instead of ConsoleClient. The sign-in form lives inside that component, so there is no way in.",
       "where": "loadConsole() and demoOrgId(), rendered by page.tsx",
       "severity": "high",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "The expiry sweep's response body overcounts its drafts: it counts any non-null return from queueChase as queued, and queueChase returns the existing pending message when a thread already has one. Measured on the honest run, the route answered draftsQueued 3 when one draft row was written.",
       "where": "src/app/api/cron/expiry-sweep/route.ts",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "Every chase the product composes is signed 'your property manager'. Both call sites of queueChase pass that string hardcoded, so no draft is fit to send without an edit.",
       "where": "both call sites of queueChase, POST /api/cois and the expiry sweep",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     }
   ],
   "suite": {
