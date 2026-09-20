@@ -111,7 +111,7 @@
       "summary": "A real signed-in customer sees an empty claims console: workspaceSlices() returns hardcoded empty arrays for six of its seven collections on any account that is not the demo account, while the write routes are putting rows in the real tables.",
       "where": "src/app/_lib/session.ts, workspaceSlices()",
       "severity": "high",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "The ledger disagrees with itself: after the audit runs the band reads '4 statements received' and the body underneath still reads 'No statement has been read yet.'",

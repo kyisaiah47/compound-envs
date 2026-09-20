@@ -570,7 +570,7 @@
       "summary": "The console's \"Take it back\" control cancels ONE held write-back per lead, whichever `writesOf(lead.id).find(w => w.state === 'queued')` returns first, and the same panel says \"N writes held\". Measured 2026-09-19: approving Ardenhall's COO queued nine rows, the console rendered nine held, one press of Take it back left one cancelled and eight queued. A buyer who stops a write they did not mean to make stops one ninth of it. The API route is fine; it takes a write-back id, which is why the kill task in this environment is written against a lead holding exactly one held row.",
       "where": "src/components/console/Console.tsx act(), and KillWindow.tsx's count",
       "severity": "high",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "The form endpoint's own comment says a retry is de-duplicated because \"same email + same minute + same form is the same submission\", and the implementation is sha256 of the ENTIRE raw body. Any difference at all, a re-ordered key, an added tracking field, a timestamp the tool stamps per delivery, produces a different source_id and a second lead. Measured: two byte-identical posts upsert onto one row, which is what the retry case needs, and the guarantee is narrower than the sentence describing it.",

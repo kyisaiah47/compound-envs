@@ -403,13 +403,13 @@
       "summary": "standup_profiles_self is an RLS policy with cmd=ALL and auth.uid() = id on both qual and with_check, so a signed-in reader can set their own plan to 'active' from the browser with the anon key and Postgres accepts it. A membership can be granted rather than collected, and nothing in the product reads the column that would show the difference.",
       "where": "the standup_profiles_self policy, reproduced verbatim in sql/03-rls.sql",
       "severity": "high",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "A membership is invisible everywhere. getServerPlan and isMemberServer, the two functions that would make one visible, are dead code with no caller anywhere in the app, and Mast.tsx prints Sign in whether or not anybody is signed in, so a reader who has paid sees exactly what a reader who has not sees.",
       "where": "src/lib/plan.ts and Mast.tsx",
       "severity": "high",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "src/lib/email-render.ts hardcodes the production project's email-render function url, so every confirmation email on every deployment is rendered through production and the subscribe path needs the internet.",

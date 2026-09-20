@@ -190,7 +190,7 @@
       "summary": "The console renders an in-memory demo book to every visitor, signed in or not: page.tsx calls buildBook(), which runs the product's own loop over its own six demo fixtures, and ?signed-in=1 is a register over that same book rather than a tenant. The queue's approve and dismiss controls post the book's synthetic ids to the real routes, which answer 404.",
       "where": "src/app/page.tsx and src/lib/book.ts, buildBook()",
       "severity": "high",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "The product cannot build, so its nightly deploy fails. Its own FACTS.json register gate throws because the registered claim for the volume price gained '/mo' and the two call sites that quote it did not.",

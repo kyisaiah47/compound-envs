@@ -111,8 +111,8 @@ The shapes:
 ## The defects the build found
 
 92, recorded in the `defects` array of each environment's `results.json` with where, how severe
-and whether it is fixed. 46 are fixed in the products and committed there separately from the
-environment work; 46 stay open and recorded. 29 were high severity and 24 of those are fixed.
+and whether it is fixed. 51 are fixed in the products and committed there separately from the
+environment work; 41 stay open and recorded. All 29 high-severity findings are fixed.
 
 Every one was found by grading rows rather than pages, and most of them look fine from the
 outside, which is the point.
