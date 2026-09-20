@@ -6,3 +6,10 @@ envs/*/harness/node_modules/
 envs/*/harness/session.json
 envs/*/harness/*.png
 envs/*/app/
+
+# the console (was site/)
+node_modules/
+.next/
+.open-next/
+.wrangler/
+*.tsbuildinfo

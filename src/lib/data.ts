@@ -52,7 +52,7 @@ let cache: Environment[] | null = null;
 
 export function getEnvironments(): Environment[] {
   if (cache) return cache;
-  const root = path.resolve(process.cwd(), "..", "envs");
+  const root = path.resolve(process.cwd(), "envs");
   cache = fs
     .readdirSync(root)
     .map((name) => path.join(root, name, "results.json"))
