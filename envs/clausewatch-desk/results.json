@@ -196,7 +196,7 @@
       "summary": "The product cannot build, so its nightly deploy fails. Its own FACTS.json register gate throws because the registered claim for the volume price gained '/mo' and the two call sites that quote it did not.",
       "where": "src/app/(marketing)/contract-renewal-tracking-software/page.tsx:121 and src/app/(marketing)/landing.config.ts:874",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     }
   ],
   "suite": {

@@ -166,13 +166,13 @@
       "summary": "demoUserId() in both crons reads a 500 from GoTrue's admin list-users endpoint as 'there is no demo account' and carries on, so the shared demo book gets worked like any other customer's. One NULL token column anywhere in auth.users makes that endpoint answer 500 for every caller.",
       "where": "demoUserId(), read by GET /api/cron/pass and GET /api/cron/dispatch",
       "severity": "high",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "auth/callback redirects to new URL(req.url).origin, which resolves to a different host from the one the session cookie was just written on. Browsers scope cookies by host, so the console then renders the read-only demo book with a perfectly good session sitting next to it, and nothing errors.",
       "where": "src/app/auth/callback",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     }
   ],
   "suite": {
