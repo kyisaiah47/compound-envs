@@ -85,7 +85,9 @@
           "caught_by": "a-usable-public-prefix"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "revoke-the-leaked-key",
@@ -158,7 +160,9 @@
           "caught_by": "nothing-else-changed-state"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "arm-the-auto-recharge-pack",
@@ -231,7 +235,9 @@
           "caught_by": "the-other-developer-is-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "forget-the-shipment-notes",
@@ -405,7 +411,9 @@
           "caught_by": "the-failure-says-why"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 0.0
+      }
     }
   ],
   "not_gradable": [
@@ -470,11 +478,11 @@
     "codex-headless": {
       "ran_at": "2026-09-20",
       "rollouts_per_task": 1,
-      "mean": 1.0,
+      "mean": 0.8,
       "rail": "codex-headless",
-      "tasks_completed": 1,
+      "tasks_completed": 5,
       "tasks_total": 5,
-      "complete": false
+      "complete": true
     }
   }
 }
