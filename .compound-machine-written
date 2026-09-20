@@ -1,0 +1,7 @@
+# Paths in this repo that a generator writes, not a person.
+# Read by ~/CompoundLabs/compound-ops/tools/deploy-dirty.sh: one extended-regex per line,
+# matched against the git porcelain path. An undeclared generated file blocks every deploy.
+
+# Next.js rewrites this on every dev and build run, flipping between .next/dev/types and
+# .next/types depending on which ran last. The file itself says it should not be edited.
+^next-env\.d\.ts$
