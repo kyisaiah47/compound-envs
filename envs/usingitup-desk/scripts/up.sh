@@ -157,8 +157,8 @@ say "publish engine copy"
 #   site dir = PROJECTS/usingitup              envs/usingitup-desk/usingitup
 #
 # The copy is laid out to satisfy that arithmetic rather than patched to change it, and
-# `usingitup` is a symlink onto the app copy this script just built. Only the two credential
-# lines are touched.
+# `usingitup` is a symlink onto the app copy this script just built. Older engine revisions need
+# two credential lines neutralised; the current fail-closed engine needs no patch.
 mkdir -p "$UGC"
 # `daemon/` is excluded and replaced. The real one is the LIVE posting daemon's working
 # directory: it carries the account credentials, an ARMED flag, and a state file whose contents
@@ -183,12 +183,15 @@ text = text.replace("|| 'https://xowekqdsttxwbhfxvusa.supabase.co'", "|| ''")
 # 2. the fallback that reads the PRODUCTION service role key out of the vault
 text = text.replace("path.join(os.homedir(), 'bin/compound-secret')",
                     "'/nonexistent/no-vault-in-an-environment'")
-assert text != before, "neither credential line was found; publish.mjs changed shape"
+if text == before:
+    assert "process.env.SUPABASE_URL || ''" in text
+    assert "process.env.SUPABASE_SERVICE_ROLE_KEY || ''" in text
+    assert "must both be supplied by the caller" in text
 open(dst, "w", encoding="utf-8").write(text)
 PY
 changed=$(diff "$UGC_SRC/publish.mjs" "$UGC/publish.mjs" | grep -c '^[<>]' || true)
-[ "$changed" = "4" ] || {
-  echo "the engine patch changed $changed lines, expected 4 (two lines, in and out)" >&2; exit 1; }
+[ "$changed" = "0" ] || [ "$changed" = "4" ] || {
+  echo "the engine patch changed $changed lines, expected 0 (already fail-closed) or 4" >&2; exit 1; }
 diff "$UGC_SRC/publish.mjs" "$UGC/publish.mjs" | grep '^[<>]' \
   | grep -qvE "supabase\.co|compound-secret|no-vault-in-an-environment" && {
   echo "the engine patch touched a line that is not credential resolution" >&2; exit 1; } || true
@@ -204,7 +207,8 @@ if (cd "$UGC" && env -u SUPABASE_URL -u SUPABASE_SERVICE_ROLE_KEY node publish.m
   echo "the engine ran with no credentials in the environment. Refusing to continue." >&2
   exit 1
 fi
-grep -q "no SUPABASE_SERVICE_ROLE_KEY" /tmp/usingitup-desk-engine-probe.log || {
+grep -qE "no SUPABASE_SERVICE_ROLE_KEY|SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must both be supplied" \
+  /tmp/usingitup-desk-engine-probe.log || {
   echo "the engine failed for a reason other than the missing key:" >&2
   cat /tmp/usingitup-desk-engine-probe.log >&2; exit 1; }
 echo "engine refuses to run without an explicit local key"

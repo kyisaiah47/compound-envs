@@ -114,7 +114,9 @@
           "caught_by": "nothing-else-moved"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "take-back-the-renewal-reply",
@@ -208,7 +210,9 @@
           "caught_by": "nothing-else-moved"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "kill-the-chargeback-draft",
@@ -297,7 +301,9 @@
           "caught_by": "nothing-was-sent"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "one-dispatcher-tick",
@@ -441,7 +447,9 @@
           "caught_by": "no-model-spend"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "run-the-overnight-pass",
@@ -564,7 +572,9 @@
           "caught_by": "threads-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "apply-the-billing-events",
@@ -660,7 +670,9 @@
           "caught_by": "nothing-else-moved"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 0.0
+      }
     },
     {
       "id": "approve-from-the-slack-card",
@@ -752,7 +764,9 @@
           "caught_by": "threads-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "drop-the-uninstalled-workspace",
@@ -839,7 +853,9 @@
           "caught_by": "threads-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     }
   ],
   "not_gradable": [
@@ -940,5 +956,15 @@
     "guards": 68,
     "browser_tasks": 0
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 0.875,
+      "rail": "codex-headless",
+      "tasks_completed": 8,
+      "tasks_total": 8,
+      "complete": true
+    }
+  }
 }

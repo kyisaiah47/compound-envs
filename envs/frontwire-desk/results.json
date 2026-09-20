@@ -72,7 +72,9 @@
           "caught_by": "not-marked-gone"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "take-the-reader-off-the-list",
@@ -146,7 +148,9 @@
           "caught_by": "nobody-else-suppressed"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "log-the-letter-to-the-desk",
@@ -215,7 +219,9 @@
           "caught_by": "not-marked-answered"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "park-the-membership-that-paid-first",
@@ -307,7 +313,9 @@
           "caught_by": "the-older-parked-memberships-are-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "stamp-the-engagement-on-the-send-ledger",
@@ -375,7 +383,9 @@
           "caught_by": "no-other-message-was-touched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 0.0
+      }
     },
     {
       "id": "open-the-account-that-already-paid",
@@ -450,7 +460,9 @@
           "caught_by": "nobody-elses-plan-moved"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     }
   ],
   "not_gradable": [
@@ -517,5 +529,15 @@
     "guards": 35,
     "browser_tasks": 4
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 0.8333333333333334,
+      "rail": "codex-headless",
+      "tasks_completed": 6,
+      "tasks_total": 6,
+      "complete": true
+    }
+  }
 }

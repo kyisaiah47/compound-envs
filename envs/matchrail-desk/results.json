@@ -114,7 +114,9 @@
           "caught_by": "nothing-else-moved"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "take-back-the-queued-correction",
@@ -192,7 +194,9 @@
           "caught_by": "draft-kept"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "one-dispatcher-sweep",
@@ -294,7 +298,9 @@
           "caught_by": "ledger-match-stays-open"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "disconnect-the-quickbooks-rail",
@@ -360,7 +366,9 @@
           "caught_by": "book-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "run-the-nightly-pass",
@@ -454,7 +462,9 @@
           "caught_by": "corrections-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "dismiss-the-agreed-price-rise",
@@ -529,7 +539,9 @@
           "caught_by": "nothing-else-moved"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     }
   ],
   "not_gradable": [
@@ -610,5 +622,15 @@
     "guards": 43,
     "browser_tasks": 1
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 1.0,
+      "rail": "codex-headless",
+      "tasks_completed": 6,
+      "tasks_total": 6,
+      "complete": true
+    }
+  }
 }

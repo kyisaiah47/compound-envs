@@ -95,7 +95,9 @@
           "caught_by": "the-other-slates-are-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "settle-yesterdays-slate",
@@ -199,7 +201,9 @@
           "caught_by": "the-other-slates-are-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "grant-the-wire-pass",
@@ -283,7 +287,9 @@
           "caught_by": "a-pass-buys-no-edge"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "confirm-the-streak-reminder",
@@ -347,7 +353,9 @@
           "caught_by": "confirming-grants-nothing-else"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     }
   ],
   "not_gradable": [
@@ -422,5 +430,15 @@
     "guards": 26,
     "browser_tasks": 1
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 1.0,
+      "rail": "codex-headless",
+      "tasks_completed": 4,
+      "tasks_total": 4,
+      "complete": true
+    }
+  }
 }

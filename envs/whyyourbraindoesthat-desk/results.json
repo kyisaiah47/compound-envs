@@ -114,7 +114,9 @@
           "caught_by": "the-send-ledger-was-not-touched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "take-the-reader-off-the-letter-list",
@@ -206,7 +208,9 @@
           "caught_by": "the-send-ledger-was-not-touched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     }
   ],
   "not_gradable": [
@@ -273,5 +277,15 @@
     "guards": 15,
     "browser_tasks": 2
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 1.0,
+      "rail": "codex-headless",
+      "tasks_completed": 2,
+      "tasks_total": 2,
+      "complete": true
+    }
+  }
 }

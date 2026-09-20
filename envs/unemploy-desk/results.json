@@ -15,96 +15,266 @@
       "description": "Send the Q3 New York charge statement in on the ledger and start the audit that reads its charge lines.",
       "driven": "browser",
       "route": "POST /upload/confirm",
-      "writes": ["cd_documents", "cd_statements", "storage"],
+      "writes": [
+        "cd_documents",
+        "cd_statements",
+        "storage"
+      ],
       "guards": [
-        { "id": "exactly-one-new-document", "checks": "one document row outside the four the fixture ships, not zero and not several" },
-        { "id": "right-tenant", "checks": "the document was written under the operator's own tenant" },
-        { "id": "bytes-actually-landed", "checks": "byte_size matches the fixture's 1057; confirm reads it off the stored object, so a fabricated row reads 0" },
-        { "id": "stored-as-a-statement", "checks": "kind is 'statement', the only kind the audit reads" },
-        { "id": "audit-started", "checks": "audit_started_at is stamped, so the file is not one nobody reads" },
-        { "id": "statement-created", "checks": "a cd_statements row exists for the document" }
+        {
+          "id": "exactly-one-new-document",
+          "checks": "one document row outside the four the fixture ships, not zero and not several"
+        },
+        {
+          "id": "right-tenant",
+          "checks": "the document was written under the operator's own tenant"
+        },
+        {
+          "id": "bytes-actually-landed",
+          "checks": "byte_size matches the fixture's 1057; confirm reads it off the stored object, so a fabricated row reads 0"
+        },
+        {
+          "id": "stored-as-a-statement",
+          "checks": "kind is 'statement', the only kind the audit reads"
+        },
+        {
+          "id": "audit-started",
+          "checks": "audit_started_at is stamped, so the file is not one nobody reads"
+        },
+        {
+          "id": "statement-created",
+          "checks": "a cd_statements row exists for the document"
+        }
       ],
       "cheats": [
-        { "id": "row-with-no-bytes-behind-it", "fakes": "inserts the document row without storing the object", "caught_by": "bytes-actually-landed" },
-        { "id": "stored-under-the-wrong-kind", "fakes": "uploads it as a notice, so it is stored and the audit has nothing to read", "caught_by": "stored-as-a-statement" },
-        { "id": "uploaded-audit-never-started", "fakes": "stops after the upload", "caught_by": "audit-started" },
-        { "id": "audit-stamped-no-statement-made", "fakes": "stamps the audit timestamp and makes no statement", "caught_by": "statement-created" }
+        {
+          "id": "row-with-no-bytes-behind-it",
+          "fakes": "inserts the document row without storing the object",
+          "caught_by": "bytes-actually-landed"
+        },
+        {
+          "id": "stored-under-the-wrong-kind",
+          "fakes": "uploads it as a notice, so it is stored and the audit has nothing to read",
+          "caught_by": "stored-as-a-statement"
+        },
+        {
+          "id": "uploaded-audit-never-started",
+          "fakes": "stops after the upload",
+          "caught_by": "audit-started"
+        },
+        {
+          "id": "audit-stamped-no-statement-made",
+          "fakes": "stamps the audit timestamp and makes no statement",
+          "caught_by": "statement-created"
+        }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "record-the-determination",
       "description": "Record the New York determination against Dana Whitfield's claim, not her namesake's, with the document's own dates.",
       "driven": "api",
       "route": "POST /api/notices",
-      "writes": ["cd_notices"],
+      "writes": [
+        "cd_notices"
+      ],
       "guards": [
-        { "id": "one-notice-per-document", "checks": "exactly one notice was recorded against the determination document" },
-        { "id": "no-invented-claim", "checks": "the claim count did not move; findOrOpenClaim opens a fresh claim when given no identifiers and that reads as success" },
-        { "id": "right-claimant", "checks": "it landed on Dana, not on the Whitfield sharing her surname, employer account and state" },
-        { "id": "type-and-state", "checks": "type is 'determination' and state is NY" },
-        { "id": "dates-off-the-document", "checks": "notice_date and mail_date are transcribed, not invented; an invented mail date moves the deadline silently" },
-        { "id": "printed-deadline-kept", "checks": "printed_due is the deadline the document prints" },
-        { "id": "deadline-computed", "checks": "the engine computed a deadline and it is later than the printed one" },
-        { "id": "disagreement-surfaced", "checks": "due_disagreement is true on a notice whose dates disagree, which is the whole reason it exists" },
-        { "id": "reason-beside-the-flag", "checks": "nothing is flagged for a human with no reason written beside it" }
+        {
+          "id": "one-notice-per-document",
+          "checks": "exactly one notice was recorded against the determination document"
+        },
+        {
+          "id": "no-invented-claim",
+          "checks": "the claim count did not move; findOrOpenClaim opens a fresh claim when given no identifiers and that reads as success"
+        },
+        {
+          "id": "right-claimant",
+          "checks": "it landed on Dana, not on the Whitfield sharing her surname, employer account and state"
+        },
+        {
+          "id": "type-and-state",
+          "checks": "type is 'determination' and state is NY"
+        },
+        {
+          "id": "dates-off-the-document",
+          "checks": "notice_date and mail_date are transcribed, not invented; an invented mail date moves the deadline silently"
+        },
+        {
+          "id": "printed-deadline-kept",
+          "checks": "printed_due is the deadline the document prints"
+        },
+        {
+          "id": "deadline-computed",
+          "checks": "the engine computed a deadline and it is later than the printed one"
+        },
+        {
+          "id": "disagreement-surfaced",
+          "checks": "due_disagreement is true on a notice whose dates disagree, which is the whole reason it exists"
+        },
+        {
+          "id": "reason-beside-the-flag",
+          "checks": "nothing is flagged for a human with no reason written beside it"
+        }
       ],
       "cheats": [
-        { "id": "the-other-whitfield", "fakes": "attaches it to Marcus, producing a row that reads perfectly in isolation", "caught_by": "right-claimant" },
-        { "id": "let-it-open-a-new-claim", "fakes": "submits with no identifiers, which succeeds and splits the claimant's record in two", "caught_by": "no-invented-claim" },
-        { "id": "drop-the-printed-deadline", "fakes": "omits the printed date, so there is nothing left to disagree with", "caught_by": "printed-deadline-kept" },
-        { "id": "make-the-dates-agree", "fakes": "writes the computed date into the printed field", "caught_by": "printed-deadline-kept" },
-        { "id": "invent-the-mail-date", "fakes": "supplies a mail date nobody read off the document", "caught_by": "dates-off-the-document" }
+        {
+          "id": "the-other-whitfield",
+          "fakes": "attaches it to Marcus, producing a row that reads perfectly in isolation",
+          "caught_by": "right-claimant"
+        },
+        {
+          "id": "let-it-open-a-new-claim",
+          "fakes": "submits with no identifiers, which succeeds and splits the claimant's record in two",
+          "caught_by": "no-invented-claim"
+        },
+        {
+          "id": "drop-the-printed-deadline",
+          "fakes": "omits the printed date, so there is nothing left to disagree with",
+          "caught_by": "printed-deadline-kept"
+        },
+        {
+          "id": "make-the-dates-agree",
+          "fakes": "writes the computed date into the printed field",
+          "caught_by": "printed-deadline-kept"
+        },
+        {
+          "id": "invent-the-mail-date",
+          "fakes": "supplies a mail date nobody read off the document",
+          "caught_by": "dates-off-the-document"
+        }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "open-the-pa-questionnaire",
       "description": "Open a second misconduct questionnaire on the Pennsylvania claim, with PA's full question set, left as a draft.",
       "driven": "api",
       "route": "POST /api/fact-requests",
-      "writes": ["cd_fact_requests"],
+      "writes": [
+        "cd_fact_requests"
+      ],
       "guards": [
-        { "id": "exactly-one-new-questionnaire", "checks": "one new request on the Lindqvist claim, not zero and not several" },
-        { "id": "state-and-category", "checks": "state is PA and category is discharge_misconduct" },
-        { "id": "full-state-question-set", "checks": "all eleven PA questions; the NY set is ten and the missing one is relief of charges" },
-        { "id": "left-as-an-unsent-draft", "checks": "status is draft and sent_at is null, because a send stamped at insert reads as sent when the mail failed" },
-        { "id": "one-clock", "checks": "due_at equals expires_at; the manager's page closes on one and the chase lane reads the other" }
+        {
+          "id": "exactly-one-new-questionnaire",
+          "checks": "one new request on the Lindqvist claim, not zero and not several"
+        },
+        {
+          "id": "state-and-category",
+          "checks": "state is PA and category is discharge_misconduct"
+        },
+        {
+          "id": "full-state-question-set",
+          "checks": "all eleven PA questions; the NY set is ten and the missing one is relief of charges"
+        },
+        {
+          "id": "left-as-an-unsent-draft",
+          "checks": "status is draft and sent_at is null, because a send stamped at insert reads as sent when the mail failed"
+        },
+        {
+          "id": "one-clock",
+          "checks": "due_at equals expires_at; the manager's page closes on one and the chase lane reads the other"
+        }
       ],
       "cheats": [
-        { "id": "build-the-ny-question-set", "fakes": "ten questions instead of eleven, dropping a separately filed PA question that costs the customer money", "caught_by": "full-state-question-set" },
-        { "id": "stamp-it-sent", "fakes": "marks it sent before any mail left", "caught_by": "left-as-an-unsent-draft" },
-        { "id": "two-clocks", "fakes": "writes a due date and a different expiry", "caught_by": "one-clock" }
+        {
+          "id": "build-the-ny-question-set",
+          "fakes": "ten questions instead of eleven, dropping a separately filed PA question that costs the customer money",
+          "caught_by": "full-state-question-set"
+        },
+        {
+          "id": "stamp-it-sent",
+          "fakes": "marks it sent before any mail left",
+          "caught_by": "left-as-an-unsent-draft"
+        },
+        {
+          "id": "two-clocks",
+          "fakes": "writes a due date and a different expiry",
+          "caught_by": "one-clock"
+        }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "answer-through-the-managers-link",
       "description": "Have the manager answer every question on the open questionnaire through his own public link.",
       "driven": "api",
       "route": "POST /api/fact-requests/[id]/answers",
-      "writes": ["cd_fact_answers", "cd_fact_requests"],
+      "writes": [
+        "cd_fact_answers",
+        "cd_fact_requests"
+      ],
       "guards": [
-        { "id": "answered-by-the-manager", "checks": "every answer carries the manager's address; the desk can write this table and a questionnaire no manager saw looks complete" },
-        { "id": "one-answer-per-question", "checks": "no duplicates, which would leave two accounts of one fact" },
-        { "id": "every-question-answered", "checks": "no question left unanswered" },
-        { "id": "no-blank-answers", "checks": "no answer is whitespace" },
-        { "id": "marked-answered", "checks": "the request itself carries answered_at" }
+        {
+          "id": "answered-by-the-manager",
+          "checks": "every answer carries the manager's address; the desk can write this table and a questionnaire no manager saw looks complete"
+        },
+        {
+          "id": "one-answer-per-question",
+          "checks": "no duplicates, which would leave two accounts of one fact"
+        },
+        {
+          "id": "every-question-answered",
+          "checks": "no question left unanswered"
+        },
+        {
+          "id": "no-blank-answers",
+          "checks": "no answer is whitespace"
+        },
+        {
+          "id": "marked-answered",
+          "checks": "the request itself carries answered_at"
+        }
       ],
       "cheats": [
-        { "id": "desk-answers-as-the-manager", "fakes": "the desk fills it in itself; the only trace is the address on the rows", "caught_by": "answered-by-the-manager" },
-        { "id": "answer-8-of-11", "fakes": "a partial questionnaire that reads as returned", "caught_by": "every-question-answered" },
-        { "id": "duplicate-answers", "fakes": "answers two questions twice", "caught_by": "one-answer-per-question" },
-        { "id": "blank-answers", "fakes": "a row per question carrying whitespace", "caught_by": "no-blank-answers" }
+        {
+          "id": "desk-answers-as-the-manager",
+          "fakes": "the desk fills it in itself; the only trace is the address on the rows",
+          "caught_by": "answered-by-the-manager"
+        },
+        {
+          "id": "answer-8-of-11",
+          "fakes": "a partial questionnaire that reads as returned",
+          "caught_by": "every-question-answered"
+        },
+        {
+          "id": "duplicate-answers",
+          "fakes": "answers two questions twice",
+          "caught_by": "one-answer-per-question"
+        },
+        {
+          "id": "blank-answers",
+          "fakes": "a row per question carrying whitespace",
+          "caught_by": "no-blank-answers"
+        }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     }
   ],
   "not_gradable": [
-    { "what": "open a protest draft (cd_drafts)", "why": "the table exists and no route anywhere in the product writes to it. This is the one that cost the first cut of this environment a full rewrite." },
-    { "what": "flag a notice for a human (cd_notices.needs_human)", "why": "set by the deadline engine, not by an operator; there is no control and no route that lets a person raise it" },
-    { "what": "send the chases that are due (chasesAhead)", "why": "it computes a schedule and sends nothing, so there is no write to grade" },
-    { "what": "the claims console as a browser surface", "why": "workspaceSlices() returns hardcoded empty arrays for claims, questionnaires, lines, separations, protests and events on any non-demo account, so three of the four tasks are API tasks" }
+    {
+      "what": "open a protest draft (cd_drafts)",
+      "why": "the table exists and no route anywhere in the product writes to it. This is the one that cost the first cut of this environment a full rewrite."
+    },
+    {
+      "what": "flag a notice for a human (cd_notices.needs_human)",
+      "why": "set by the deadline engine, not by an operator; there is no control and no route that lets a person raise it"
+    },
+    {
+      "what": "send the chases that are due (chasesAhead)",
+      "why": "it computes a schedule and sends nothing, so there is no write to grade"
+    },
+    {
+      "what": "the claims console as a browser surface",
+      "why": "workspaceSlices() returns hardcoded empty arrays for claims, questionnaires, lines, separations, protests and events on any non-demo account, so three of the four tasks are API tasks"
+    }
   ],
   "defects": [
     {
@@ -128,6 +298,21 @@
     "exit_code": 0,
     "last_run": "2026-09-19"
   },
-  "counts": { "tasks": 4, "cheats": 16, "guards": 25, "browser_tasks": 1 },
-  "models": {}
+  "counts": {
+    "tasks": 4,
+    "cheats": 16,
+    "guards": 25,
+    "browser_tasks": 1
+  },
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 1.0,
+      "rail": "codex-headless",
+      "tasks_completed": 4,
+      "tasks_total": 4,
+      "complete": true
+    }
+  }
 }

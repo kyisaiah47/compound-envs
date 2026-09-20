@@ -97,7 +97,9 @@
           "caught_by": "no-other-tenant-worked"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "approve-the-ardenhall-coo",
@@ -185,7 +187,9 @@
           "caught_by": "every-queued-write-has-a-receipt"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "take-back-the-barrantes-write",
@@ -259,7 +263,9 @@
           "caught_by": "the-kill-has-a-receipt"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "dispatch-the-due-writes",
@@ -337,7 +343,9 @@
           "caught_by": "no-other-tenant-worked"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 0.0
+      }
     },
     {
       "id": "take-the-inbound-form-lead",
@@ -420,7 +428,9 @@
           "caught_by": "the-arrival-has-a-receipt"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 0.0
+      }
     },
     {
       "id": "apply-the-billing-events",
@@ -494,7 +504,9 @@
           "caught_by": "the-payment-was-recorded"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 0.0
+      }
     }
   ],
   "not_gradable": [
@@ -617,5 +629,15 @@
     "guards": 40,
     "browser_tasks": 2
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 0.5,
+      "rail": "codex-headless",
+      "tasks_completed": 6,
+      "tasks_total": 6,
+      "complete": true
+    }
+  }
 }

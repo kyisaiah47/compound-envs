@@ -99,7 +99,9 @@
           "caught_by": "the-passive-facts-are-facts"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "generate-the-paid-report",
@@ -224,7 +226,9 @@
           "caught_by": "the-other-paid-order-is-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "revoke-the-disputed-order",
@@ -318,7 +322,9 @@
           "caught_by": "the-status-names-the-event"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "run-the-nightly",
@@ -453,7 +459,9 @@
           "caught_by": "exactly-one-regression-and-it-names-the-move"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "queue-the-smoke-test",
@@ -528,7 +536,9 @@
           "caught_by": "exactly-one-queued-run-for-the-app-named"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     }
   ],
   "not_gradable": [
@@ -595,5 +605,15 @@
     "guards": 40,
     "browser_tasks": 2
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 1.0,
+      "rail": "codex-headless",
+      "tasks_completed": 5,
+      "tasks_total": 5,
+      "complete": true
+    }
+  }
 }

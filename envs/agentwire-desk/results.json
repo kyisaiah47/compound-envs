@@ -67,7 +67,9 @@
           "caught_by": "one-new-row-not-a-hedge"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "confirm-the-subscription",
@@ -131,7 +133,9 @@
           "caught_by": "she-is-on-the-list-not-off-it"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "take-the-reader-off-the-list",
@@ -205,7 +209,9 @@
           "caught_by": "she-is-suppressed"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 0.0
+      }
     },
     {
       "id": "mirror-the-days-sends-onto-the-index",
@@ -287,7 +293,9 @@
           "caught_by": "both-posted-repos-at-their-derived-slug"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     }
   ],
   "not_gradable": [
@@ -372,5 +380,15 @@
     "guards": 22,
     "browser_tasks": 3
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 0.75,
+      "rail": "codex-headless",
+      "tasks_completed": 4,
+      "tasks_total": 4,
+      "complete": true
+    }
+  }
 }

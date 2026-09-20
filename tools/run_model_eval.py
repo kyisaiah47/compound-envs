@@ -60,8 +60,17 @@ def load_taskset(env_dir: pathlib.Path):
 
 def task_class(module: Any, task_id: str):
     tasks = getattr(module, "TASKS", {})
-    if task_id in tasks:
+    if isinstance(tasks, dict) and task_id in tasks:
         return tasks[task_id]
+    if isinstance(tasks, (list, tuple)):
+        for entry in tasks:
+            if isinstance(entry, (list, tuple)) and len(entry) >= 2 and entry[1] == task_id:
+                return entry[0]
+    task_ids = getattr(module, "TASK_IDS", {})
+    if isinstance(task_ids, dict) and task_id in task_ids:
+        candidate = getattr(module, task_ids[task_id], None)
+        if isinstance(candidate, type):
+            return candidate
     for value in vars(module).values():
         if isinstance(value, type) and getattr(value, "TASK_ID", None) == task_id:
             return value

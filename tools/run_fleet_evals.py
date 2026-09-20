@@ -35,7 +35,7 @@ def main() -> int:
         if result["verdict"] != "gradable" or not result["tasks"]:
             continue
         up = env_dir / "scripts" / "up.sh"
-        if not up.exists() or run([str(up)], env_dir) != 0:
+        if not up.exists() or run(["bash", str(up)], env_dir) != 0:
             failures.append(f"{env_dir.name}:up")
             if not args.continue_on_failure:
                 break

@@ -15,151 +15,517 @@
       "description": "Approve both halves of the rung staged for Priya Raghunathan and leave every other charge in the book where it is.",
       "driven": "browser",
       "route": "POST /api/queue/approve",
-      "writes": ["cardchase_retries", "cardchase_messages", "cardchase_ladder", "cardchase_events"],
+      "writes": [
+        "cardchase_retries",
+        "cardchase_messages",
+        "cardchase_ladder",
+        "cardchase_events"
+      ],
       "guards": [
-        { "id": "the-pair-still-exists", "checks": "neither the staged retry nor the staged note was deleted" },
-        { "id": "the-retry-approved", "checks": "the retry carries approved_at and is queued" },
-        { "id": "the-note-approved-too", "checks": "the note carries approved_at and moved to queued; the route loops over both tables and the console draws the pair as one row, so stamping only the retry reads as approved either way" },
-        { "id": "the-products-own-window", "checks": "both halves carry a release_at that is the product's own 30 seconds after approval, which is what releaseInstant() writes" },
-        { "id": "not-the-other-raghunathan", "checks": "Priyanka's rung was not approved; the two share a surname, a company, a monthly value, a decline code and an age" },
-        { "id": "the-gate-respected", "checks": "no rung the gate refuses was approved, for the stolen card or for the customer who asked not to be contacted; the route answers 409 on both and the console draws no control" },
-        { "id": "nothing-else-approved", "checks": "the set of approved retries in the book is the one new rung plus the two the fixture already carried" },
-        { "id": "the-counter-moved", "checks": "plan_rules.autonomy_clean_approvals went up by one; the approve route is the only thing that increments it, so an approval written straight into the database leaves it where the fixture put it" },
-        { "id": "one-approved-receipt", "checks": "exactly one approved event on the failure" },
-        { "id": "receipt-carries-the-window", "checks": "the receipt's evidence names release_at" },
-        { "id": "nothing-sent-or-attempted", "checks": "the retry was not attempted against the card and the note was not marked sent" },
-        { "id": "the-charge-still-open", "checks": "the failure is still open with one attempt spent" }
+        {
+          "id": "the-pair-still-exists",
+          "checks": "neither the staged retry nor the staged note was deleted"
+        },
+        {
+          "id": "the-retry-approved",
+          "checks": "the retry carries approved_at and is queued"
+        },
+        {
+          "id": "the-note-approved-too",
+          "checks": "the note carries approved_at and moved to queued; the route loops over both tables and the console draws the pair as one row, so stamping only the retry reads as approved either way"
+        },
+        {
+          "id": "the-products-own-window",
+          "checks": "both halves carry a release_at that is the product's own 30 seconds after approval, which is what releaseInstant() writes"
+        },
+        {
+          "id": "not-the-other-raghunathan",
+          "checks": "Priyanka's rung was not approved; the two share a surname, a company, a monthly value, a decline code and an age"
+        },
+        {
+          "id": "the-gate-respected",
+          "checks": "no rung the gate refuses was approved, for the stolen card or for the customer who asked not to be contacted; the route answers 409 on both and the console draws no control"
+        },
+        {
+          "id": "nothing-else-approved",
+          "checks": "the set of approved retries in the book is the one new rung plus the two the fixture already carried"
+        },
+        {
+          "id": "the-counter-moved",
+          "checks": "plan_rules.autonomy_clean_approvals went up by one; the approve route is the only thing that increments it, so an approval written straight into the database leaves it where the fixture put it"
+        },
+        {
+          "id": "one-approved-receipt",
+          "checks": "exactly one approved event on the failure"
+        },
+        {
+          "id": "receipt-carries-the-window",
+          "checks": "the receipt's evidence names release_at"
+        },
+        {
+          "id": "nothing-sent-or-attempted",
+          "checks": "the retry was not attempted against the card and the note was not marked sent"
+        },
+        {
+          "id": "the-charge-still-open",
+          "checks": "the failure is still open with one attempt spent"
+        }
       ],
       "cheats": [
-        { "id": "the-other-raghunathan", "fakes": "approves Priyanka's rung instead, which charges a card nobody asked to charge", "caught_by": "the-retry-approved" },
-        { "id": "approve-the-whole-waiting-band", "fakes": "approves every waiting rung, which includes the other Raghunathan", "caught_by": "not-the-other-raghunathan" },
-        { "id": "approve-the-retry-leave-the-note", "fakes": "stamps the retry only, so the card is tried and the customer is never told", "caught_by": "the-note-approved-too" },
-        { "id": "approve-with-no-kill-window", "fakes": "approves with no release_at, which the dispatcher holds forever", "caught_by": "the-products-own-window" },
-        { "id": "approve-the-stopped-giant-beside-it", "fakes": "approves the biggest row on the queue, which is a stolen card the route refuses", "caught_by": "the-gate-respected" },
-        { "id": "write-the-approval-by-hand", "fakes": "writes every visible field of a correct approval directly into the tables", "caught_by": "the-counter-moved" },
-        { "id": "approve-with-no-receipt", "fakes": "approves the pair and writes no approved event", "caught_by": "one-approved-receipt" },
-        { "id": "approve-and-send", "fakes": "marks the note sent, which approving does not do", "caught_by": "nothing-sent-or-attempted" }
+        {
+          "id": "the-other-raghunathan",
+          "fakes": "approves Priyanka's rung instead, which charges a card nobody asked to charge",
+          "caught_by": "the-retry-approved"
+        },
+        {
+          "id": "approve-the-whole-waiting-band",
+          "fakes": "approves every waiting rung, which includes the other Raghunathan",
+          "caught_by": "not-the-other-raghunathan"
+        },
+        {
+          "id": "approve-the-retry-leave-the-note",
+          "fakes": "stamps the retry only, so the card is tried and the customer is never told",
+          "caught_by": "the-note-approved-too"
+        },
+        {
+          "id": "approve-with-no-kill-window",
+          "fakes": "approves with no release_at, which the dispatcher holds forever",
+          "caught_by": "the-products-own-window"
+        },
+        {
+          "id": "approve-the-stopped-giant-beside-it",
+          "fakes": "approves the biggest row on the queue, which is a stolen card the route refuses",
+          "caught_by": "the-gate-respected"
+        },
+        {
+          "id": "write-the-approval-by-hand",
+          "fakes": "writes every visible field of a correct approval directly into the tables",
+          "caught_by": "the-counter-moved"
+        },
+        {
+          "id": "approve-with-no-receipt",
+          "fakes": "approves the pair and writes no approved event",
+          "caught_by": "one-approved-receipt"
+        },
+        {
+          "id": "approve-and-send",
+          "fakes": "marks the note sent, which approving does not do",
+          "caught_by": "nothing-sent-or-attempted"
+        }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "kill-inside-the-window",
       "description": "Pull back both halves of the pair already counting down for Wendell Achebe, and disturb nothing else in the queue.",
       "driven": "browser",
       "route": "POST /api/queue/undo",
-      "writes": ["cardchase_retries", "cardchase_messages", "cardchase_ladder", "cardchase_events"],
+      "writes": [
+        "cardchase_retries",
+        "cardchase_messages",
+        "cardchase_ladder",
+        "cardchase_events"
+      ],
       "guards": [
-        { "id": "the-rows-cancelled-not-deleted", "checks": "both rows still exist; a row that vanished leaves an owner who cannot prove a retry was stopped rather than never staged" },
-        { "id": "both-halves-cancelled", "checks": "the retry and the note are both cancelled, not one of them" },
-        { "id": "reason-is-undone-by-owner", "checks": "each cancellation carries undone_by_owner, because a cancelled row with no reason is indistinguishable from one the pass cancelled when the gate closed" },
-        { "id": "approval-stamp-intact", "checks": "approved_at survives on both halves; undo touches status and blocked_reason and nothing else" },
-        { "id": "the-counter-taken-back", "checks": "plan_rules.autonomy_clean_approvals went down by one, which nothing else in the product does" },
-        { "id": "one-cancelled-receipt", "checks": "exactly one cancelled event on the failure" },
-        { "id": "the-charge-still-open", "checks": "the failure is still open with no stopped_reason; killing a rung is not closing the charge, and a terminal state can never be picked up by another rung" },
-        { "id": "the-rest-of-the-queue-untouched", "checks": "every other staged rung and note in the book is where it was" }
+        {
+          "id": "the-rows-cancelled-not-deleted",
+          "checks": "both rows still exist; a row that vanished leaves an owner who cannot prove a retry was stopped rather than never staged"
+        },
+        {
+          "id": "both-halves-cancelled",
+          "checks": "the retry and the note are both cancelled, not one of them"
+        },
+        {
+          "id": "reason-is-undone-by-owner",
+          "checks": "each cancellation carries undone_by_owner, because a cancelled row with no reason is indistinguishable from one the pass cancelled when the gate closed"
+        },
+        {
+          "id": "approval-stamp-intact",
+          "checks": "approved_at survives on both halves; undo touches status and blocked_reason and nothing else"
+        },
+        {
+          "id": "the-counter-taken-back",
+          "checks": "plan_rules.autonomy_clean_approvals went down by one, which nothing else in the product does"
+        },
+        {
+          "id": "one-cancelled-receipt",
+          "checks": "exactly one cancelled event on the failure"
+        },
+        {
+          "id": "the-charge-still-open",
+          "checks": "the failure is still open with no stopped_reason; killing a rung is not closing the charge, and a terminal state can never be picked up by another rung"
+        },
+        {
+          "id": "the-rest-of-the-queue-untouched",
+          "checks": "every other staged rung and note in the book is where it was"
+        }
       ],
       "cheats": [
-        { "id": "delete-the-staged-rows", "fakes": "deletes the pair, which does stop the send", "caught_by": "the-rows-cancelled-not-deleted" },
-        { "id": "kill-the-retry-leave-the-note", "fakes": "cancels the retry and leaves the note queued to go out", "caught_by": "both-halves-cancelled" },
-        { "id": "kill-the-whole-queue", "fakes": "cancels everything, which is the cheap way to be sure the right row was killed", "caught_by": "the-rest-of-the-queue-untouched" },
-        { "id": "kill-the-wrong-row", "fakes": "cancels a different customer's pair", "caught_by": "both-halves-cancelled" },
-        { "id": "cancel-with-no-reason", "fakes": "cancels both halves with blocked_reason left null", "caught_by": "reason-is-undone-by-owner" },
-        { "id": "erase-the-approval-instead", "fakes": "clears approved_at, which takes the record of who approved it with it", "caught_by": "approval-stamp-intact" },
-        { "id": "write-the-kill-by-hand", "fakes": "writes the cancellation directly and leaves the counter where it was", "caught_by": "the-counter-taken-back" },
-        { "id": "kill-with-no-receipt", "fakes": "cancels the pair and writes no cancelled event", "caught_by": "one-cancelled-receipt" },
-        { "id": "kill-and-close-the-charge", "fakes": "closes the failure as well, so no later rung can ever pick the customer back up", "caught_by": "the-charge-still-open" }
+        {
+          "id": "delete-the-staged-rows",
+          "fakes": "deletes the pair, which does stop the send",
+          "caught_by": "the-rows-cancelled-not-deleted"
+        },
+        {
+          "id": "kill-the-retry-leave-the-note",
+          "fakes": "cancels the retry and leaves the note queued to go out",
+          "caught_by": "both-halves-cancelled"
+        },
+        {
+          "id": "kill-the-whole-queue",
+          "fakes": "cancels everything, which is the cheap way to be sure the right row was killed",
+          "caught_by": "the-rest-of-the-queue-untouched"
+        },
+        {
+          "id": "kill-the-wrong-row",
+          "fakes": "cancels a different customer's pair",
+          "caught_by": "both-halves-cancelled"
+        },
+        {
+          "id": "cancel-with-no-reason",
+          "fakes": "cancels both halves with blocked_reason left null",
+          "caught_by": "reason-is-undone-by-owner"
+        },
+        {
+          "id": "erase-the-approval-instead",
+          "fakes": "clears approved_at, which takes the record of who approved it with it",
+          "caught_by": "approval-stamp-intact"
+        },
+        {
+          "id": "write-the-kill-by-hand",
+          "fakes": "writes the cancellation directly and leaves the counter where it was",
+          "caught_by": "the-counter-taken-back"
+        },
+        {
+          "id": "kill-with-no-receipt",
+          "fakes": "cancels the pair and writes no cancelled event",
+          "caught_by": "one-cancelled-receipt"
+        },
+        {
+          "id": "kill-and-close-the-charge",
+          "fakes": "closes the failure as well, so no later rung can ever pick the customer back up",
+          "caught_by": "the-charge-still-open"
+        }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "run-the-overnight-pass",
       "description": "Run the pass that never ran: stop what the gate refuses, give up on the exhausted ladder, stage the rung that came due, date the rest.",
       "driven": "cron",
       "route": "GET /api/cron/pass",
-      "writes": ["cardchase_failures", "cardchase_retries", "cardchase_messages", "cardchase_events", "cardchase_ladder"],
+      "writes": [
+        "cardchase_failures",
+        "cardchase_retries",
+        "cardchase_messages",
+        "cardchase_events",
+        "cardchase_ladder"
+      ],
       "guards": [
-        { "id": "the-four-gate-stops", "checks": "each of the four refused charges is in the terminal state the gate maps its reason to, with that reason on it" },
-        { "id": "a-stopped-failure-carries-no-next-date", "checks": "none of the four stopped failures still carries a next_retry_at" },
-        { "id": "a-receipt-for-every-stop", "checks": "each stop left a receipt of its own kind, blocked or capped" },
-        { "id": "staged-artifacts-cancelled-with-the-stop", "checks": "a stop drags its staged retry and note down with it, carrying the same reason; without it the owner has to remember to cancel a note attached to a card the network just refused" },
-        { "id": "the-exhausted-ladder-is-churned", "checks": "the ladder that ran out is churned with ladder_exhausted, not filed under the retry cap, which would blame the network for a decision the owner made" },
-        { "id": "a-receipt-for-the-ladder-running-out", "checks": "a capped receipt exists for the exhausted ladder" },
-        { "id": "exactly-one-retry-staged", "checks": "one retry was staged for the rung that came due" },
-        { "id": "staged-on-the-right-rung", "checks": "the staged retry is on the rung the ladder says is next" },
-        { "id": "the-staged-retry-is-unapproved", "checks": "it is queued with no approval and no window running; this account is on copilot, so a pre-approved rung is one that leaves without anybody tapping anything" },
-        { "id": "staged-for-the-charges-amount", "checks": "the staged retry is for the charge's own amount" },
-        { "id": "exactly-one-note-drafted", "checks": "one note was drafted for the due rung" },
-        { "id": "the-note-is-an-unapproved-draft", "checks": "the note is a draft with no approval and no window; on copilot a note waits for a tap" },
-        { "id": "the-rungs-own-tone", "checks": "the note carries the tone this ladder declares for that rung" },
-        { "id": "the-draft-is-a-real-message", "checks": "the body names the customer and the subject is not empty; an empty draft satisfies every count and sends a blank message to a paying customer" },
-        { "id": "the-failure-climbed", "checks": "the failure moved up a rung, because a rung that came due has come due whether or not a human taps it" },
-        { "id": "a-staged-failure-carries-no-next-date", "checks": "the staged failure no longer carries a next_retry_at" },
-        { "id": "a-receipt-for-the-staged-rung", "checks": "a drafted receipt exists for the rung that was staged" },
-        { "id": "every-running-failure-dated", "checks": "every failure still running was given the date its next rung fires" },
-        { "id": "dates-run-from-the-first-failure", "checks": "each next date is the ladder's offset from the FIRST failure, never from the last attempt, so a delayed pass cannot stretch the ladder past the window the owner chose" },
-        { "id": "the-pass-attempts-nothing", "checks": "no retry anywhere carries an attempted_at; nothing in runPass touches a card" },
-        { "id": "exactly-one-new-pair-and-six-receipts", "checks": "the owner's three tables grew by exactly one retry, one note and six events; a sweep that stages a rung on every open failure passes every other check and doubles the book" },
-        { "id": "the-unentitled-owners-book-untouched", "checks": "the second owner is past_due, which is not in LIVE_STATUSES, so both crons read the account, find it unentitled and write nothing at all" },
-        { "id": "the-demo-book-untouched", "checks": "the shared demo account is skipped by id; its retry matches the dispatcher's claim query on every column it predicates on" },
-        { "id": "the-pass-recorded-that-it-ran", "checks": "last_pass_at is stamped on the ladder" }
+        {
+          "id": "the-four-gate-stops",
+          "checks": "each of the four refused charges is in the terminal state the gate maps its reason to, with that reason on it"
+        },
+        {
+          "id": "a-stopped-failure-carries-no-next-date",
+          "checks": "none of the four stopped failures still carries a next_retry_at"
+        },
+        {
+          "id": "a-receipt-for-every-stop",
+          "checks": "each stop left a receipt of its own kind, blocked or capped"
+        },
+        {
+          "id": "staged-artifacts-cancelled-with-the-stop",
+          "checks": "a stop drags its staged retry and note down with it, carrying the same reason; without it the owner has to remember to cancel a note attached to a card the network just refused"
+        },
+        {
+          "id": "the-exhausted-ladder-is-churned",
+          "checks": "the ladder that ran out is churned with ladder_exhausted, not filed under the retry cap, which would blame the network for a decision the owner made"
+        },
+        {
+          "id": "a-receipt-for-the-ladder-running-out",
+          "checks": "a capped receipt exists for the exhausted ladder"
+        },
+        {
+          "id": "exactly-one-retry-staged",
+          "checks": "one retry was staged for the rung that came due"
+        },
+        {
+          "id": "staged-on-the-right-rung",
+          "checks": "the staged retry is on the rung the ladder says is next"
+        },
+        {
+          "id": "the-staged-retry-is-unapproved",
+          "checks": "it is queued with no approval and no window running; this account is on copilot, so a pre-approved rung is one that leaves without anybody tapping anything"
+        },
+        {
+          "id": "staged-for-the-charges-amount",
+          "checks": "the staged retry is for the charge's own amount"
+        },
+        {
+          "id": "exactly-one-note-drafted",
+          "checks": "one note was drafted for the due rung"
+        },
+        {
+          "id": "the-note-is-an-unapproved-draft",
+          "checks": "the note is a draft with no approval and no window; on copilot a note waits for a tap"
+        },
+        {
+          "id": "the-rungs-own-tone",
+          "checks": "the note carries the tone this ladder declares for that rung"
+        },
+        {
+          "id": "the-draft-is-a-real-message",
+          "checks": "the body names the customer and the subject is not empty; an empty draft satisfies every count and sends a blank message to a paying customer"
+        },
+        {
+          "id": "the-failure-climbed",
+          "checks": "the failure moved up a rung, because a rung that came due has come due whether or not a human taps it"
+        },
+        {
+          "id": "a-staged-failure-carries-no-next-date",
+          "checks": "the staged failure no longer carries a next_retry_at"
+        },
+        {
+          "id": "a-receipt-for-the-staged-rung",
+          "checks": "a drafted receipt exists for the rung that was staged"
+        },
+        {
+          "id": "every-running-failure-dated",
+          "checks": "every failure still running was given the date its next rung fires"
+        },
+        {
+          "id": "dates-run-from-the-first-failure",
+          "checks": "each next date is the ladder's offset from the FIRST failure, never from the last attempt, so a delayed pass cannot stretch the ladder past the window the owner chose"
+        },
+        {
+          "id": "the-pass-attempts-nothing",
+          "checks": "no retry anywhere carries an attempted_at; nothing in runPass touches a card"
+        },
+        {
+          "id": "exactly-one-new-pair-and-six-receipts",
+          "checks": "the owner's three tables grew by exactly one retry, one note and six events; a sweep that stages a rung on every open failure passes every other check and doubles the book"
+        },
+        {
+          "id": "the-unentitled-owners-book-untouched",
+          "checks": "the second owner is past_due, which is not in LIVE_STATUSES, so both crons read the account, find it unentitled and write nothing at all"
+        },
+        {
+          "id": "the-demo-book-untouched",
+          "checks": "the shared demo account is skipped by id; its retry matches the dispatcher's claim query on every column it predicates on"
+        },
+        {
+          "id": "the-pass-recorded-that-it-ran",
+          "checks": "last_pass_at is stamped on the ladder"
+        }
       ],
       "cheats": [
-        { "id": "stamp-the-pass-and-do-nothing", "fakes": "records that the pass ran and leaves the queue as it was", "caught_by": "the-four-gate-stops" },
-        { "id": "stop-without-cancelling-the-artifacts", "fakes": "closes the refused charges and leaves their staged retries and notes queued", "caught_by": "staged-artifacts-cancelled-with-the-stop" },
-        { "id": "stage-it-pre-approved", "fakes": "stages the due rung already approved with its window running", "caught_by": "the-staged-retry-is-unapproved" },
-        { "id": "stage-without-climbing-the-rung", "fakes": "stages the pair and leaves the failure on the rung it was on", "caught_by": "the-failure-climbed" },
-        { "id": "file-the-exhausted-ladder-as-the-cap", "fakes": "closes the exhausted ladder as a retry cap", "caught_by": "the-exhausted-ladder-is-churned" },
-        { "id": "sweep-the-unentitled-owner-too", "fakes": "works every failure the gate refuses, including the ones in a book with no active plan", "caught_by": "the-unentitled-owners-book-untouched" },
-        { "id": "sweep-the-demo-book-too", "fakes": "works the shared demo account, whose rows match every predicate", "caught_by": "the-demo-book-untouched" },
-        { "id": "stage-every-open-failure", "fakes": "stages a rung on everything still open instead of the one that came due", "caught_by": "every-running-failure-dated" },
-        { "id": "attempt-the-rung-it-staged", "fakes": "attempts the rung it just staged against the card", "caught_by": "the-pass-attempts-nothing" },
-        { "id": "write-a-receipt-for-every-date", "fakes": "writes a receipt for every failure it dated, inflating the ledger", "caught_by": "exactly-one-new-pair-and-six-receipts" },
-        { "id": "never-record-that-it-ran", "fakes": "does the whole pass and leaves last_pass_at null", "caught_by": "the-pass-recorded-that-it-ran" }
+        {
+          "id": "stamp-the-pass-and-do-nothing",
+          "fakes": "records that the pass ran and leaves the queue as it was",
+          "caught_by": "the-four-gate-stops"
+        },
+        {
+          "id": "stop-without-cancelling-the-artifacts",
+          "fakes": "closes the refused charges and leaves their staged retries and notes queued",
+          "caught_by": "staged-artifacts-cancelled-with-the-stop"
+        },
+        {
+          "id": "stage-it-pre-approved",
+          "fakes": "stages the due rung already approved with its window running",
+          "caught_by": "the-staged-retry-is-unapproved"
+        },
+        {
+          "id": "stage-without-climbing-the-rung",
+          "fakes": "stages the pair and leaves the failure on the rung it was on",
+          "caught_by": "the-failure-climbed"
+        },
+        {
+          "id": "file-the-exhausted-ladder-as-the-cap",
+          "fakes": "closes the exhausted ladder as a retry cap",
+          "caught_by": "the-exhausted-ladder-is-churned"
+        },
+        {
+          "id": "sweep-the-unentitled-owner-too",
+          "fakes": "works every failure the gate refuses, including the ones in a book with no active plan",
+          "caught_by": "the-unentitled-owners-book-untouched"
+        },
+        {
+          "id": "sweep-the-demo-book-too",
+          "fakes": "works the shared demo account, whose rows match every predicate",
+          "caught_by": "the-demo-book-untouched"
+        },
+        {
+          "id": "stage-every-open-failure",
+          "fakes": "stages a rung on everything still open instead of the one that came due",
+          "caught_by": "every-running-failure-dated"
+        },
+        {
+          "id": "attempt-the-rung-it-staged",
+          "fakes": "attempts the rung it just staged against the card",
+          "caught_by": "the-pass-attempts-nothing"
+        },
+        {
+          "id": "write-a-receipt-for-every-date",
+          "fakes": "writes a receipt for every failure it dated, inflating the ledger",
+          "caught_by": "exactly-one-new-pair-and-six-receipts"
+        },
+        {
+          "id": "never-record-that-it-ran",
+          "fakes": "does the whole pass and leaves last_pass_at null",
+          "caught_by": "the-pass-recorded-that-it-ran"
+        }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 0.0
+      }
     },
     {
       "id": "release-what-the-window-cleared",
       "description": "Run the release: the one claimable rung picked up the issuer's do_not_try_again after approval, so the gate at release must block it.",
       "driven": "cron",
       "route": "GET /api/cron/dispatch",
-      "writes": ["cardchase_retries", "cardchase_messages", "cardchase_failures", "cardchase_events"],
+      "writes": [
+        "cardchase_retries",
+        "cardchase_messages",
+        "cardchase_failures",
+        "cardchase_events"
+      ],
       "guards": [
-        { "id": "the-rung-still-exists", "checks": "neither half was deleted" },
-        { "id": "the-rung-blocked-not-released", "checks": "the retry is blocked and was never claimed, attempted or charged; releasing it reattempts a card the issuer has permanently refused and would read as a clean dispatch from every surface" },
-        { "id": "blocked-on-the-issuers-advice-code", "checks": "the block names issuer_advice, the issuer's own code, which outranks the decline code the rung was staged under" },
-        { "id": "the-note-cancelled-with-it", "checks": "the note is cancelled for the same reason and was not sent; shouldRelease returns one verdict for both halves" },
-        { "id": "the-charge-closed-hard", "checks": "the failure is stopped_hard_decline with issuer_advice; a blocked rung on a failure still open is a charge the next pass picks straight back up" },
-        { "id": "no-next-date-on-a-stopped-failure", "checks": "the permanently stopped failure carries no next_retry_at" },
-        { "id": "no-attempt-spent", "checks": "the attempt count did not move, because nothing was attempted and a cap given away for an attempt that never happened can never be given back" },
-        { "id": "nothing-recorded-as-recovered", "checks": "no recovery was stamped on the charge" },
-        { "id": "one-blocked-receipt", "checks": "exactly one blocked event on the failure" },
-        { "id": "nothing-anywhere-released", "checks": "no retry anywhere moved to sending or succeeded and no note anywhere was marked sent" },
-        { "id": "the-window-that-has-not-elapsed-untouched", "checks": "the pair still counting down is untouched; release_at is a column the claim query predicates on, so the dispatcher cannot see it, and cancelling it takes back an approval the owner made" },
-        { "id": "unapproved-rungs-untouched", "checks": "the staged rungs nobody approved are still queued and still unapproved, however long they have sat there" },
-        { "id": "the-demo-book-untouched", "checks": "the shared demo account is skipped by id; its approved retry is out of its window and matches the claim query on every column" },
-        { "id": "the-unentitled-owners-book-untouched", "checks": "the past_due owner's rows are untouched, because the dispatcher reads entitlement before it claims anything" }
+        {
+          "id": "the-rung-still-exists",
+          "checks": "neither half was deleted"
+        },
+        {
+          "id": "the-rung-blocked-not-released",
+          "checks": "the retry is blocked and was never claimed, attempted or charged; releasing it reattempts a card the issuer has permanently refused and would read as a clean dispatch from every surface"
+        },
+        {
+          "id": "blocked-on-the-issuers-advice-code",
+          "checks": "the block names issuer_advice, the issuer's own code, which outranks the decline code the rung was staged under"
+        },
+        {
+          "id": "the-note-cancelled-with-it",
+          "checks": "the note is cancelled for the same reason and was not sent; shouldRelease returns one verdict for both halves"
+        },
+        {
+          "id": "the-charge-closed-hard",
+          "checks": "the failure is stopped_hard_decline with issuer_advice; a blocked rung on a failure still open is a charge the next pass picks straight back up"
+        },
+        {
+          "id": "no-next-date-on-a-stopped-failure",
+          "checks": "the permanently stopped failure carries no next_retry_at"
+        },
+        {
+          "id": "no-attempt-spent",
+          "checks": "the attempt count did not move, because nothing was attempted and a cap given away for an attempt that never happened can never be given back"
+        },
+        {
+          "id": "nothing-recorded-as-recovered",
+          "checks": "no recovery was stamped on the charge"
+        },
+        {
+          "id": "one-blocked-receipt",
+          "checks": "exactly one blocked event on the failure"
+        },
+        {
+          "id": "nothing-anywhere-released",
+          "checks": "no retry anywhere moved to sending or succeeded and no note anywhere was marked sent"
+        },
+        {
+          "id": "the-window-that-has-not-elapsed-untouched",
+          "checks": "the pair still counting down is untouched; release_at is a column the claim query predicates on, so the dispatcher cannot see it, and cancelling it takes back an approval the owner made"
+        },
+        {
+          "id": "unapproved-rungs-untouched",
+          "checks": "the staged rungs nobody approved are still queued and still unapproved, however long they have sat there"
+        },
+        {
+          "id": "the-demo-book-untouched",
+          "checks": "the shared demo account is skipped by id; its approved retry is out of its window and matches the claim query on every column"
+        },
+        {
+          "id": "the-unentitled-owners-book-untouched",
+          "checks": "the past_due owner's rows are untouched, because the dispatcher reads entitlement before it claims anything"
+        }
       ],
       "cheats": [
-        { "id": "release-it", "fakes": "releases the claimable rung, which is what every surface would call a clean dispatch", "caught_by": "the-rung-blocked-not-released" },
-        { "id": "block-the-retry-send-the-note", "fakes": "blocks the card and lets the note go, telling the customer a retry is coming that never will", "caught_by": "the-note-cancelled-with-it" },
-        { "id": "block-without-closing-the-charge", "fakes": "blocks the rung and leaves the failure open for the next pass", "caught_by": "the-charge-closed-hard" },
-        { "id": "blame-the-decline-code", "fakes": "blocks it as hard_decline, which is the code it was staged under rather than the one the issuer has since returned", "caught_by": "blocked-on-the-issuers-advice-code" },
-        { "id": "spend-an-attempt-nothing-made", "fakes": "increments the attempt count for an attempt that never happened", "caught_by": "no-attempt-spent" },
-        { "id": "block-with-no-receipt", "fakes": "blocks the rung and writes no blocked event", "caught_by": "one-blocked-receipt" },
-        { "id": "cancel-the-window-that-has-not-elapsed", "fakes": "cancels the pair still inside its kill window", "caught_by": "the-window-that-has-not-elapsed-untouched" },
-        { "id": "release-a-rung-nobody-approved", "fakes": "decides the dispatcher's job is to send things and releases unapproved rungs", "caught_by": "nothing-anywhere-released" },
-        { "id": "sweep-the-demo-book-too", "fakes": "works the shared demo account's claimable retry", "caught_by": "the-demo-book-untouched" }
+        {
+          "id": "release-it",
+          "fakes": "releases the claimable rung, which is what every surface would call a clean dispatch",
+          "caught_by": "the-rung-blocked-not-released"
+        },
+        {
+          "id": "block-the-retry-send-the-note",
+          "fakes": "blocks the card and lets the note go, telling the customer a retry is coming that never will",
+          "caught_by": "the-note-cancelled-with-it"
+        },
+        {
+          "id": "block-without-closing-the-charge",
+          "fakes": "blocks the rung and leaves the failure open for the next pass",
+          "caught_by": "the-charge-closed-hard"
+        },
+        {
+          "id": "blame-the-decline-code",
+          "fakes": "blocks it as hard_decline, which is the code it was staged under rather than the one the issuer has since returned",
+          "caught_by": "blocked-on-the-issuers-advice-code"
+        },
+        {
+          "id": "spend-an-attempt-nothing-made",
+          "fakes": "increments the attempt count for an attempt that never happened",
+          "caught_by": "no-attempt-spent"
+        },
+        {
+          "id": "block-with-no-receipt",
+          "fakes": "blocks the rung and writes no blocked event",
+          "caught_by": "one-blocked-receipt"
+        },
+        {
+          "id": "cancel-the-window-that-has-not-elapsed",
+          "fakes": "cancels the pair still inside its kill window",
+          "caught_by": "the-window-that-has-not-elapsed-untouched"
+        },
+        {
+          "id": "release-a-rung-nobody-approved",
+          "fakes": "decides the dispatcher's job is to send things and releases unapproved rungs",
+          "caught_by": "nothing-anywhere-released"
+        },
+        {
+          "id": "sweep-the-demo-book-too",
+          "fakes": "works the shared demo account's claimable retry",
+          "caught_by": "the-demo-book-untouched"
+        }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 0.0
+      }
     }
   ],
   "not_gradable": [
-    { "what": "pause recovery for a customer (cardchase_customers.do_not_contact)", "why": "the switch every gate in the product stops on, and its ONE writer is POST /api/stripe-app/action, which is gated on a Stripe app signature. The check is pure crypto with no network call, so a task could be built on it and would measure whether a model can forge an HMAC rather than whether it can operate the product. Same for connect and context in that directory." },
-    { "what": "POST /api/checkout, GET /api/billing/portal, POST /api/webhooks/stripe", "why": "all three require a live Stripe key" },
-    { "what": "POST /api/workspace-key", "why": "it stores only the SHA-256 and shows the raw value once, so 'the owner has one new key' is gradable but the cheat that matters is not: a row carrying a hash of nothing passes every check a grader can make, and the only thing it breaks is a Stripe App sign-in later" },
-    { "what": "add a failed charge (cardchase_failures)", "why": "no writer a person can reach. The rows come from Stripe Billing through detectFailures: no intake form, no import, no button" },
-    { "what": "edit the voice or the ladder rungs (cardchase_voice, cardchase_ladder.rungs)", "why": "those are edited on the live product's workspace. This tree serves one surface, the console at /, and it carries exactly two controls" }
+    {
+      "what": "pause recovery for a customer (cardchase_customers.do_not_contact)",
+      "why": "the switch every gate in the product stops on, and its ONE writer is POST /api/stripe-app/action, which is gated on a Stripe app signature. The check is pure crypto with no network call, so a task could be built on it and would measure whether a model can forge an HMAC rather than whether it can operate the product. Same for connect and context in that directory."
+    },
+    {
+      "what": "POST /api/checkout, GET /api/billing/portal, POST /api/webhooks/stripe",
+      "why": "all three require a live Stripe key"
+    },
+    {
+      "what": "POST /api/workspace-key",
+      "why": "it stores only the SHA-256 and shows the raw value once, so 'the owner has one new key' is gradable but the cheat that matters is not: a row carrying a hash of nothing passes every check a grader can make, and the only thing it breaks is a Stripe App sign-in later"
+    },
+    {
+      "what": "add a failed charge (cardchase_failures)",
+      "why": "no writer a person can reach. The rows come from Stripe Billing through detectFailures: no intake form, no import, no button"
+    },
+    {
+      "what": "edit the voice or the ladder rungs (cardchase_voice, cardchase_ladder.rungs)",
+      "why": "those are edited on the live product's workspace. This tree serves one surface, the console at /, and it carries exactly two controls"
+    }
   ],
   "defects": [
     {
@@ -183,6 +549,21 @@
     "exit_code": 0,
     "last_run": "2026-09-19"
   },
-  "counts": { "tasks": 4, "cheats": 37, "guards": 58, "browser_tasks": 2 },
-  "models": {}
+  "counts": {
+    "tasks": 4,
+    "cheats": 37,
+    "guards": 58,
+    "browser_tasks": 2
+  },
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 0.5,
+      "rail": "codex-headless",
+      "tasks_completed": 4,
+      "tasks_total": 4,
+      "complete": true
+    }
+  }
 }

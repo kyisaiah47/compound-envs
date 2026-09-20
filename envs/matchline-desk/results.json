@@ -82,7 +82,9 @@
           "caught_by": "exactly-one-new-check"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "remove-the-delivered-file",
@@ -162,7 +164,9 @@
           "caught_by": "the-order-is-marked-deleted"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "hand-over-the-finished-reading",
@@ -236,7 +240,9 @@
           "caught_by": "not-purged-by-this-route"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     }
   ],
   "not_gradable": [
@@ -303,5 +309,15 @@
     "guards": 15,
     "browser_tasks": 1
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 1.0,
+      "rail": "codex-headless",
+      "tasks_completed": 3,
+      "tasks_total": 3,
+      "complete": true
+    }
+  }
 }

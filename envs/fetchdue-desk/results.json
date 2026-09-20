@@ -82,7 +82,9 @@
           "caught_by": "nothing-else-moved"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "take-back-the-brightmoor-chase",
@@ -155,7 +157,9 @@
           "caught_by": "the-claimed-chase-is-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "run-the-dispatcher-once",
@@ -232,7 +236,9 @@
           "caught_by": "no-fabricated-send"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "run-the-ladder-for-this-workspace",
@@ -337,7 +343,9 @@
           "caught_by": "no-second-chase-at-the-same-step"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "sever-the-quickbooks-rail",
@@ -412,7 +420,9 @@
           "caught_by": "the-book-is-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "assess-the-late-fees",
@@ -503,7 +513,9 @@
           "caught_by": "the-ratchet-only-climbs"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "close-promises-and-the-plan",
@@ -605,7 +617,9 @@
           "caught_by": "the-future-payments-are-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     },
     {
       "id": "import-the-overdue-book",
@@ -688,7 +702,9 @@
           "caught_by": "nothing-was-chased"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 0.0
+      }
     },
     {
       "id": "plan-the-calderbank-balance",
@@ -780,7 +796,9 @@
           "caught_by": "the-invoice-is-untouched"
         }
       ],
-      "scores": {}
+      "scores": {
+        "codex-headless": 1.0
+      }
     }
   ],
   "not_gradable": [
@@ -897,5 +915,15 @@
     "guards": 67,
     "browser_tasks": 0
   },
-  "models": {}
+  "models": {
+    "codex-headless": {
+      "ran_at": "2026-09-20",
+      "rollouts_per_task": 1,
+      "mean": 0.8888888888888888,
+      "rail": "codex-headless",
+      "tasks_completed": 9,
+      "tasks_total": 9,
+      "complete": true
+    }
+  }
 }
