@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-19T18:23:28.031Z",
-  "today": "2026-09-19",
+  "generated_at": "2026-09-20T01:51:24.389Z",
+  "today": "2026-09-20",
   "separator": "—",
   "org_a": "00000000-0000-4000-8000-000000000001",
   "org_b": "00000000-0000-4000-8000-000000000002",
@@ -56,12 +56,12 @@
     "marwood": "approaching"
   },
   "deadlines": {
-    "yard": "2026-09-22",
-    "terminal": "2026-10-19",
+    "yard": "2026-09-23",
+    "terminal": "2026-10-20",
     "rothbury": null,
-    "ostergaard": "2026-09-24",
-    "kessler": "2026-09-29",
-    "marwood": "2026-10-03"
+    "ostergaard": "2026-09-25",
+    "kessler": "2026-09-30",
+    "marwood": "2026-10-04"
   },
   "notice_quote": {
     "yard": "Either party may prevent renewal by giving written notice of non-renewal not less than sixty (60) days prior to the end of the then-current term.",
@@ -116,24 +116,24 @@
     "title": "Cold Store Lease",
     "counterparty": "Vantell Holdings",
     "byte_length": 800,
-    "doc_text": "This Agreement is effective as of November 23, 2025.\n\nThe initial term ends on January 17, 2027.\n\nEither party may prevent renewal by giving written notice of non-renewal not less than ninety (90) days prior to the end of the then-current term.\n\nThis Agreement shall automatically renew for successive twelve (12) month terms.\n\nFees may increase by no more than 7 percent (7%) on each renewal.\n\nThe parties acknowledge that the premises were surveyed prior to occupation.\n\nNotwithstanding the foregoing, this Agreement expires on February 17, 2027.\n\nEach party shall perform its obligations in good faith and in accordance with applicable law.\n\nNeither party may assign this Agreement without the prior written consent of the other.\n\nThis Agreement is governed by the laws of the State of Washington.\n\n",
+    "doc_text": "This Agreement is effective as of November 24, 2025.\n\nThe initial term ends on January 18, 2027.\n\nEither party may prevent renewal by giving written notice of non-renewal not less than ninety (90) days prior to the end of the then-current term.\n\nThis Agreement shall automatically renew for successive twelve (12) month terms.\n\nFees may increase by no more than 7 percent (7%) on each renewal.\n\nThe parties acknowledge that the premises were surveyed prior to occupation.\n\nNotwithstanding the foregoing, this Agreement expires on February 18, 2027.\n\nEach party shall perform its obligations in good faith and in accordance with applicable law.\n\nNeither party may assign this Agreement without the prior written consent of the other.\n\nThis Agreement is governed by the laws of the State of Washington.\n\n",
     "clauses": {
       "effective_date": {
         "found": true,
         "value": {
           "type": "date",
-          "iso": "2025-11-23"
+          "iso": "2025-11-24"
         },
         "page": 1,
         "start": 0,
         "end": 52,
-        "quote": "This Agreement is effective as of November 23, 2025.",
+        "quote": "This Agreement is effective as of November 24, 2025.",
         "pattern": "month-day-year"
       },
       "term_end": {
         "found": false,
         "reason": "ambiguous-multiple",
-        "detail": "2027-01-17 · 2027-02-17"
+        "detail": "2027-01-18 · 2027-02-18"
       },
       "notice_period": {
         "found": true,
@@ -181,8 +181,8 @@
     ],
     "term_end_reason": "ambiguous-multiple",
     "contested": [
-      "2027-01-17",
-      "2027-02-17"
+      "2027-01-18",
+      "2027-02-18"
     ],
     "found_kinds": [
       "effective_date",
