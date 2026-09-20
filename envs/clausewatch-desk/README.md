@@ -180,10 +180,10 @@ perform.
   the state variable's name. It matched nothing and logged `null` for fifteen seconds while the
   upload had already succeeded. The real element is `p.note[role="status"]`.
 
-## A defect in the product, found while building this, NOT fixed here
+## A product build defect found while building this, now fixed
 
-clausewatch cannot currently build, so its nightly deploy will fail. Its own FACTS.json register
-gate throws:
+The first environment pass found that ClauseWatch could not build. Its own FACTS.json register
+gate threw:
 
 ```
 Error: FACTS.json claim "contractsafe-volume-price" no longer contains the quoted clause.
@@ -198,15 +198,10 @@ in two files:
 - `src/app/(marketing)/contract-renewal-tracking-software/page.tsx:121`
 - `src/app/(marketing)/landing.config.ts:874`
 
-It is not applied. This task carried an explicit instruction not to edit the clausewatch repo,
-and an agent quietly editing a product tree it was told to leave alone is worse than the finding.
-`FACTS.json` was last written 10:25 and the last successful build in `.next` was 01:22, so the
-breakage arrived this morning. Nothing in this environment depends on those two files. The five
-routes under test are untouched by them.
-
-To prove the honest cases today, the build ran against a throwaway copy of the tree with that one
-string corrected, outside the repo, deleted afterwards. `up.sh` builds in place, as it should,
-and will work with no changes once those two lines are fixed.
+The environment task did not edit the separate product tree. The product fix subsequently landed
+as ClauseWatch commit `4eaa12d`, updating both quoted strings to include `/mo`. A clean product
+build and this environment's full live suite were re-run on 2026-09-20: the build passed and all
+47 expectations held, including the browser upload and four real-route honest cases.
 
 ## What could not be graded, and why
 
