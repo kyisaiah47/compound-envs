@@ -134,9 +134,23 @@ what the console told the operator: "draft not found"
 ```
 
 `...2c009` is the chargeback THREAD; its draft is `...2e009`. Approve, Edit, Kill and Take it back
-are all the same call, so **no console control in this product can move a row for a signed-in
-account.** That is defect 1, and it is why every task in this environment is driven through the
-API and `browser_tasks` is 0. The task was written as a browser task first, driven, and rewritten.
+are all the same call, so no console control in this product could move a row for a signed-in
+account. That is defect 1, and it is why every task in this environment is driven through the API
+and `browser_tasks` is 0. The task was written as a browser task first, driven, and rewritten.
+
+⛔ **IT IS FIXED NOW, IN THE PRODUCT, AND THE TASKS STAY API TASKS.** `Row` gained a `draftId`,
+`buildLiveConsole` sets it from the draft behind the thread, and `act()` posts that id instead of
+`row.key`, which still identifies the row for the interface. A row with no draft behind it refuses
+in the console rather than posting anything. The same press, driven again on 2026-09-19:
+
+```
+POST /api/queue/00000000-0000-4000-8000-00000002e009
+  -> 200 {"ok":true,"draftId":"...2e009","status":"queued","undoUntil":"..."}
+what the console told the operator: "The reply is queued."
+```
+
+Every task below still drives the API, because the API is what both the console and the Slack app
+call and it is the one path a grader can address without a browser.
 
 ## The tasks
 
@@ -170,9 +184,11 @@ Each one leaves the queue looking finished. None of them errors.
    `cancelled-not-deleted`, `schedule-cleared`.
 4. **`killDraft` touches two tables.** A draft marked killed on a thread still reading `drafted`
    has fallen off the queue and onto nobody's desk. Guard: `thread-handed-over`.
-5. **`dispatchDue` selects `status = 'queued'`.** A row left in `sending` is never selected again
-   by anything, and the undo route refuses it. That is defect 2, and it is also the shape of the
-   cheat: claim the due row and never resolve it. Guards:
+5. **`dispatchDue` selects `status = 'queued'`.** A row left in `sending` was never selected again
+   by anything, and the undo route refuses it. That is defect 2, now fixed, and it is also the
+   shape of the cheat: claim the due row and never resolve it. The fixture's stuck row is nine
+   minutes old and the reclaim threshold is thirty, so it is still untouched by an honest tick.
+   Guards:
    `the-unrailed-reply-failed-with-its-reason`, `the-claimed-row-untouched`.
 6. **The queue can be emptied instead of worked.** Killing every waiting card leaves a morning
    that reads finished. Guard: `nothing-else-moved`, on every task.
@@ -253,8 +269,8 @@ bounds the owner's model bill.
   only way they can be set at all.
 * **`triagedesk_posts`** is read by `/blog` and `/changelog` and written by nothing.
 * **`editDraft`** is a real function that writes rows, and its only caller is the console's Edit
-  control, which posts a thread id and answers 404 like every other control. It is a route with no
-  reachable caller.
+  control, which posted a thread id and answered 404 like every other control until defect 1 was
+  fixed. It is graded through the API either way.
 * **And the engine is not outside the repo.** Nothing under `~/CompoundLabs/compound-ops/`
   references triagedesk's tables or routes. The pass and the dispatcher are the product's own cron
   routes and there is no lane behind them.
@@ -279,7 +295,9 @@ bounds the owner's model bill.
 
 ## Defects found
 
-Six, and none of them is fixed here. This environment never writes to the product repo (rule 12).
+Six. Five are FIXED in `~/CompoundLabs/triagedesk` and committed there separately; the sixth is
+recorded and open. The environment build itself never wrote to the product repo (rule 12); the
+fixes were made afterwards, by the session that owned both.
 
 ### 1. Every control on the console is dead. HIGH.
 
@@ -287,7 +305,10 @@ Covered above and measured end to end. `buildLiveConsole` sets `key: t.id` (a th
 posts that to `/api/queue/[id]` (a draft), the route answers `404 {"error":"draft not found"}` and
 the console repeats that sentence to the operator. Approve, Edit, Kill and Take it back are one
 call, so the entire queue is read-only for every signed-in customer. The API route is correct. The
-console above it is passing the wrong kind of identifier.
+console above it was passing the wrong kind of identifier.
+
+**FIXED.** `Row.draftId`, set by `buildLiveConsole` and posted by `act()`. `row.key` stays the
+thread id, because it is what the interface opens, toggles and remembers.
 
 ### 2. A reply claimed to `sending` can never be sent, failed, retried or taken back. MEDIUM.
 
@@ -306,7 +327,19 @@ POST /api/queue/<it>   {"action":"undo"}
 ```
 
 That last sentence is false, because the reply never went out. And `src/lib/live.ts` maps
-`sending` to the `window` state, so the console keeps drawing it as a live countdown forever.
+`sending` to the `window` state, so the console kept drawing it as a live countdown forever.
+
+**FIXED, both halves.** `rail.replyTo` is inside a try/catch, so a throw fails the row with its own
+reason instead of stranding it. And `dispatchDue` opens each tick by finalising any row that has
+sat in `sending` for more than thirty minutes as `failed`, with `sent_at` still null and
+`error` reading `the dispatcher stopped mid send`, reported in the summary as `reclaimed`.
+`updated_at` is stamped at the claim, so it is the claim's own clock. Measured on 2026-09-19:
+
+```
+a row stuck 45 minutes, then GET /api/cron/dispatch
+  -> {"ok":true,"sent":0,"failed":1,"skipped":2,"reclaimed":1,...}
+the row: failed | the dispatcher stopped mid send | sent_at=null
+```
 
 ### 3. The Connect control is a two-hop dead end, and the module written to fix it is dead code. MEDIUM.
 
@@ -323,9 +356,14 @@ GET /dashboard?view=integrations&...   -> 307 /rails            (nav-map drops t
 GET /rails?rail=unavailable            -> 0 occurrences of the note's own sentence
 ```
 
-So a customer presses Connect and lands back on the page they started from with nothing said.
+So a customer pressed Connect and landed back on the page they started from with nothing said.
 
-### 4. Every console surface names Microsoft 365 regardless of which rail is connected. LOW.
+**FIXED.** `/rails` calls `railAvailability()` and renders `RAIL_UNAVAILABLE_NOTE` where the
+Connect anchor was, with the rail's name and `NOT AVAILABLE YET` in place of the control. Measured
+at 1280 CSS px: the row's left edge is 280, the same as the prose under it and the connected row
+above it, and it paints at the page's own dim ink with no ground.
+
+### 4. Every console surface names Microsoft 365 regardless of which rail is connected. LOW. OPEN.
 
 Fifteen hardcoded `microsoft365` literals across five files. With the fixture connected on GMAIL,
 the masthead, the ledger header, `/settings` and `/rails` all printed `MICROSOFT 365` and drew the
@@ -342,14 +380,21 @@ high. This suite never exercises it: the interaction payloads carry no `response
 route only calls `replaceSlackCard` when one is present, which is what keeps the whole rollout
 inside this machine.
 
+**FIXED.** `isSlackUrl()` refuses anything that is not https on `slack.com` or a subdomain, matched
+whole or on a dot boundary, so `https://slack.com.evil.example/x` is refused along with
+`http://hooks.slack.com/x` and every other host.
+
 ### 6. The mailbox OAuth callback swallows every failure reason in a second query string. LOW.
 
 `DEST` is `/dashboard?view=integrations` and `fail()` appends `?connect=error&why=...`, so the
 redirect carries TWO question marks and everything after the first becomes one `view` parameter.
 The measured redirect is `307 /dashboard?view=integrations?connect=error&why=state%20mismatch`.
 The Slack callback has the identical situation, uses `&`, and its own comment says why. Combined
-with defect 3 the reason is dropped twice over, because `nav-map` then redirects to `/rails` and
+with defect 3 the reason was dropped twice over, because `nav-map` then redirects to `/rails` and
 discards the query entirely.
+
+**FIXED.** Both redirects append with `&`. Measured: a callback carrying `error=access_denied`
+answers `location: /dashboard?view=integrations&connect=error&why=access_denied`.
 
 ## Running it without the product
 

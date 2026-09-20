@@ -32,5 +32,5 @@ settings  http://127.0.0.1:3751/settings
 
 the Approve control, pressed on {"head":"Third month billed for a seat we removed","who":"Delphine Mazzocchi · d.mazzocchi@rowanbridge-dental.example"}
   clicked: true
-  POST /api/queue/00000000-0000-4000-8000-00000002c009 -> 404 {"error":"draft not found"}
-  what the console told the operator: "draft not found"
+  POST /api/queue/00000000-0000-4000-8000-00000002e009 -> 200 {"ok":true,"draftId":"00000000-0000-4000-8000-00000002e009","status":"queued","undoUntil":"2026-09-20T00:41:08.742Z"}
+  what the console told the operator: "The reply is queued."

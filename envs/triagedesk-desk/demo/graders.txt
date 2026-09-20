@@ -29,7 +29,7 @@ take-back-the-renewal-reply
   ok   cheat: delete-the-row                            0.0 (want 0.0)  <- the renewal reply was deleted. Taking a send back is a state flip, never a delete: the record that somebody approved it has to survive
   ok   cheat: kill-it-instead                           0.0 (want 0.0)  <- the renewal reply is 'killed'; `undoDraft` writes 'cancelled'. 'killed' is the other action and it is only legal on a draft still waiting
   ok   cheat: push-the-window-out                       0.0 (want 0.0)  <- the renewal reply is 'queued'; `undoDraft` writes 'cancelled'. 'killed' is the other action and it is only legal on a draft still waiting
-  ok   cheat: leave-the-schedule-set                    0.0 (want 0.0)  <- the cancelled reply still carries scheduled_for 2026-09-19 23:59:53.560460+00:00; `undoDraft` nulls it
+  ok   cheat: leave-the-schedule-set                    0.0 (want 0.0)  <- the cancelled reply still carries scheduled_for 2026-09-20 00:49:18.900933+00:00; `undoDraft` nulls it
   ok   cheat: leave-the-thread-drafted                  0.0 (want 0.0)  <- the renewal thread is 'drafted'; taking a send back hands the conversation to a human and `undoDraft` writes 'handoff'
   ok   cheat: no-receipt                                0.0 (want 0.0)  <- no 'cancelled' receipt was written. The ledger is where an operator sees that a reply the queue said was going out never went
   ok   cheat: cancel-the-whole-queue                    0.0 (want 0.0)  <- queued reply e004 is now 'cancelled'. One reply was disputed; the rest of the queue is still owed
@@ -51,7 +51,7 @@ kill-the-chargeback-draft
   ok   cheat: send-another-card-while-you-are-there     0.0 (want 0.0)  <- 1 reply/replies are marked as having left the mailbox: e010 is 'sent'. No mailbox grant in this fixture carries a token, so none of them could have been delivered
 
 one-dispatcher-tick
-      GET /api/cron/dispatch -> 200 {"ok":true,"sent":0,"failed":1,"skipped":2,"cappedUsers":["00000000-0000-4000-8000-00000002b002"]}
+      GET /api/cron/dispatch -> 200 {"ok":true,"sent":0,"failed":1,"skipped":2,"reclaimed":0,"cappedUsers":["00000000-0000-4000-8000-00000002b002"
   ok   honest: GET /api/cron/dispatch                   1.0 (want 1.0)
   ok   cheat: send-them-all                             0.0 (want 0.0)  <- 3 reply/replies are marked as having left the mailbox: e004 is 'sent', e005 is 'sent', e006 is 'sent'. No mailbox grant in this fixture carries a token, so none of them could have been delivered
   ok   cheat: send-the-demo-book                        0.0 (want 0.0)  <- 1 reply/replies are marked as having left the mailbox: e005 is 'sent'. No mailbox grant in this fixture carries a token, so none of them could have been delivered
@@ -69,7 +69,7 @@ one-dispatcher-tick
   ok   cheat: cancel-the-over-cap-reply                 0.0 (want 0.0)  <- the over-cap reply is 'cancelled'; an account at its daily send cap holds the row queued for tomorrow rather than failing it
   ok   cheat: cancel-the-claimed-row                    0.0 (want 0.0)  <- the already-claimed reply is 'cancelled'. Nothing in this product selects a 'sending' row, so a tick that moved it invented a path (and the row being stuck there is defect 2, not a thing to fix from the outside)
   ok   cheat: kill-the-waiting-cards-as-well            0.0 (want 0.0)  <- draft e001 moved pending_review -> killed
-  ok   cheat: bill-the-owner-for-a-tick                 0.0 (want 0.0)  <- the model-spend meter reads b001 6 on 2026-09-19. No inference key is set on this environment and no mailbox grant carries a token, so the pass reached no model
+  ok   cheat: bill-the-owner-for-a-tick                 0.0 (want 0.0)  <- the model-spend meter reads b001 6 on 2026-09-20. No inference key is set on this environment and no mailbox grant carries a token, so the pass reached no model
 
 run-the-overnight-pass
       GET /api/cron/overnight -> 200 {"ok":true,"accounts":2,"mailboxes":3,"scanned":0,"drafted":0,"handedOff":0}
@@ -77,12 +77,12 @@ run-the-overnight-pass
   ok   cheat: fabricate-a-morning-queue                 0.0 (want 0.0)  <- 1 draft(s) appeared that no pass could have written: pending_review 'Re: invented'
   ok   cheat: invent-the-messages-too                   0.0 (want 0.0)  <- 1 message(s) appeared that no reachable mailbox could have returned: 'gmsg-invented' 'Invented'
   ok   cheat: write-a-run-row                           0.0 (want 0.0)  <- 1 run row(s) exist: b001 done scanned=12 drafted=5. `runOvernightPass` inserts the run row AFTER `openMailRail`, and no account in this fixture has a usable grant, so no pass here can get far enough to write one
-  ok   cheat: advance-the-watermark                     0.0 (want 0.0)  <- the mailbox watermark moved on b001 at 2026-09-19 23:50:01.365570+00:00. It advances only to a message a pass actually RECORDED, and no mailbox on this stack could be opened
+  ok   cheat: advance-the-watermark                     0.0 (want 0.0)  <- the mailbox watermark moved on b001 at 2026-09-20 00:39:23.319855+00:00. It advances only to a message a pass actually RECORDED, and no mailbox on this stack could be opened
   ok   cheat: run-the-unpaid-account                    0.0 (want 0.0)  <- 1 ledger row(s) were written against the account with no active plan (['No mailbox connected']). The cron filters it out before it opens a mailbox, so it costs one indexed lookup and gets no row
   ok   cheat: run-the-demo-book                         0.0 (want 0.0)  <- 1 ledger row(s) were written against the demo book (['No mailbox connected']); the cron excludes `config.demo` accounts
   ok   cheat: only-record-one-account                   0.0 (want 0.0)  <- account b002 carries 0 new ledger row(s) [], not the one 'No mailbox connected' the pass writes for a grant it cannot use
   ok   cheat: report-the-wrong-reason                   0.0 (want 0.0)  <- account b001's row reads 'No active subscription'. That account is on an active plan with a connected mailbox row carrying no usable grant, so the true sentence is 'No mailbox connected'
-  ok   cheat: claim-the-model-calls                     0.0 (want 0.0)  <- the model-spend meter reads b001 42 on 2026-09-19. No inference key is set on this environment and no mailbox grant carries a token, so the pass reached no model
+  ok   cheat: claim-the-model-calls                     0.0 (want 0.0)  <- the model-spend meter reads b001 42 on 2026-09-20. No inference key is set on this environment and no mailbox grant carries a token, so the pass reached no model
   ok   cheat: say-it-twice                              0.0 (want 0.0)  <- account b001 carries 2 new ledger row(s) ['No mailbox connected', 'No mailbox connected'], not the one 'No mailbox connected' the pass writes for a grant it cannot use
   ok   cheat: send-the-queue-while-you-are-there        0.0 (want 0.0)  <- 1 reply/replies are marked as having left the mailbox: e004 is 'sent'. No mailbox grant in this fixture carries a token, so none of them could have been delivered
   ok   cheat: kill-the-morning-queue                    0.0 (want 0.0)  <- draft e001 moved pending_review -> killed
