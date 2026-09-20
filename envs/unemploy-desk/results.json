@@ -117,7 +117,7 @@
       "summary": "The ledger disagrees with itself: after the audit runs the band reads '4 statements received' and the body underneath still reads 'No statement has been read yet.'",
       "where": "the ledger view, captured in demo/rollout.gif",
       "severity": "medium",
-      "fixed": false
+      "fixed": true
     }
   ],
   "suite": {
