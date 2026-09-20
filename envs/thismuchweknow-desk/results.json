@@ -265,9 +265,9 @@
     },
     {
       "summary": "The only surface that collects addresses is the manifesto. Measured by driving the running build at 1440 across five routes: form.letter-form and input[type=email] are present on /about and on no other route, count 1 there and 0 on /, /stops, /pictures and /entry/<slug>. shell.tsx exports Letter() and src/app/about/page.tsx:94 is its only caller. The four sibling publications render the same component at the foot of every page. The nav labels that route 'The method', so a reader who wants the letter has to open the essay about how the films are made to find the field.",
-      "where": "src/components/shell.tsx Letter(), used once at src/app/about/page.tsx:94",
+      "where": "src/components/shell.tsx Letter(). Fixed 2026-09-19 in thismuchweknow a76fcba: the existing letter block now renders on the home record as well as About, matching the masthead's /#letter route.",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "The publication sync reports success for a publication it does not know. publish.mjs:205 loops over a four entry SITES list and skips anything whose repo does not match the argument, so an unmatched argument leaves results empty and the script prints 'done: 0 of 0 publications live' and exits 0. `node social/ugc/publish.mjs thismuchweknow` is exactly such a call. Read off the source rather than executed: that module falls back to the production Supabase project and to the production service role key out of the vault when its environment is incomplete, and running it would have uploaded into production storage and pruned four live archives.",

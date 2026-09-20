@@ -353,9 +353,9 @@
     },
     {
       "summary": "agentwire_email_sends ships opened_at and clicked_at and no code path anywhere writes them, so every engagement figure the table implies reads as zero forever rather than as unmeasured.",
-      "where": "public.agentwire_email_sends, scripts/send-digest.mjs",
+      "where": "public.agentwire_email_sends. Fixed 2026-09-19 in agentwire d50385c: POST /api/email/webhook verifies Resend's Svix signature and replay window, then stamps the named send's first opened_at or clicked_at value.",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     }
   ],
   "suite": {

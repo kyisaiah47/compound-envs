@@ -522,9 +522,9 @@
     },
     {
       "summary": "The Reach dedup key is taken from a client-settable header with no trusted-proxy check. /out/[domain] hashes x-forwarded-for and reads split(',')[0], the leftmost value, which is the one a caller supplies when a proxy appends rather than replaces. A caller that varies the header chooses its own dedup key. Source-verified only: which value the live edge puts first was not measured, because measuring it means writing real click rows on the production board.",
-      "where": "src/app/out/[domain]/route.ts clientHash",
+      "where": "src/app/out/[domain]/route.ts clientHash. Fixed 2026-09-19 in outrip 06756f9: dedup uses only Cloudflare's or the origin proxy's edge-written client address and ignores caller-controlled X-Forwarded-For.",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     },
     {
       "summary": "Stock and dust are both read-modify-write, so concurrent calls oversell and lose updates. buyFromShop reads item.stock and writes stock minus one with a .gt('stock', 0) filter that is true for both of two concurrent callers, so one unit of stock mints two cards; tradeIn and buyFromShop both read the dust balance and write a computed total rather than an increment.",
