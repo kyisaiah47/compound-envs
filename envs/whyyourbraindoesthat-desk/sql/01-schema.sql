@@ -37,6 +37,8 @@ create table if not exists public.publication_subscribers (
 -- is over the raw bytes, so `A@b.example` and `a@b.example` are two different readers to it.
 create unique index if not exists publication_subscribers_unique
   on public.publication_subscribers (publication, email);
+create unique index if not exists publication_subscribers_publication_email_lower_unique
+  on public.publication_subscribers (publication, lower(email));
 
 -- The unsubscribe route finds its row by this column.
 -- ⛔ UNIQUE, and that is production's index, not a hardening. It means the database itself
