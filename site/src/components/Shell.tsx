@@ -1,42 +1,38 @@
 import Link from "next/link";
-import ThemeSwitch from "./Theme";
 import type { Environment } from "@/lib/data";
 
 function Mark() {
-  return <span className="marks"><img className="mk mk-dark" src="/compound-mark.svg" alt="" /><img className="mk mk-light" src="/compound-mark-plate.svg" alt="" /></span>;
+  return <img className="eval-mark" src="/eval-mark.svg" alt="" />;
 }
 
 export default function Shell({ active, envs, children }: { active: "evals" | "environments" | string; envs: Environment[]; children: React.ReactNode }) {
   const taskCount = envs.reduce((n, e) => n + e.tasks.length, 0);
   const lastRun = envs.map((e) => e.suite?.last_run).filter(Boolean).sort().at(-1) || "never";
-  return <>
-    <header className="top">
-      <div className="top-in">
-        <span className="brand"><Mark /><span>Compound</span><em>EVALS</em></span>
-        <div className="folio"><span>SUITE <b>{taskCount.toLocaleString()} tasks</b></span><span>LAST PROVED <b>{lastRun}</b></span></div>
-        <span className="live"><i className="dot" />PUBLIC RECORD</span><ThemeSwitch />
+  return <div className="site">
+    <header className="mast">
+      <div className="mast-main">
+        <Link href="/evals" className="identity"><Mark /><span>Compound Evals</span></Link>
+        <nav className="nav" aria-label="Evals surfaces">
+          <Link href="/evals" data-on={active === "evals"}>Results</Link>
+          <Link href="/environments" data-on={active === "environments"}>Environments</Link>
+        </nav>
+        <span className="status"><i />PUBLIC MEASUREMENT</span>
       </div>
-      <nav className="tabs" aria-label="Evals surfaces">
-        <Link href="/evals" data-on={active === "evals"}><Mark />Evals</Link>
-        <Link href="/environments" data-on={active === "environments"}>Environments</Link>
-      </nav>
+      <div className="tape" aria-label="Suite status">
+        <span><b>{taskCount.toLocaleString()}</b> TASKS READY</span>
+        <span><b>{lastRun}</b> LAST PROVED</span>
+        <span>RESET → RUN → GRADE → PUBLISH</span>
+      </div>
     </header>
-    <main className="shell">
-      <nav className="rail" aria-label="Environment index">
-        <h5>THE MEASURE</h5>
-        <ul>
-          <li><Link href="/evals" data-on={active === "evals"}>Model results</Link></li>
-          <li><Link href="/environments" data-on={active === "environments"}>Environment register</Link></li>
-        </ul>
-        <h5>PRODUCT ENVIRONMENTS</h5>
-        <ul>{envs.map((env) => <li key={env.product}><Link href={`/${env.product}`} data-on={active === env.product}><span className="l">{env.product}</span><span className="n">{env.tasks.length}</span></Link></li>)}</ul>
-        <div className="gap" />
-        <h5>THIS SITE READS</h5>
-        <p className="why">versioned results.json records<br /><b>written by the grader suites</b></p>
-      </nav>
+    <main className="canvas">
       <section className="river">{children}</section>
+      <aside className="index" aria-label="Environment index">
+        <div className="index-head"><span>ENVIRONMENT INDEX</span><b>{envs.length.toString().padStart(2, "0")}</b></div>
+        <div className="index-list">{envs.map((env, i) => <Link key={env.product} href={`/${env.product}`} data-on={active === env.product}><span className="ordinal">{String(i + 1).padStart(2, "0")}</span><span>{env.product}</span><b>{env.tasks.length}</b></Link>)}</div>
+      </aside>
     </main>
-  </>;
+    <footer className="foot"><span>Compound Evals</span><span>Every score carries its environment.</span><span>Built by Compound Labs</span></footer>
+  </div>;
 }
 
 export function ViewHead({ title, children, src }: { title: string; children: React.ReactNode; src?: React.ReactNode }) {

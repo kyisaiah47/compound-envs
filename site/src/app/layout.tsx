@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter, IBM_Plex_Mono } from "next/font/google";
-import { BOOT } from "@/components/Theme";
 import "./globals.css";
 
 const sans = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap", variable: "--font-sans" });
@@ -12,5 +11,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="en" className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning><head><script dangerouslySetInnerHTML={{ __html: BOOT }} /></head><body>{children}</body></html>;
+  return <html lang="en" className={`${sans.variable} ${mono.variable}`}><body>{children}</body></html>;
 }
