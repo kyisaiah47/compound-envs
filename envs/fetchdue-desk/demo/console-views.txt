@@ -1,0 +1,56 @@
+account desk@harrowgate-joinery.example
+
+http://127.0.0.1:3757/   (the whole river)
+  drew 11 row(s); own client names: true; own invoice numbers: true
+  band: The AI collections agent for agencies. Never chase an invoice again.
+    INV-2240/Brightmoor Estates/$2,640.00/12d past due WAITING ON YOU DELLA NKEMELU WROTE BACK ON 2026-09-13 · READ AS PAYMENT_PLAN_REQUEST · 4 OF 8 LABEL
+      controls: ["Approve","Edit the wording","Kill it"]
+    INV-2222/Quill and Rail/$1,480.00/36d past due Nell, I will get INV-2222 paid off before the end of the month, you have my word. PROMISED A DATE IVOR 
+      controls: ["Open the thread"]
+    INV-2205/Calderbank Homes/$960.00/31d past due Hi Priya, a quick note that invoice INV-2205 for $960.00 is now 9 days past due. When you get a chance,
+      controls: ["Open the thread"]
+    INV-2261/Quill and Rail/$1,800.00/121d past due Bench tops, Quill Street annexe is on the ladder. Nothing is waiting on you. ON THE LADDER THE ONLY FI
+      controls: ["Open the thread"]
+    INV-2260/Westbourne Fitout/$3,461.15/94d past due Reception desk and panelling is on the ladder. Nothing is waiting on you. ON THE LADDER THE ONLY FIG
+      controls: ["Open the thread"]
+    INV-2199/Quill and Rail/$9,150.00/64d past due Library fit out, Quill Street is on the ladder. Nothing is waiting on you. ON THE LADDER THE ONLY FIGUR
+      controls: ["Open the thread"]
+    ... and 5 more
+  every control on the page: ["Connect QuickBooks, Xero or Stripe","Approve","Edit the wording","Kill it","Open the thread","Start free"]
+  demo read-only sentence: false; signed-in "not wired" sentence: false
+  shot -> look-river.png
+
+http://127.0.0.1:3757/?show=waiting   (waiting on you)
+  drew 1 row(s); own client names: false; own invoice numbers: false
+  band: The AI collections agent for agencies. Never chase an invoice again.
+    INV-2240/Brightmoor Estates/$2,640.00/12d past due WAITING ON YOU DELLA NKEMELU WROTE BACK ON 2026-09-13 · READ AS PAYMENT_PLAN_REQUEST · 4 OF 8 LABEL
+      controls: ["Approve","Edit the wording","Kill it"]
+  every control on the page: ["Connect QuickBooks, Xero or Stripe","Approve","Edit the wording","Kill it","Start free"]
+  demo read-only sentence: false; signed-in "not wired" sentence: false
+  shot -> look-show-waiting.png
+
+http://127.0.0.1:3757/?show=window   (inside the undo window)
+  drew 0 row(s); own client names: false; own invoice numbers: false
+  band: The AI collections agent for agencies. Never chase an invoice again.
+  every control on the page: ["Connect QuickBooks, Xero or Stripe","Start free"]
+  demo read-only sentence: false; signed-in "not wired" sentence: false
+  shot -> look-show-window.png
+
+http://127.0.0.1:3757/?show=record   (the record)
+  drew 6 row(s); own client names: false; own invoice numbers: false
+  band: The AI collections agent for agencies. Never chase an invoice again.
+    4 rails connected The book was read: 12 invoices across 6 clients. quickbooks · Company 9341261885540127, xero · Harrowgate Joinery, microsoft365 · ne
+    INV-2240 · payment_plan_request · 4 of 8 labels Brightmoor Estates wrote back, and the reply was read as payment_plan_request. Hi Nell, sorry for the 
+    INV-2240 · every amount it names is one the agent was handed A reply was written for Brightmoor Estates and is waiting on you. Hi Della, that is no pr
+    INV-2222 · promise_to_pay · 5 of 8 labels Quill and Rail wrote back, and the reply was read as promise_to_pay. Nell, I will get INV-2222 paid off befo
+    INV-2205 · email Stage 2 chase left your mailbox for Calderbank Homes. Reminder INV-2205 SENT
+    INV-2188 · email Stage 1 chase left your mailbox for Calderbank Homes. Reminder INV-2188 SENT
+  every control on the page: ["Connect QuickBooks, Xero or Stripe","Start free"]
+  demo read-only sentence: false; signed-in "not wired" sentence: false
+  shot -> look-show-record.png
+
+pressed the primary control on the row the console opened itself
+  row: INV-2240/Brightmoor Estates/$2,640.00/12d past due
+  controls on it: ["Approve","Edit the wording","Kill it"]
+  requests to /api/ that the press caused: []
+  what the row answered: "This console reads your book. Approving, editing and killing a chase are not wired here yet."

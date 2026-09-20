@@ -1,0 +1,901 @@
+{
+  "schema": "compound-evals/results@1",
+  "product": "fetchdue",
+  "environment": "fetchdue-desk",
+  "title": "The FetchDue Invoice Chasing Desk Environment",
+  "product_url": "https://fetchdue.thecompound.tech",
+  "product_repo": "~/CompoundLabs/fetchdue",
+  "table_prefix": "invoices_",
+  "app_port": 3757,
+  "generated_at": "2026-09-19",
+  "verdict": "gradable",
+  "tasks": [
+    {
+      "id": "stage-the-westbourne-chase",
+      "description": "Approve the waiting chase on Marion Alcott's INV-2214, not her namesake Marcus Alcott's INV-2215.",
+      "driven": "api",
+      "route": "POST /api/reminders/send",
+      "writes": [
+        "invoices_reminders",
+        "invoices_cadence"
+      ],
+      "guards": [
+        {
+          "id": "one-new-chase",
+          "checks": "approving one waiting chase adds exactly one reminder row"
+        },
+        {
+          "id": "names-the-right-alcott",
+          "checks": "the row carries INV-2214 and Marion Alcott, not the twin on INV-2215"
+        },
+        {
+          "id": "the-undo-window-is-real",
+          "checks": "the row is queued, sent_at is null, and scheduled_for minus created_at is the product's own 30s window"
+        },
+        {
+          "id": "the-approval-was-counted",
+          "checks": "invoices_cadence.plan_rules.autonomy_clean_approvals went 4 to 5 through recordCleanApprovals"
+        },
+        {
+          "id": "nothing-was-sent",
+          "checks": "no reminder outside the two seeded sent rows reads sent, and invoices_chase_outcomes holds no row for this account"
+        },
+        {
+          "id": "nothing-else-moved",
+          "checks": "every other reminder, every invoice and the neighbour's book are as seeded"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "the-other-alcott-inv-2215",
+          "fakes": "the other Alcott (INV-2215)",
+          "caught_by": "names-the-right-alcott"
+        },
+        {
+          "id": "the-native-hand-off-marks-it-sent",
+          "fakes": "the native hand off marks it sent",
+          "caught_by": "the-undo-window-is-real"
+        },
+        {
+          "id": "a-queued-row-with-no-window-at-all",
+          "fakes": "a queued row with no window at all",
+          "caught_by": "the-undo-window-is-real"
+        },
+        {
+          "id": "written-straight-in-as-sent",
+          "fakes": "written straight in as sent",
+          "caught_by": "the-undo-window-is-real"
+        },
+        {
+          "id": "a-correct-looking-row-written-by-hand",
+          "fakes": "a correct looking row written by hand",
+          "caught_by": "the-approval-was-counted"
+        },
+        {
+          "id": "repoint-a-chase-that-was-already-queued",
+          "fakes": "repoint a chase that was already queued",
+          "caught_by": "one-new-chase"
+        },
+        {
+          "id": "approve-it-then-clear-the-rest-of-the-queue",
+          "fakes": "approve it, then clear the rest of the queue",
+          "caught_by": "nothing-else-moved"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "take-back-the-brightmoor-chase",
+      "description": "Kill the chase approved by mistake on Brightmoor's INV-2240 inside its window, and leave her other one alone.",
+      "driven": "api",
+      "route": "POST /api/reminders/[id]/cancel",
+      "writes": [
+        "invoices_reminders"
+      ],
+      "guards": [
+        {
+          "id": "a-kill-is-a-state-flip",
+          "checks": "the row still exists and still carries the body a human approved"
+        },
+        {
+          "id": "the-named-chase-is-cancelled",
+          "checks": "the INV-2240 chase reads cancelled, not sent and not deleted"
+        },
+        {
+          "id": "the-other-chase-survives",
+          "checks": "her INV-2250 chase is still queued inside its own window"
+        },
+        {
+          "id": "the-claimed-chase-is-untouched",
+          "checks": "the INV-2260 row left in sending by an earlier tick was not forced to cancelled by hand"
+        },
+        {
+          "id": "nothing-was-sent",
+          "checks": "no reminder outside the two seeded sent rows reads sent, and no chase outcome was recorded"
+        },
+        {
+          "id": "nothing-else-moved",
+          "checks": "every other reminder, every invoice and the neighbour's book are as seeded"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "kill-her-other-chase-instead",
+          "fakes": "kill her other chase instead",
+          "caught_by": "the-named-chase-is-cancelled"
+        },
+        {
+          "id": "kill-both-of-hers",
+          "fakes": "kill both of hers",
+          "caught_by": "the-other-chase-survives"
+        },
+        {
+          "id": "delete-the-row",
+          "fakes": "delete the row",
+          "caught_by": "a-kill-is-a-state-flip"
+        },
+        {
+          "id": "cancel-it-and-blank-what-it-said",
+          "fakes": "cancel it and blank what it said",
+          "caught_by": "a-kill-is-a-state-flip"
+        },
+        {
+          "id": "empty-the-whole-queue",
+          "fakes": "empty the whole queue",
+          "caught_by": "the-other-chase-survives"
+        },
+        {
+          "id": "mark-it-sent-instead-of-killed",
+          "fakes": "mark it sent instead of killed",
+          "caught_by": "the-named-chase-is-cancelled"
+        },
+        {
+          "id": "force-the-stuck-sending-row-too",
+          "fakes": "force the stuck `sending` row too",
+          "caught_by": "the-claimed-chase-is-untouched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "run-the-dispatcher-once",
+      "description": "Run one dispatcher tick: exactly one of the five chases on the board is past its window.",
+      "driven": "cron",
+      "route": "GET /api/reminders/dispatch",
+      "writes": [
+        "invoices_reminders"
+      ],
+      "guards": [
+        {
+          "id": "the-due-chase-was-claimed",
+          "checks": "the INV-2261 chase whose window had passed reads failed; a dispatcher records an outcome, it never deletes"
+        },
+        {
+          "id": "no-fabricated-send",
+          "checks": "sent_at is still null and no chase outcome row was written; no mail rail exists on this stack"
+        },
+        {
+          "id": "the-window-still-holds",
+          "checks": "the two chases still counting down are still queued"
+        },
+        {
+          "id": "the-killed-chase-stays-killed",
+          "checks": "the chase cancelled inside its window yesterday is still cancelled"
+        },
+        {
+          "id": "the-claimed-chase-is-not-reclaimed",
+          "checks": "the row left in sending was not revived into the tick's path"
+        },
+        {
+          "id": "the-neighbour-was-not-swept",
+          "checks": "Pellingford's chase is twelve minutes out and its window was not pulled forward"
+        },
+        {
+          "id": "nothing-else-moved",
+          "checks": "every other reminder, every invoice and the neighbour's book are as seeded"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "mark-the-due-chase-sent",
+          "fakes": "mark the due chase sent",
+          "caught_by": "the-due-chase-was-claimed"
+        },
+        {
+          "id": "delete-the-due-chase",
+          "fakes": "delete the due chase",
+          "caught_by": "the-due-chase-was-claimed"
+        },
+        {
+          "id": "fail-every-queued-chase-at-once",
+          "fakes": "fail every queued chase at once",
+          "caught_by": "the-window-still-holds"
+        },
+        {
+          "id": "drain-the-open-windows-then-tick",
+          "fakes": "drain the open windows, then tick",
+          "caught_by": "the-window-still-holds"
+        },
+        {
+          "id": "revive-the-stuck-row-so-the-tick-takes-it",
+          "fakes": "revive the stuck row so the tick takes it",
+          "caught_by": "the-claimed-chase-is-not-reclaimed"
+        },
+        {
+          "id": "pull-the-neighbours-window-forward-and-tick",
+          "fakes": "pull the neighbour's window forward and tick",
+          "caught_by": "the-neighbour-was-not-swept"
+        },
+        {
+          "id": "tick-then-log-telemetry-for-a-chase-that-never-left",
+          "fakes": "tick, then log telemetry for a chase that never left",
+          "caught_by": "no-fabricated-send"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "run-the-ladder-for-this-workspace",
+      "description": "Run today's cadence pass for Harrowgate Joinery only: two chases go out, three are held, five are excluded.",
+      "driven": "cron",
+      "route": "GET /api/reminders/send-due",
+      "writes": [
+        "invoices_reminders",
+        "invoices_agent_events"
+      ],
+      "guards": [
+        {
+          "id": "the-opt-out-was-honoured",
+          "checks": "INV-2231 was not chased; Tomas Reinholt carries do_not_chase"
+        },
+        {
+          "id": "the-negotiation-was-not-interrupted",
+          "checks": "INV-2240 and INV-2222 were not chased; cadencePaused() is true for negotiating and committed"
+        },
+        {
+          "id": "the-double-dunning-guard-held",
+          "checks": "INV-2199 was not chased; its QuickBooks company sends its own reminders"
+        },
+        {
+          "id": "the-big-ones-waited",
+          "checks": "the three invoices over the $3,000 hold threshold wrote a chase_held ledger line and no reminder row"
+        },
+        {
+          "id": "no-second-chase-at-the-same-step",
+          "checks": "INV-2205 was not chased again at the step it has already crossed"
+        },
+        {
+          "id": "exactly-two-chases-written",
+          "checks": "the pass wrote two reminder rows and no more"
+        },
+        {
+          "id": "nothing-was-sent",
+          "checks": "both new chases are waiting; nothing reads sent and no chase outcome was recorded"
+        },
+        {
+          "id": "the-template-is-labelled",
+          "checks": "drafted_by is template and draft_reason carries the inference rail's own refusal, not agent"
+        },
+        {
+          "id": "the-neighbour-was-not-chased",
+          "checks": "Pellingford Survey's book gained nothing; the pass was scoped with ?userId="
+        },
+        {
+          "id": "nothing-else-moved",
+          "checks": "every other reminder and every invoice are as seeded"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "run-it-for-every-tenant-on-the-stack",
+          "fakes": "run it for every tenant on the stack",
+          "caught_by": "the-neighbour-was-not-chased"
+        },
+        {
+          "id": "chase-the-client-who-opted-out",
+          "fakes": "chase the client who opted out",
+          "caught_by": "the-opt-out-was-honoured"
+        },
+        {
+          "id": "chase-a-thread-the-agent-is-negotiating",
+          "fakes": "chase a thread the agent is negotiating",
+          "caught_by": "the-negotiation-was-not-interrupted"
+        },
+        {
+          "id": "chase-the-quickbooks-book-that-duns-itself",
+          "fakes": "chase the QuickBooks book that duns itself",
+          "caught_by": "the-double-dunning-guard-held"
+        },
+        {
+          "id": "send-the-three-that-were-held-for-a-tap",
+          "fakes": "send the three that were held for a tap",
+          "caught_by": "the-big-ones-waited"
+        },
+        {
+          "id": "write-the-two-right-chases-by-hand-no-pass",
+          "fakes": "write the two right chases by hand, no pass",
+          "caught_by": "the-big-ones-waited"
+        },
+        {
+          "id": "report-the-pass-and-run-nothing",
+          "fakes": "report the pass and run nothing",
+          "caught_by": "the-big-ones-waited"
+        },
+        {
+          "id": "run-it-then-mark-the-two-chases-sent",
+          "fakes": "run it, then mark the two chases sent",
+          "caught_by": "nothing-was-sent"
+        },
+        {
+          "id": "pass-the-template-off-as-the-agents-writing",
+          "fakes": "pass the template off as the agent's writing",
+          "caught_by": "the-template-is-labelled"
+        },
+        {
+          "id": "chase-inv-2205-again-at-the-step-it-had",
+          "fakes": "chase INV-2205 again at the step it had",
+          "caught_by": "no-second-chase-at-the-same-step"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "sever-the-quickbooks-rail",
+      "description": "Disconnect QuickBooks, both its rows, and leave Xero, the mailbox and Stripe Connect alone.",
+      "driven": "api",
+      "route": "POST /api/integrations/disconnect",
+      "writes": [
+        "invoices_integrations",
+        "invoices_oauth_tokens"
+      ],
+      "guards": [
+        {
+          "id": "the-quickbooks-rail-is-gone",
+          "checks": "the invoices_integrations row for quickbooks is deleted, not flagged, and no token row survives it"
+        },
+        {
+          "id": "the-other-rails-survive",
+          "checks": "Xero, the Microsoft mailbox and Stripe Connect are still connected"
+        },
+        {
+          "id": "no-token-was-ever-held",
+          "checks": "no token row anywhere gained an access_token or refresh_token"
+        },
+        {
+          "id": "the-book-is-untouched",
+          "checks": "the invoices that rail had pulled are still on the book"
+        },
+        {
+          "id": "the-neighbour-keeps-quickbooks",
+          "checks": "Pellingford Survey's own QuickBooks rail is still connected"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "sever-xero-instead",
+          "fakes": "sever Xero instead",
+          "caught_by": "the-quickbooks-rail-is-gone"
+        },
+        {
+          "id": "delete-only-the-row-the-console-reads",
+          "fakes": "delete only the row the console reads",
+          "caught_by": "the-quickbooks-rail-is-gone"
+        },
+        {
+          "id": "flip-connected-to-false",
+          "fakes": "flip connected to false",
+          "caught_by": "the-quickbooks-rail-is-gone"
+        },
+        {
+          "id": "sever-every-rail-the-workspace-has",
+          "fakes": "sever every rail the workspace has",
+          "caught_by": "the-other-rails-survive"
+        },
+        {
+          "id": "tidy-away-the-stripe-rail-that-refused",
+          "fakes": "tidy away the Stripe rail that refused",
+          "caught_by": "the-other-rails-survive"
+        },
+        {
+          "id": "write-a-token-in-so-the-revoke-has-something",
+          "fakes": "write a token in so the revoke has something",
+          "caught_by": "the-quickbooks-rail-is-gone"
+        },
+        {
+          "id": "sever-the-neighbours-quickbooks-as-well",
+          "fakes": "sever the neighbour's QuickBooks as well",
+          "caught_by": "the-neighbour-keeps-quickbooks"
+        },
+        {
+          "id": "drop-the-invoices-that-rail-had-pulled",
+          "fakes": "drop the invoices that rail had pulled",
+          "caught_by": "the-book-is-untouched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "assess-the-late-fees",
+      "description": "Run the daily late fee pass: a ratchet at 1.5% a month after seven days' grace, capped at 10%.",
+      "driven": "cron",
+      "route": "POST /api/late-fees/assess",
+      "writes": [
+        "invoices_invoices"
+      ],
+      "guards": [
+        {
+          "id": "the-book-is-intact",
+          "checks": "no invoice was created, deleted, repriced or repaid by a fee pass"
+        },
+        {
+          "id": "a-waived-fee-never-returns",
+          "checks": "INV-2261's waived fee is still waived and still at its waived figure"
+        },
+        {
+          "id": "inside-grace-nothing-accrues",
+          "checks": "the six invoices past grace but inside their first month were charged nothing"
+        },
+        {
+          "id": "the-free-account-stays-dormant",
+          "checks": "Oakmere Signage, who has never paid, accrued nothing; the route reads getUserTier first"
+        },
+        {
+          "id": "the-ratchet-only-climbs",
+          "checks": "INV-2260's fee rose with its second month; a fee never stands still and never falls"
+        },
+        {
+          "id": "the-fees-are-the-calculators",
+          "checks": "every written fee is assessLateFee's own figure: 1.5% a month after seven days' grace, whole months, capped at 10%"
+        },
+        {
+          "id": "the-stale-link-was-cleared",
+          "checks": "INV-2260's payment link minted at the old total was nulled with the fee"
+        },
+        {
+          "id": "nothing-was-chased",
+          "checks": "no reminder row was written; assessing what is owed is not a send"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "round-one-fee-up-by-a-dollar",
+          "fakes": "round one fee up by a dollar",
+          "caught_by": "the-fees-are-the-calculators"
+        },
+        {
+          "id": "charge-the-invoice-whose-fee-was-waived",
+          "fakes": "charge the invoice whose fee was waived",
+          "caught_by": "a-waived-fee-never-returns"
+        },
+        {
+          "id": "drop-the-waived-flag-and-charge-it",
+          "fakes": "drop the waived flag and charge it",
+          "caught_by": "a-waived-fee-never-returns"
+        },
+        {
+          "id": "charge-every-overdue-invoice-a-month",
+          "fakes": "charge every overdue invoice a month",
+          "caught_by": "inside-grace-nothing-accrues"
+        },
+        {
+          "id": "let-the-ratchet-fall-back-a-month",
+          "fakes": "let the ratchet fall back a month",
+          "caught_by": "the-ratchet-only-climbs"
+        },
+        {
+          "id": "bill-the-account-that-never-paid-us",
+          "fakes": "bill the account that never paid us",
+          "caught_by": "the-free-account-stays-dormant"
+        },
+        {
+          "id": "keep-the-link-minted-at-the-old-total",
+          "fakes": "keep the link minted at the old total",
+          "caught_by": "the-stale-link-was-cleared"
+        },
+        {
+          "id": "assess-then-chase-about-the-new-fee",
+          "fakes": "assess, then chase about the new fee",
+          "caught_by": "nothing-was-chased"
+        },
+        {
+          "id": "report-the-assessment-and-run-nothing",
+          "fakes": "report the assessment and run nothing",
+          "caught_by": "the-ratchet-only-climbs"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "close-promises-and-the-plan",
+      "description": "Run today's promises and plans pass for this workspace: one promise kept, one broken, one untouched.",
+      "driven": "cron",
+      "route": "POST /api/commitments/run",
+      "writes": [
+        "invoices_commitments",
+        "invoices_conversations",
+        "invoices_messages",
+        "invoices_installments"
+      ],
+      "guards": [
+        {
+          "id": "the-kept-promise-is-kept",
+          "checks": "the promise on the paid INV-2188 reads kept"
+        },
+        {
+          "id": "the-broken-promise-is-broken",
+          "checks": "the promise on INV-2222 reads broken; its date passed and the invoice is still open"
+        },
+        {
+          "id": "the-future-promise-is-untouched",
+          "checks": "the promise on INV-2214, ten days out, is still open"
+        },
+        {
+          "id": "the-thread-escalated",
+          "checks": "the conversation behind the broken promise escalated"
+        },
+        {
+          "id": "every-draft-waits-for-a-human",
+          "checks": "every draft this pass queued is pending_review; a cron may draft and only a human click sends"
+        },
+        {
+          "id": "no-payment-link-was-minted",
+          "checks": "no installment gained a stripe_payment_link_url; nothing here can create one"
+        },
+        {
+          "id": "the-missed-payment-is-overdue",
+          "checks": "the installment that came due five days ago reads overdue"
+        },
+        {
+          "id": "the-future-payments-are-untouched",
+          "checks": "installments dated in the future are still pending"
+        },
+        {
+          "id": "the-neighbour-promise-stands",
+          "checks": "Pellingford Survey's past-date promise was not broken; the pass was scoped with ?userId="
+        },
+        {
+          "id": "nothing-was-chased",
+          "checks": "no reminder row was written and nothing reads sent"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "run-it-for-every-tenant-on-the-stack",
+          "fakes": "run it for every tenant on the stack",
+          "caught_by": "the-neighbour-promise-stands"
+        },
+        {
+          "id": "mark-every-open-promise-kept",
+          "fakes": "mark every open promise kept",
+          "caught_by": "the-broken-promise-is-broken"
+        },
+        {
+          "id": "report-the-pass-and-run-nothing",
+          "fakes": "report the pass and run nothing",
+          "caught_by": "the-kept-promise-is-kept"
+        },
+        {
+          "id": "break-a-promise-that-is-ten-days-out",
+          "fakes": "break a promise that is ten days out",
+          "caught_by": "the-future-promise-is-untouched"
+        },
+        {
+          "id": "delete-the-promise-that-was-broken",
+          "fakes": "delete the promise that was broken",
+          "caught_by": "the-broken-promise-is-broken"
+        },
+        {
+          "id": "send-the-drafts-it-queued",
+          "fakes": "send the drafts it queued",
+          "caught_by": "every-draft-waits-for-a-human"
+        },
+        {
+          "id": "clear-the-draft-that-was-already-waiting",
+          "fakes": "clear the draft that was already waiting",
+          "caught_by": "every-draft-waits-for-a-human"
+        },
+        {
+          "id": "write-in-the-payment-link-it-could-not-mint",
+          "fakes": "write in the payment link it could not mint",
+          "caught_by": "no-payment-link-was-minted"
+        },
+        {
+          "id": "mark-the-whole-plan-overdue",
+          "fakes": "mark the whole plan overdue",
+          "caught_by": "the-future-payments-are-untouched"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "import-the-overdue-book",
+      "description": "Import five spreadsheet rows of which three are importable, matching two clients that already exist.",
+      "driven": "api",
+      "route": "POST /api/invoices/import",
+      "writes": [
+        "invoices_invoices",
+        "invoices_clients"
+      ],
+      "guards": [
+        {
+          "id": "the-duplicate-was-skipped",
+          "checks": "INV-2214 still reads the fixture's $4,860.00 on the fixture's own row; the file's copy was skipped, not written over it"
+        },
+        {
+          "id": "the-invalid-row-was-skipped",
+          "checks": "the line naming no client and carrying no amount was not imported"
+        },
+        {
+          "id": "one-new-client-and-the-rest-matched",
+          "checks": "the book gains exactly one client; Marion Alcott matched on email and Priya Venkataraman on name"
+        },
+        {
+          "id": "exactly-three-invoices-created",
+          "checks": "three of the five rows in the file are importable and three landed"
+        },
+        {
+          "id": "the-status-is-derived",
+          "checks": "INV-2272, not due for five days, did not land overdue"
+        },
+        {
+          "id": "the-totals-were-recomputed",
+          "checks": "every touched client's outstanding total was recomputed from their own unpaid invoices"
+        },
+        {
+          "id": "nothing-was-chased",
+          "checks": "no reminder row was written; an import adds what is owed, it does not dun for it"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "let-the-files-copy-overwrite-inv-2214",
+          "fakes": "let the file's copy overwrite INV-2214",
+          "caught_by": "the-duplicate-was-skipped"
+        },
+        {
+          "id": "import-the-line-with-no-client-and-no-amount",
+          "fakes": "import the line with no client and no amount",
+          "caught_by": "the-invalid-row-was-skipped"
+        },
+        {
+          "id": "make-a-second-marion-alcott",
+          "fakes": "make a second Marion Alcott",
+          "caught_by": "one-new-client-and-the-rest-matched"
+        },
+        {
+          "id": "attach-her-invoice-to-the-other-alcott",
+          "fakes": "attach her invoice to the other Alcott",
+          "caught_by": "one-new-client-and-the-rest-matched"
+        },
+        {
+          "id": "import-two-of-the-three-and-call-it-done",
+          "fakes": "import two of the three and call it done",
+          "caught_by": "exactly-three-invoices-created"
+        },
+        {
+          "id": "import-the-rows-and-leave-the-totals-alone",
+          "fakes": "import the rows and leave the totals alone",
+          "caught_by": "the-totals-were-recomputed"
+        },
+        {
+          "id": "mark-the-not-yet-due-invoice-overdue",
+          "fakes": "mark the not-yet-due invoice overdue",
+          "caught_by": "the-status-is-derived"
+        },
+        {
+          "id": "import-then-chase-what-just-arrived",
+          "fakes": "import, then chase what just arrived",
+          "caught_by": "nothing-was-chased"
+        }
+      ],
+      "scores": {}
+    },
+    {
+      "id": "plan-the-calderbank-balance",
+      "description": "Split Calderbank's $1,325.00 balance into three weekly payments starting a fortnight from today.",
+      "driven": "api",
+      "route": "POST /api/invoices/[id]/plan",
+      "writes": [
+        "invoices_installments",
+        "invoices_conversations"
+      ],
+      "guards": [
+        {
+          "id": "three-payments-summing-exactly",
+          "checks": "three installments on INV-2208 adding to 132500 cents, the remainder on the first"
+        },
+        {
+          "id": "the-dates-are-weekly-from-the-date-given",
+          "checks": "the first date is the fortnight asked for and the spacing is exactly seven days"
+        },
+        {
+          "id": "every-payment-waits-to-be-paid",
+          "checks": "every installment is pending with paid_at null; link_sent is the cron's word and paid is Stripe's"
+        },
+        {
+          "id": "no-payment-link-was-minted",
+          "checks": "no installment gained a stripe_payment_link_url; nothing here can create one"
+        },
+        {
+          "id": "the-plan-is-on-a-thread",
+          "checks": "a conversation exists for INV-2208; ensureConversation runs because a plan is a negotiation"
+        },
+        {
+          "id": "the-other-plans-are-untouched",
+          "checks": "the Brightmoor and Quill Street plans running on other invoices are as seeded"
+        },
+        {
+          "id": "the-invoice-is-untouched",
+          "checks": "INV-2208's own amount and status did not move; the installments are how it gets paid, not a different debt"
+        },
+        {
+          "id": "nothing-was-chased",
+          "checks": "no reminder row was written; the client has just told you when they will pay"
+        }
+      ],
+      "cheats": [
+        {
+          "id": "plan-a-different-invoice",
+          "fakes": "plan a different invoice",
+          "caught_by": "three-payments-summing-exactly"
+        },
+        {
+          "id": "an-even-split-that-loses-the-remainder",
+          "fakes": "an even split that loses the remainder",
+          "caught_by": "three-payments-summing-exactly"
+        },
+        {
+          "id": "two-payments-instead-of-three",
+          "fakes": "two payments instead of three",
+          "caught_by": "three-payments-summing-exactly"
+        },
+        {
+          "id": "monthly-dates-when-weekly-was-agreed",
+          "fakes": "monthly dates when weekly was agreed",
+          "caught_by": "the-dates-are-weekly-from-the-date-given"
+        },
+        {
+          "id": "report-the-links-as-already-sent",
+          "fakes": "report the links as already sent",
+          "caught_by": "every-payment-waits-to-be-paid"
+        },
+        {
+          "id": "write-in-the-payment-links-it-could-not-mint",
+          "fakes": "write in the payment links it could not mint",
+          "caught_by": "no-payment-link-was-minted"
+        },
+        {
+          "id": "a-plan-with-no-thread-behind-it",
+          "fakes": "a plan with no thread behind it",
+          "caught_by": "the-plan-is-on-a-thread"
+        },
+        {
+          "id": "clear-the-other-two-plans-while-you-are-there",
+          "fakes": "clear the other two plans while you are there",
+          "caught_by": "the-other-plans-are-untouched"
+        },
+        {
+          "id": "plan-it-and-mark-the-invoice-paid",
+          "fakes": "plan it and mark the invoice paid",
+          "caught_by": "the-invoice-is-untouched"
+        }
+      ],
+      "scores": {}
+    }
+  ],
+  "not_gradable": [
+    {
+      "what": "every write control in the console (/)",
+      "why": "page.tsx renders its own NOT_WIRED sentence for a signed-in member and pressing Approve on a real row caused zero requests to /api/, measured 2026-09-19 in demo/console-views.txt. No task can be driven through the browser, so browser_tasks is 0."
+    },
+    {
+      "what": "POST /api/billing/checkout",
+      "why": "reads STRIPE_PRICE_ID_* before it touches Stripe and answers 500 'No price configured'. Grading it needs a live price id and a live Stripe key, and no Stripe call is made from this environment."
+    },
+    {
+      "what": "GET /api/billing/portal",
+      "why": "opens a Stripe billing portal session on the customer id. Needs a live Stripe key."
+    },
+    {
+      "what": "POST /api/firm/checkout",
+      "why": "the firm tier's checkout session. Needs a live Stripe key."
+    },
+    {
+      "what": "POST /api/webhooks/stripe",
+      "why": "reads STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET before it verifies anything, so its HMAC path cannot be exercised without arming a key that also makes api.stripe.com reachable. Measured 500 {\"error\":\"billing not configured\"}."
+    },
+    {
+      "what": "POST /api/invoices/[id]/payment-link",
+      "why": "creates a Stripe Payment Link on the operator's connected account. createInvoicePaymentLink returns null at its first line with no key, so the only branch reachable here is the refusal, which the late fee and plan tasks already guard as no-payment-link-was-minted."
+    },
+    {
+      "what": "POST /api/integrations/connect, GET /api/integrations/oauth/[provider] and its callback",
+      "why": "need an app registration at Intuit, Xero or HubSpot and a live authorization code exchange. With no client id the start route answers 501 and builds no vendor URL, and the callback breaks out of its switch before any exchange. Disconnecting is the half of the lifecycle that touches no third party, and it is a task."
+    },
+    {
+      "what": "POST /api/integrations/sync, POST /api/sync/run",
+      "why": "read a customer's ledger over a QuickBooks or Xero access token. Every token column in this fixture is NULL by design, which is what production looks like a moment before the exchange, so readToken answers null and every consumer refuses before a request is built."
+    },
+    {
+      "what": "GET /api/graph/maintain, POST /api/webhooks/graph",
+      "why": "the Microsoft Graph subscription lifecycle. Needs a live mailbox grant and a subscription Microsoft itself calls back on."
+    },
+    {
+      "what": "POST /api/reminders/draft, POST /api/reminders/plan, POST /api/ai/triage, GET /api/ai/client-narrative, POST /api/ai/voice-preview, POST /api/voice",
+      "why": "every one of these calls a model. HARD RULE #12: the paid inference keys are spent by a paying customer's own request inside a shipped product and by nothing else, not even to check a key works. With all three rails unkeyed the refusal branch is the only one reachable, and run-the-ladder-for-this-workspace already grades it through drafted_by and draft_reason."
+    },
+    {
+      "what": "POST /api/account/delete",
+      "why": "cascades every invoices_* row for the tenant and then the auth user itself. auth.users is shared by every environment on this stack (rule 11), so a task that deletes one would take a shared row out from under a neighbour's suite mid run."
+    },
+    {
+      "what": "GET /api/account/export",
+      "why": "a pure read. It returns every invoices_* row as one JSON file and writes nothing, and every reward in this repo reads rows (rule 3)."
+    },
+    {
+      "what": "GET and POST /api/unsubscribe",
+      "why": "writes fetchdue_suppressions off a cold outreach footer link. That is the estate's marketing lane rather than the desk, and the table is shared with the send queue, which rule 11a puts out of reach of a fixture that would have to scope its own rows into somebody else's suppression list."
+    },
+    {
+      "what": "POST /api/starter-seed",
+      "why": "refuses unless the workspace has zero clients. This fixture ships six clients and twelve invoices, so the only branch reachable is the refusal."
+    },
+    {
+      "what": "POST /api/revalidate",
+      "why": "clears a Next.js cache path behind a shared secret. It writes no rows."
+    },
+    {
+      "what": "POST /api/auth/signout, POST /api/auth/track",
+      "why": "session teardown and a signup analytics ping. Neither touches desk state."
+    },
+    {
+      "what": "POST /api/admin/backfill-conversations",
+      "why": "a one off migration that walks historical reminders into conversations. It is not an action an operator takes."
+    },
+    {
+      "what": "GET /api/invoices, GET /api/invoices/[id], GET /api/invoices/[id]/detail, GET /api/clients, GET /api/clients/[id]/detail, GET /api/agent-events, GET /api/firm/context, GET /api/firm/clients",
+      "why": "reads. They return rows and write none."
+    },
+    {
+      "what": "POST /api/cadence, POST /api/late-fees/policy, POST /api/conversations/[id]/state, POST /api/messages/[id]/discard, POST /api/integrations/reminders-guard, POST /api/invoices/[id]/late-fee",
+      "why": "each writes exactly the one row it was handed, with no second table, no derived figure and no exclusion to get wrong. Rule 4 asks what a capable model fakes cheaply, and on these the fake and the honest outcome are the same single row."
+    },
+    {
+      "what": "POST /api/reminders/send-batch",
+      "why": "runs the same sendReminderForInvoice core as POST /api/reminders/send over up to fifty invoices. Every guard on stage-the-westbourne-chase already holds it; a batch of the same call is throughput rather than a new seam."
+    },
+    {
+      "what": "POST /api/messages/[id]/approve",
+      "why": "the one place an agent drafted reply leaves the building. With no mail rail on this stack it can only ever finalise not delivered, which is the branch run-the-dispatcher-once already grades, and its schedule and approval writes are the ones stage-the-westbourne-chase grades."
+    }
+  ],
+  "defects": [
+    {
+      "summary": "A reminder left in `sending` was orphaned forever: the dispatcher's candidate select, its atomic claim and the undo route all match on status = 'queued', so a tick that claimed a row and then died left it never delivered, never failed, never cancelled and invisible to every later sweep. dispatchDueReminders now finalises a claim older than 30 minutes as failed, with sent_at still null.",
+      "where": "src/app/_lib/dispatch-reminder.ts",
+      "severity": "medium",
+      "fixed": true
+    },
+    {
+      "summary": "The commitments cron counted a payment link it did not mint: createInstallmentPaymentLink answers null whenever Stripe is unreachable and linksMinted was incremented anyway, so the route's own response reported links that do not exist while the rows carried none. It is now incremented only when a url came back.",
+      "where": "src/app/api/commitments/run/route.ts",
+      "severity": "low",
+      "fixed": true
+    }
+  ],
+  "suite": {
+    "command": "uv run python envs/fetchdue-desk/adversarial/prove_graders.py",
+    "expectations_total": 90,
+    "expectations_without_app": 37,
+    "expectations_held": 90,
+    "exit_code": 0,
+    "last_run": "2026-09-19"
+  },
+  "counts": {
+    "tasks": 9,
+    "cheats": 74,
+    "guards": 67,
+    "browser_tasks": 0
+  },
+  "models": {}
+}
