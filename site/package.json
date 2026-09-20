@@ -1,0 +1,25 @@
+{
+  "name": "compound-evals-console",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --webpack -p 3092",
+    "build": "next build --webpack",
+    "start": "next start -p 3092",
+    "build:cf": "opennextjs-cloudflare build",
+    "deploy:cf": "./scripts/deploy.sh"
+  },
+  "dependencies": {
+    "next": "16.3.5",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.6",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5",
+    "wrangler": "^4.132.0"
+  }
+}
