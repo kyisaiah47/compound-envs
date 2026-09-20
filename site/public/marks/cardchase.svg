@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="CardChase">
+<!--
+  THE CARDCHASE MARK: the charge going back for itself.
+
+  THE IDEA. Most of the customers you lose never decided to leave. A card expired, a balance
+  dipped, and the subscription quietly ended. CardChase turns that around, so the mark is a turn:
+  one heavy ribbon that runs out to the right, swings a full half circle, and comes back the way
+  it came, ending in a solid accent head aimed at where the charge failed. It is not a circle. It
+  has two free ends and it is asymmetric, because this is one bounded return trip and not a wheel
+  that spins forever. The product retries a fixed number of times and stops.
+
+  WHY A RIBBON AND NOT A RING. A ring cut into segments is a donut chart, and a ring with an
+  arrow on it is the refresh glyph off every toolbar ever drawn. Both were built and both were
+  rejected in the sheet: five segments read as a pie with a slice highlighted, which says nothing
+  about recovery and everything about analytics. A U turn drawn as MASS reads as one movement,
+  and movement is the only thing this product does.
+
+  THE COUNTERFORM IS THE TURN. The ground runs through the middle of the bend and out to the
+  left between the two arms, so the mark has a mouth: you can see where the ribbon left from and
+  where it is heading back to. Fill the counterform in and the whole idea disappears.
+
+  DRAWN AT 64 UNITS, NOT 16. The bend is two true semicircles at a real radius. The arms are 12
+  units thick, which is 3px in a browser tab, and the accent head is 26 units across the base, so
+  the colour is the last thing to go rather than the first.
+
+  NO WORDMARK IN THE IMAGE. The frame's Wordmark sets the name in live text beside the mark.
+
+  THE ACCENT IS STAMPED, NOT AUTHORED. The accent group carries data-palette="accent" and its
+  fill is rewritten from this repo's own palette by scripts/_palette.mjs at render time. The hex
+  below is what that palette resolves to today; it is not the source of truth for the colour.
+-->
+  <rect width="64" height="64" fill="#1a1a1a"/>
+  <path fill="#f2f2f2" d="M 10 52 H 40 A 18 18 0 0 0 40 16 H 20 V 28 H 40 A 6 6 0 0 1 40 40 H 10 Z"/>
+  <g data-palette="accent" fill="#14a562">
+    <path d="M 21 11 L 5 22 L 21 33 Z"/>
+  </g>
+</svg>

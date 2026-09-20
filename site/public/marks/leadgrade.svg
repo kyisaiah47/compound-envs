@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="LeadGrade">
+  <rect width="64" height="64" fill="#1a1a1a"/>
+  <path fill="#f2f2f2" d="M 32 6 L 60 58 L 44 58 L 32 42 L 20 58 L 4 58 Z"/>
+  <g data-palette="accent" fill="#ed5e92">
+    <path d="M 32 14 L 42 34 L 22 34 Z"/>
+  </g>
+</svg>

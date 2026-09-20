@@ -1,0 +1,42 @@
+<!--
+  THE TRIAGEDESK MARK: the reply already standing up out of the inbox.
+
+  THE IDEA. What TriageDesk hands you in the morning is not a sorted pile. It is a written reply,
+  per conversation, waiting on your tap. So the mark is the shared inbox opened, and the thing
+  standing up out of the opening is the draft: a solid accent card rising clear of the envelope's
+  mouth, with two lines already on it. The envelope is the backlog and it is ink. The card is the
+  work the agent did overnight and it is the only thing in colour, because it is the only thing
+  that needs you.
+
+  WHY A CARD OUT OF AN ENVELOPE AND NOT A LIST. The previous mark was four stacked bars with the
+  top one in the accent, which is the hamburger menu with a highlight on it, and it drew the
+  backlog rather than the answer to it. This product's own landing calls the artifact a queue of
+  cards. The mark draws the card.
+
+  THE COUNTERFORM IS THE OPENING. The V is the ground cutting into the envelope, and the card
+  sits in it, so the two shapes interlock rather than sit next to each other: remove the card and
+  the envelope is visibly missing something. That is the whole state the product exists to end.
+
+  DRAWN AT 64 UNITS, NOT 16. The V is a true diagonal, not a staircase. The card is 16 units wide,
+  which is 4px in a browser tab, so the one element carrying the colour is also the one that
+  survives smallest; the two ground rules on it close up at that size and it reads as a solid tab.
+
+  NO WORDMARK IN THE IMAGE. The frame's Wordmark sets the name in live text beside the mark.
+
+  THE ACCENT IS STAMPED, NOT AUTHORED. The accent group carries data-palette="accent" and its
+  fill is rewritten from this repo's own palette by scripts/_palette.mjs at render time. The hex
+  below is what that palette resolves to today; it is not the source of truth for the colour.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="TriageDesk">
+  <rect width="64" height="64" fill="#1a1a1a"/>
+  <rect x="8" y="22" width="48" height="34" fill="#f2f2f2"/>
+  <path fill="#1a1a1a" d="M 4 19 L 32 40 L 60 19 Z"/>
+  <g data-palette="accent" fill="#1699da">
+    <path d="M 21 7 H 43 V 42 H 21 Z"/>
+  </g>
+  <g fill="#1a1a1a">
+    <rect x="25" y="13" width="14" height="2.5"/>
+    <rect x="25" y="18" width="14" height="2.5"/>
+    <rect x="25" y="23" width="9" height="2.5"/>
+  </g>
+</svg>
