@@ -68,7 +68,7 @@ from whyyourbraindoesthat_desk import db
 # `COPY.handle.replace(/^@/, "")`. src/lib/live.ts uses the same expression, so the site, the
 # feed and the letter lane all agree on one string. Read off src/copy.ts:41 on 2026-09-19.
 PUBLICATION = "whyyourbraindoesthat"
-SIBLING = "softmoneyjournal"
+SIBLING = "whyyourbraindoesthat-desk-neighbour"
 
 # ── the fixture's readers, by the id sql/02-seed.sql gives them ──────────────────────────────
 R_LEAVING = 9779001   # asked to stop. Task 2's target.

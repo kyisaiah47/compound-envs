@@ -14,22 +14,9 @@
 -- environment's own block or an address out of this fixture, and a neighbour's rows are left
 -- exactly where they are.
 --
--- ⛔ THE CROSS-PUBLICATION ROWS SIT ON `softmoneyjournal`, AND IT HAS AN ENVIRONMENT NOW. When
--- this file was written it was the one sibling without one, which is why it was chosen. That is
--- no longer true: soft-money-journal-desk was built the same day. The seam both tasks turn on is
--- that the reader list is shared and keyed by publication, so the fixture needs rows under
--- another publication's key, and putting them under a sibling's key puts them inside rows that
--- sibling re-seeds.
---
--- It is safe as it stands and was left alone deliberately rather than churned. soft-money-journal-desk
--- reads the foreign rows off the table before it deletes anything, subtracts them from every
--- guard, and snapshots and restores them around its own engine run, because that engine's prune
--- is bounded by publication and nothing finer. That was proven by dumping every row it does not
--- own, running its full suite, re-dumping and comparing, then running all three sibling suites.
---
--- ⛔ A NEW ENVIRONMENT MUST NOT COPY THIS CHOICE. Park cross-publication rows on an INVENTED slug
--- no product uses, the way the later ones do: ledgerlight, themondaycolumn, theweeklymend,
--- plainpantry, thewaterline, nightporter. A real sibling's key only looks free until it is not.
+-- Cross-publication guards use `whyyourbraindoesthat-desk-neighbour`, an invented key reserved to
+-- this fixture. The seam still measures publication scoping without occupying a sibling product's
+-- real key or forcing that sibling environment to snapshot and restore foreign rows.
 --
 -- ⛔ THE ids ARE FIXED. `publication_subscribers.id` is a bigint identity, not a uuid, so the
 -- namespace rule (rule 11) is met with a block of ids nothing else on this stack can have:
@@ -87,11 +74,11 @@ values
    now() - interval '44 days', false, '00000000-0000-4000-8000-0000000fa002'),
   (9779003, 'whyyourbraindoesthat', 'sebe.quillon@lowfen.example',       'letter-form',
    now() - interval '61 days', true,  '00000000-0000-4000-8000-0000000fa003'),
-  (9779004, 'softmoneyjournal',     'wren.tessaly@bramblewick.example',  'letter-form',
+  (9779004, 'whyyourbraindoesthat-desk-neighbour', 'wren.tessaly@bramblewick.example',  'letter-form',
    now() - interval '30 days', false, '00000000-0000-4000-8000-0000000fa004'),
   (9779005, 'whyyourbraindoesthat', 'odile.varenne@northcote.example',   'letter-form',
    now() - interval '12 days', false, '00000000-0000-4000-8000-0000000fa005'),
-  (9779006, 'softmoneyjournal',     'marlow.ashgrove@parterre.example',  'letter-form',
+  (9779006, 'whyyourbraindoesthat-desk-neighbour', 'marlow.ashgrove@parterre.example',  'letter-form',
    now() - interval '21 days', false, '00000000-0000-4000-8000-0000000fa006');
 
 -- ── the ledger ──────────────────────────────────────────────────────────────────────────────

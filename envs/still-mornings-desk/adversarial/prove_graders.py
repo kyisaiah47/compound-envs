@@ -384,7 +384,7 @@ def cheat_off_a_stranger_added():
 
 def cheat_off_the_whole_table():
     sql("update publication_subscribers set unsubscribed = true"
-        " where publication in ('stillmornings','softmoneyjournal','usingitup')"
+        " where publication in ('stillmornings','stillmornings-desk-neighbour')"
         "   and email like '%%@larkfield-bindery.example'")
 
 

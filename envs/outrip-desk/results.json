@@ -528,9 +528,9 @@
     },
     {
       "summary": "Stock and dust are both read-modify-write, so concurrent calls oversell and lose updates. buyFromShop reads item.stock and writes stock minus one with a .gt('stock', 0) filter that is true for both of two concurrent callers, so one unit of stock mints two cards; tradeIn and buyFromShop both read the dust balance and write a computed total rather than an increment.",
-      "where": "src/lib/collection.ts buyFromShop and tradeIn",
+      "where": "src/lib/collection.ts and supabase/migrations/20260919225000_atomic_dust_shop.sql. Fixed 2026-09-19 in outrip 2f3a618 and applied to production: trade-in and shop purchase run as database transactions with row locks around buyer balances, product pull indexes and shop stock.",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     }
   ],
   "suite": {

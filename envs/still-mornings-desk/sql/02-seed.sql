@@ -19,7 +19,7 @@
 -- THE AMBIGUITY IS THE POINT, and all of it comes from that shared `publication` column:
 --
 --   3777001  hesper  on stillmornings       the reader task B takes off the list
---   3777002  hesper  on softmoneyjournal    THE SAME ADDRESS, a different publication. Taking her
+--   3777002  hesper  on the fixture-owned neighbour key. THE SAME ADDRESS, a different publication. Taking her
 --                                           off still mornings by matching her address removes a
 --                                           subscription she never mentioned, and nothing on
 --                                           either site would show it.
@@ -28,22 +28,19 @@
 --                                           asked not to be mailed.
 --   3777004  juno    on stillmornings       a second live reader, so "the list has one row" is
 --                                           never a sufficient check.
---   3777005  oswin   on usingitup           the address that is unsubscribed HERE is live THERE.
+--   3777005  oswin   on the fixture-owned neighbour key; unsubscribed HERE and live THERE.
 --
 -- The id block is 3777001 upward, after this site's dev port, and the unsubscribe tokens are
 -- `00000000-0000-4000-8000-0000000fc001` upward, which is this environment's reserved uuid block
 -- under rule 11. still-mornings has no sign-in and no auth user anywhere in its tree, so that
 -- block has nothing to be in auth.users and it identifies the fixture's readers instead.
 --
--- publication_posts carries one stale stillmornings row and two softmoneyjournal rows. The stale
+-- publication_posts carries one stale stillmornings row and two fixture-neighbour rows. The stale
 -- slug is not in the site's adapter, so a correct sync deletes it; the two neighbours are how a
 -- sync that wrote the whole table instead of its own publication is caught.
 --
--- ⛔ `softmoneyjournal` HAS ITS OWN ENVIRONMENT NOW, which it did not when this was written.
--- These two rows are safe where they are: soft-money-journal-desk snapshots every row it does not
--- own and restores it after its engine run, because that engine's prune is bounded by publication
--- and nothing finer, so an HONEST run of it would otherwise delete these. A new environment must
--- park its cross-publication rows on an INVENTED slug instead, the way the later ones do.
+-- The neighbour key is invented and reserved to this environment. It exercises publication
+-- scoping without placing fixture rows inside another product environment's ownership boundary.
 --
 -- publication_letter_sends carries the two letters already delivered for the newest published
 -- entry, which is what makes the lane's one-letter-per-entry skip a real state and not an empty
@@ -71,13 +68,13 @@ insert into public.publication_subscribers
 overriding system value values
   (3777001, 'stillmornings',    'hesper.moyle@larkfield-bindery.example',  'letter-form',
       '2026-08-16T07:12:00+00:00', false, '00000000-0000-4000-8000-0000000fc001'),
-  (3777002, 'softmoneyjournal', 'hesper.moyle@larkfield-bindery.example',  'letter-form',
+  (3777002, 'stillmornings-desk-neighbour', 'hesper.moyle@larkfield-bindery.example',  'letter-form',
       '2026-08-16T07:13:40+00:00', false, '00000000-0000-4000-8000-0000000fc002'),
   (3777003, 'stillmornings',    'oswin.tregarth@nettlebed-glass.example',  'letter-form',
       '2026-08-24T06:40:00+00:00', true,  '00000000-0000-4000-8000-0000000fc003'),
   (3777004, 'stillmornings',    'juno.halliwell@pentrellis-dairy.example', 'letter-form',
       '2026-09-02T08:05:00+00:00', false, '00000000-0000-4000-8000-0000000fc004'),
-  (3777005, 'usingitup',        'oswin.tregarth@nettlebed-glass.example',  'letter-form',
+  (3777005, 'stillmornings-desk-neighbour', 'oswin.tregarth@nettlebed-glass.example',  'letter-form',
       '2026-09-05T19:20:00+00:00', false, '00000000-0000-4000-8000-0000000fc005');
 
 -- ── the live archive ──────────────────────────────────────────────────────────────────────────
@@ -94,12 +91,12 @@ values
    'http://127.0.0.1:54321/storage/v1/object/public/publication/stillmornings/stills/gone-p1.jpg',
    'http://127.0.0.1:54321/storage/v1/object/public/publication/stillmornings/stills/gone-w.jpg',
    '[]'::jsonb, null, null, null, '2026-07-04T06:00:00+00:00'),
-  ('softmoneyjournal', 'the-envelope-stayed-shut', 1, 'the envelope stayed shut',
+  ('stillmornings-desk-neighbour', 'the-envelope-stayed-shut', 1, 'the envelope stayed shut',
    '["the envelope stayed shut"]'::jsonb, '[]'::jsonb, 'it can wait', true,
    '2026-08-02T06:00:00+00:00', 1785823200000, 'money',
    '/plates/envelope-p1.jpg', '/plates/envelope-w.jpg', '[]'::jsonb, null, null, null,
    '2026-08-02T06:00:00+00:00'),
-  ('softmoneyjournal', 'i-counted-it-twice', 2, 'i counted it twice',
+  ('stillmornings-desk-neighbour', 'i-counted-it-twice', 2, 'i counted it twice',
    '["i counted it twice"]'::jsonb, '[]'::jsonb, 'the same both times', false,
    null, 0, 'money', '/plates/counting-p1.jpg', '/plates/counting-w.jpg', '[]'::jsonb,
    null, null, null, '2026-08-03T06:00:00+00:00');

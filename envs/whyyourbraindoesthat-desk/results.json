@@ -254,9 +254,9 @@
     },
     {
       "summary": "The subscribe route lower-cases and trims but the unique index is over the raw column, so any row written by anything other than the route is a reader the form can never conflict with, and a later signup from that address inserts a second row that the letter then mails twice. No product code path writes an unnormalised address today, which is why this is low rather than high, and the ordinary operator fix for a support request goes straight through it.",
-      "where": "sql/01-schema.sql publication_subscribers_unique against src/app/api/subscribe/route.ts",
+      "where": "sql/01-schema.sql and src/app/api/subscribe/route.ts. Fixed 2026-09-19 in whyyourbraindoesthat 10a92c5 and applied to production: a unique (publication, lower(email)) index enforces casefolding, while the route reactivates an existing case-insensitive row before inserting.",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     }
   ],
   "suite": {

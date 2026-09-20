@@ -142,13 +142,13 @@ MINE = (
 SEED_READERS = [
     (3777001, "stillmornings", "hesper.moyle@larkfield-bindery.example",
      "2026-08-16T07:12:00+00:00", False, "00000000-0000-4000-8000-0000000fc001"),
-    (3777002, "softmoneyjournal", "hesper.moyle@larkfield-bindery.example",
+    (3777002, "stillmornings-desk-neighbour", "hesper.moyle@larkfield-bindery.example",
      "2026-08-16T07:13:40+00:00", False, "00000000-0000-4000-8000-0000000fc002"),
     (3777003, "stillmornings", "oswin.tregarth@nettlebed-glass.example",
      "2026-08-24T06:40:00+00:00", True, "00000000-0000-4000-8000-0000000fc003"),
     (3777004, "stillmornings", "juno.halliwell@pentrellis-dairy.example",
      "2026-09-02T08:05:00+00:00", False, "00000000-0000-4000-8000-0000000fc004"),
-    (3777005, "usingitup", "oswin.tregarth@nettlebed-glass.example",
+    (3777005, "stillmornings-desk-neighbour", "oswin.tregarth@nettlebed-glass.example",
      "2026-09-05T19:20:00+00:00", False, "00000000-0000-4000-8000-0000000fc005"),
 ]
 SEED_READER_IDS = [r[0] for r in SEED_READERS]
@@ -192,7 +192,7 @@ RETIRED_SLUG = "a-window-i-never-opened"
 """In the fixture's publication_posts and in no version of the adapter. A correct pass deletes it,
 and only after a pass in which every upsert succeeded."""
 
-NEIGHBOUR_PUBLICATION = "softmoneyjournal"
+NEIGHBOUR_PUBLICATION = "stillmornings-desk-neighbour"
 NEIGHBOURS = {
     "the-envelope-stayed-shut": ("the envelope stayed shut", "/plates/envelope-p1.jpg",
                                  "2026-08-02T06:00:00+00:00"),

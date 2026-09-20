@@ -423,9 +423,9 @@
     },
     {
       "summary": "Two sibling environments keep cross publication fixture rows on this product's own publication key, which rule 11a forbids. still-mornings-desk seeds one publication_subscribers row and two publication_posts rows on softmoneyjournal, and whyyourbraindoesthat-desk seeds two subscriber rows, both because when they were written this publication had no environment. Measured 2026-09-19: an honest run of the publish engine reported 3 pruned where this fixture accounts for 1, and the two still-mornings archive rows were gone afterwards, because publish.mjs's prune is bounded by publication and by nothing finer. This suite therefore snapshots those rows before its first case and restores them at the end; the finding is in the sibling environments, not in the product.",
-      "where": "envs/still-mornings-desk/sql/02-seed.sql and envs/whyyourbraindoesthat-desk/sql/02-seed.sql",
+      "where": "envs/still-mornings-desk and envs/whyyourbraindoesthat-desk fixtures. Fixed 2026-09-19: cross-publication guards now use invented keys reserved to their own environments, so neither fixture places baseline rows on softmoneyjournal or another product environment's key.",
       "severity": "low",
-      "fixed": false
+      "fixed": true
     }
   ],
   "suite": {

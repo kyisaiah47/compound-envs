@@ -210,11 +210,9 @@ Two things follow, and both are in the design rather than in a note.
 A neighbour truncating during a run would still take this fixture's rows with it. Run the suite
 when the other two bring-ups are not in flight.
 
-⛔ **The cross-publication fixture rows sit on `softmoneyjournal`**, the one sibling publication
-with no environment. Both tasks turn on the list being shared and keyed by publication, so the
-fixture needs rows under another publication's key. Under `stillmornings` or `usingitup` those rows
-would be inside what those two environments truncate and re-seed, and the ambiguity would evaporate
-whenever one of them ran.
+Cross-publication guards use the invented, fixture-owned key
+`whyyourbraindoesthat-desk-neighbour`. The tasks still exercise publication scoping without
+placing rows inside another product environment's ownership boundary.
 
 ## Namespaces (rule 11)
 
