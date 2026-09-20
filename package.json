@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack -p 3303",
-    "build": "next build --webpack",
+    "build": "next build",
     "start": "next start -p 3303",
     "build:cf": "opennextjs-cloudflare build",
-    "deploy:cf": "./scripts/deploy.sh"
+    "deploy:cf": "./scripts/deploy.sh",
+    "prebuild": "node scripts/build-data.mjs",
+    "predev": "node scripts/build-data.mjs"
   },
   "dependencies": {
     "lenis": "^1.3.26",

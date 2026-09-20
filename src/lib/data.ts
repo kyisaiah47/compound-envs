@@ -1,6 +1,3 @@
-import fs from "node:fs";
-import path from "node:path";
-
 export type Guard = { id: string; checks: string };
 export type Cheat = { id: string; fakes: string; caught_by: string };
 export type RawScore = number | { score?: number; passed?: boolean };
@@ -48,24 +45,12 @@ export function toScore(raw: RawScore): number {
   return raw?.passed ? 1 : 0;
 }
 
-let cache: Environment[] | null = null;
+import compiled from "@/data/environments.json";
 
+/* The environments are compiled into the bundle by scripts/build-data.mjs, because this console
+ * is served by a Worker with no filesystem. See that file for the measurement. */
 export function getEnvironments(): Environment[] {
-  if (cache) return cache;
-  const root = path.resolve(process.cwd(), "envs");
-  cache = fs
-    .readdirSync(root)
-    .map((name) => path.join(root, name, "results.json"))
-    .filter((file) => fs.existsSync(file))
-    .map((file) => {
-      const env = JSON.parse(fs.readFileSync(file, "utf8")) as Environment;
-      env.not_gradable ||= [];
-      env.defects ||= [];
-      env.models ||= {};
-      return env;
-    })
-    .sort((a, b) => a.product.localeCompare(b.product));
-  return cache;
+  return compiled as unknown as Environment[];
 }
 
 export function getEnvironment(product: string) {
