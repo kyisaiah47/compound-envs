@@ -107,8 +107,9 @@ def run_cli(rail: str, model: str, env_dir: pathlib.Path, prompt: str, timeout: 
                 "--dangerously-bypass-approvals-and-sandbox", "--cd", str(env_dir),
                 "--output-last-message", str(last),
             ]
-            if model != "codex-headless":
-                command += ["--model", model]
+            # --ignore-user-config with no --model runs the CLI default, gpt-6-astra (measured
+            # 2026-09-24). The estate floor is luna.
+            command += ["--model", model if model != "codex-headless" else "gpt-5.6-luna"]
             command += [prompt]
         else:
             command = [
